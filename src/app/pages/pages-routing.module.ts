@@ -39,6 +39,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'users',
+        loadChildren: () =>
+          import('../modules/users/users.module').then(
+            (m) => m.UsersModule
+            ),
+      },
+      {
         path: 'ngbootstrap',
         loadChildren: () =>
           import('../modules/ngbootstrap/ngbootstrap.module').then(
