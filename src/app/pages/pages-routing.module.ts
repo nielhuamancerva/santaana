@@ -46,6 +46,13 @@ const routes: Routes = [
             ),
       },
       {
+        path: 'payments',
+        loadChildren: () =>
+          import('../modules/payments/payments.module').then(
+            (m) => m.PaymentsModule
+            ),
+      },
+      {
         path: 'ngbootstrap',
         loadChildren: () =>
           import('../modules/ngbootstrap/ngbootstrap.module').then(
