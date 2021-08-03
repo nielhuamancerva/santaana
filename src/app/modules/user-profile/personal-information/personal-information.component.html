@@ -36,39 +36,37 @@
             <h5 class="font-weight-bold mb-6">Customer Info</h5>
           </div>
         </div>
+
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">Avatar</label>
           <div class="col-lg-9 col-xl-6">
-            <div class="image-input image-input-outline"
-              id="kt_profile_avatar"
-              [class.image-input-empty]="!user.pic"
-              [style.backgroundImage]="'url(./assets/media/users/blank.png)'"
-            >
-              <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
-              <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                data-action="change"
-                data-toggle="tooltip"
-                title=""
-                data-original-title="Change avatar"
-              >
-                <i class="fa fa-pen icon-sm text-muted"></i>
-                <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
-                <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
-              </label>
-              <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
-                <i class="ki ki-bold-close icon-xs text-muted"></i>
-              </span>
-              <span *ngIf="user.pic"
-                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                (click)="deletePic()"
-                data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
-                <i class="ki ki-bold-close icon-xs text-muted"></i>
-              </span>
-            </div>
-            <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+            <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]="!user.pic" [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+                <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
+                    <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                      data-action="change"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title="Change avatar"
+                    >
+                      <i class="fa fa-pen icon-sm text-muted"></i>
+                      <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
+                      <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
+                    </label>
+                      <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                        <i class="ki ki-bold-close icon-xs text-muted"></i>
+                      </span>
+                      <span *ngIf="user.pic"
+                        class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        (click)="deletePic()"
+                        data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                        <i class="ki ki-bold-close icon-xs text-muted"></i>
+                      </span>
+              </div>
+                      <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
           </div>
         </div>
+        
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">First Name</label>
           <div class="col-lg-9 col-xl-6">

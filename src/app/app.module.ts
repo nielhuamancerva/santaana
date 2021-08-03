@@ -19,6 +19,9 @@ import { FakeAPIService } from './_fake/fake-api.service';
 import { EditUserModalComponent } from './modules/users/components/edit-user-modal/edit-user-modal.component';
 import { UsersRoutingModule } from './modules/users/users-routing.module';
 import { UsersModule } from './modules/users/users.module';
+import { NewPaymentComponent } from './modules/payments/new-payment/new-payment.component';
+import { PaymentsRoutingModule } from './modules/payments/payments-routing.module';
+import { PaymentsModule } from './modules/payments/payments.module';
 // #fake-end#
 
 function appInitializer(authService: AuthService) {
@@ -31,7 +34,7 @@ function appInitializer(authService: AuthService) {
 
 
 @NgModule({
-  declarations: [AppComponent, EditUserModalComponent],
+  declarations: [AppComponent, EditUserModalComponent, NewPaymentComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -53,6 +56,8 @@ function appInitializer(authService: AuthService) {
     NgbModule,
     UsersRoutingModule,
     UsersModule,
+    PaymentsRoutingModule,
+    PaymentsModule,
   ],
   providers: [
     {
