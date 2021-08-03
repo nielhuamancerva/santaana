@@ -255,6 +255,64 @@
             </div>
 
             <div class="col-lg-4">
+                <label class="form-label">Enter Telefono 1</label>
+                <input
+                  type="Telefono1"
+                  class="form-control form-control-lg form-control-solid"
+                  name="Telefono1"
+                  placeholder="Telefono 1"
+                  autocomplete="off"
+                  [class.is-invalid]="isControlInvalid('email')"
+                  [class.is-valid]="isControlValid('email')"
+                  formControlName="email"
+                />
+                <div class="valid-feedback" *ngIf="isControlValid('email')">
+                  Telefono 1 was entered correct
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="controlHasError('required', 'email')"
+                >
+                  Telefono 1 is required
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="controlHasError('email', 'email')"
+                >
+                  Telefono 1 format is incorrect
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <label class="form-label">Enter Telefono 2</label>
+                <input
+                  type="email"
+                  class="form-control form-control-lg form-control-solid"
+                  name="email"
+                  placeholder="Email"
+                  autocomplete="off"
+                  [class.is-invalid]="isControlInvalid('email')"
+                  [class.is-valid]="isControlValid('email')"
+                  formControlName="email"
+                />
+                <div class="valid-feedback" *ngIf="isControlValid('email')">
+                  Telefono 2 was entered correct
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="controlHasError('required', 'email')"
+                >
+                  Telefono 2 is required
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="controlHasError('email', 'email')"
+                >
+                  Telefono 2 format is incorrect
+                </div>
+              </div>
+
+            <div class="col-lg-4">
               <label class="form-label">Enter Email</label>
               <input
                 type="email"
@@ -284,40 +342,36 @@
             </div>
 
             <div class="col-lg-4">
-              <label>Date of Birth</label>
-              <div class="input-group input-group-solid">
+                <label class="form-label">Enter Ubigeo</label>
                 <input
-                  type="text"
-                  name="dob"
+                  type="email"
                   class="form-control form-control-lg form-control-solid"
+                  name="email"
+                  placeholder="Ubigeo"
                   autocomplete="off"
-                  placeholder="dd/mm/yyyy"
-                  ngbDatepicker
-                  #d="ngbDatepicker"
-                  [class.is-invalid]="isControlInvalid('dob')"
-                  [class.is-valid]="isControlValid('dob')"
-                  formControlName="dob"
-                  readonly="true"
+                  [class.is-invalid]="isControlInvalid('email')"
+                  [class.is-valid]="isControlValid('email')"
+                  formControlName="email"
                 />
-                <div class="input-group-append" (click)="d.toggle()">
-                  <span class="input-group-text">
-                    <i class="text-dark-50 flaticon-calendar"></i>
-                  </span>
+                <div class="valid-feedback" *ngIf="isControlValid('email')">
+                  Email was entered correct
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="controlHasError('required', 'email')"
+                >
+                  Email is required
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="controlHasError('email', 'email')"
+                >
+                  Email format is incorrect
                 </div>
               </div>
-              <div class="valid-feedback" *ngIf="isControlValid('dob')">
-                Date of Birth was entered correct
-              </div>
-              <div
-                class="invalid-feedback"
-                *ngIf="controlHasError('required', 'dob')"
-              >
-                Please enter <b>Date of Birth</b> in 'mm/dd/yyyy' format
-              </div>
-            </div>
 
             <div class="col-lg-4">
-              <label class="form-label">Enter IP Address</label>
+              <label class="form-label">Enter Dirección Referencial</label>
               <input
                 type="text"
                 class="form-control form-control-lg form-control-solid"
@@ -332,36 +386,168 @@
                 Login was entered correct
               </div>
             </div>
+
+            <div class="col-lg-4">
+                <label class="form-label">Enter Longitud</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg form-control-solid"
+                  name="ipAddress"
+                  placeholder="Longitud"
+                  autocomplete="off"
+                  [class.is-invalid]="isControlInvalid('ipAddress')"
+                  [class.is-valid]="isControlValid('ipAddress')"
+                  formControlName="ipAddress"
+                />
+                <div class="valid-feedback" *ngIf="isControlValid('ipAddress')">
+                  Login was entered correct
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <label class="form-label">Enter Latitud</label>
+                <input
+                  type="text"
+                  class="form-control form-control-lg form-control-solid"
+                  name="ipAddress"
+                  placeholder="Latitud"
+                  autocomplete="off"
+                  [class.is-invalid]="isControlInvalid('ipAddress')"
+                  [class.is-valid]="isControlValid('ipAddress')"
+                  formControlName="ipAddress"
+                />
+                <div class="valid-feedback" *ngIf="isControlValid('ipAddress')">
+                  Login was entered correct
+                </div>
+              </div>
           </div>
 
-          <div class="form-group row">
+          <div class="form-group row">  
             <div class="col-lg-4">
-              <label>Select Gender</label>
-              <select
-                class="form-control form-control-lg form-control-solid"
-                name="gender"
-                [class.is-invalid]="isControlInvalid('gender')"
-                formControlName="gender"
-              >
-                <option value="Female">Female</option>
-                <option value="Male">Male</option>
-              </select>
-              <div class="feedback">Please select <b>Gender</b></div>
+                <div>
+                    <label class="form-label">Photografy InFront</label>
+                </div>
+              <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]=" " [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+                  <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
+                      <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        data-action="change"
+                        data-toggle="tooltip"
+                        title=""
+                        data-original-title="Change avatar"
+                      >
+                        <i class="fa fa-pen icon-sm text-muted"></i>
+                        <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
+                        <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
+                      </label>
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                        <span
+                          class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          (click)="deletePic()"
+                          data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                </div>
+                        <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+          
             </div>
-            
+
             <div class="col-lg-4">
-              <label>Select Type</label>
-              <select
-                class="form-control form-control-lg form-control-solid"
-                name="type"
-                formControlName="type"
-              >
-                <option value="1">Business</option>
-                <option value="2">Individual</option>
-              </select>
-              <div class="feedback">Please select <b>Type</b></div>
+                <div>
+                    <label class="form-label">Photografy Back</label>
+                </div>
+              <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]=" " [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+                  <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
+                      <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        data-action="change"
+                        data-toggle="tooltip"
+                        title=""
+                        data-original-title="Change avatar"
+                      >
+                        <i class="fa fa-pen icon-sm text-muted"></i>
+                        <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
+                        <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
+                      </label>
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                        <span
+                          class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          (click)="deletePic()"
+                          data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                </div>
+                        <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+          
+            </div>
+
+            <div class="col-lg-4">
+                <div>
+                    <label class="form-label">Contract Front</label>
+                </div>
+              <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]=" " [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+                  <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
+                      <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        data-action="change"
+                        data-toggle="tooltip"
+                        title=""
+                        data-original-title="Change avatar"
+                      >
+                        <i class="fa fa-pen icon-sm text-muted"></i>
+                        <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
+                        <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
+                      </label>
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                        <span
+                          class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          (click)="deletePic()"
+                          data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                </div>
+                        <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+          
+            </div>
+
+            <div class="col-lg-4">
+                <div>
+                    <label class="form-label">Contract Back</label>
+                </div>
+              <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]=" " [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+                  <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
+                      <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                        data-action="change"
+                        data-toggle="tooltip"
+                        title=""
+                        data-original-title="Change avatar"
+                      >
+                        <i class="fa fa-pen icon-sm text-muted"></i>
+                        <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
+                        <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
+                      </label>
+                        <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                        <span
+                          class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                          (click)="deletePic()"
+                          data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
+                          <i class="ki ki-bold-close icon-xs text-muted"></i>
+                        </span>
+                </div>
+                        <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
+          
             </div>
           </div>
+
         </form>
       </ng-container>
     </div>

@@ -18,6 +18,19 @@ export class EditUserModalComponent implements OnInit {
   }
 
   
+  getPic() {
+   // if (!this.user.pic) {
+      return 'none';
+  //  }
+
+  //  return `url('${this.user.pic}')`;
+  }
+
+  deletePic() {
+  //  this.user.pic = '';
+  }
+
+  
    // helpers for View
    isControlValid(controlName: string): boolean {
     const control = this.formGroup.controls[controlName];
