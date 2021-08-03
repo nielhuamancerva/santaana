@@ -1,10 +1,10 @@
 <div class="card card-custom gutter-b">
   <div class="card-header">
     <div class="card-title">
-      <h3 class="card-label">Lista de usuarios</h3>
+      <h3 class="card-label">Customers list</h3>
     </div>
     <div class="card-toolbar">
-      <button type="button" class="btn btn-primary" (click)="create()">Nuevo usuario</button>
+      <button type="button" class="btn btn-primary" (click)="create()">New Customer</button>
     </div>
   </div>
   <div class="card-body">
@@ -15,12 +15,11 @@
           <div class="row" [formGroup]="filterGroup">
             <div class="col-lg-6">
               <select class="form-control" name="status" placeholder="Filter by Status" formControlName="status">
-                <option value="">Todos</option>
-                <option value="1">Persona Juridica</option>
-                <option value="2">Persona Natural</option>
-                <option value="3">Sujeto No Domiciliario</option>
-                <option value="4">Adquiriente - Ticket</option>
-              </select><small class="form-text text-muted"><b>Filtro</b> por Persona</small>
+                <option value="">All</option>
+                <option value="1">Susspended</option>
+                <option value="2">Active</option>
+                <option value="3">Pending</option>
+              </select><small class="form-text text-muted"><b>Filter</b> by Status</small>
             </div>
             <div class="col-lg-6">
               <select class="form-control" placeholder="Filter by Type" name="type" formControlName="type">
@@ -33,7 +32,7 @@
         </div>
         <div class="col-lg-2" [formGroup]="searchGroup">
           <input type="text" class="form-control" name="searchText" placeholder="Search" value=""
-            formControlName="searchTerm" /><small class="form-text text-muted"><b>Buscar</b> en todos los campos</small>
+            formControlName="searchTerm" /><small class="form-text text-muted"><b>Search</b> in all fields</small>
         </div>
       </div>
     </div>
@@ -84,12 +83,12 @@
               (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
-            PRIMER NOMBRE
+            FIRSTNAME
             <app-sort-icon column="firstName" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
               (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
-            PRIMER APELLIDO
+            LASTNAME
             <app-sort-icon column="lastName" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
               (sort)="sort($event)"></app-sort-icon>
           </th>
@@ -99,21 +98,21 @@
               (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
-            GENERO
+            GENDER
             <app-sort-icon column="gender" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
               (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
-            ESTATUS
+            STATUS
             <app-sort-icon column="status" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
               (sort)="sort($event)"></app-sort-icon>
           </th>
           <th>
-            TIPO
+            TYPE
             <app-sort-icon column="type" [activeColumn]="sorting.column" [activeDirection]="sorting.direction"
               (sort)="sort($event)"></app-sort-icon>
           </th>
-          <th>ACCIONES</th>
+          <th>ACTIONS</th>
         </thead>
         <tbody>
           <tr >
