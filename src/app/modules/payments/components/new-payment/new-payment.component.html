@@ -86,150 +86,36 @@
 
           <div class="form-group row">
             <div class="col-lg-4">
-              <label>Enter Mileage</label>
-              <input type="number" class="form-control form-control-lg form-control-solid"
-                placeholder="Mileage" name="mileage"[class.is-invalid]="isControlInvalid('mileage')"
-                [class.is-valid]="isControlValid('mileage')" formControlName="mileage"/>
-              <div class="feedback" *ngIf="!isControlTouched('mileage')">
-                Please enter <b>Mileage</b>
-              </div>
-              <div class="valid-feedback" *ngIf="isControlValid('mileage')">
-                Mileage was entered correct
-              </div>
-              <div class="invalid-feedback" *ngIf="controlHasError('required', 'mileage')">
-                Mileage is required
-              </div>
-              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'mileage')">
-                Mileage should have at least 1 symbol
-              </div>
-              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'mileage')">
-                Mileage year should have maximum 100 symbols
-              </div>
-            </div>
-            <div class="col-lg-4">
-              <label>Select Color</label>
-              <select class="form-control form-control-lg form-control-solid" name="color" formControlName="color">
-                <option value="Red">Red</option>
-                <option value="CadetBlue">CadetBlue</option>
-                <option value="Eagle">Eagle</option>
-                <option value="Gold">Gold</option>
-                <option value="LightSlateGrey">LightSlateGrey</option>
-                <option value="RoyalBlue">RoyalBlue</option>
-                <option value="Crimson">Crimson</option>
-                <option value="Blue">Blue</option>
-                <option value="Sienna">Sienna</option>
-                <option value="Indigo">Indigo</option>
-                <option value="Green">Green</option>
-                <option value="Violet">Violet</option>
-                <option value="GoldenRod">GoldenRod</option>
-                <option value="OrangeRed">OrangeRed</option>
-                <option value="Khaki">Khaki</option>
-                <option value="Teal">Teal</option>
-                <option value="Purple">Purple</option>
-                <option value="Orange">Orange</option>
-                <option value="Pink">Pink</option>
-                <option value="Black">Black</option>
-                <option value="DarkTurquoise">DarkTurquoise</option>
-              </select>
-              <div class="feedback">Please select <b>Color</b></div>
-            </div>
-            <div class="col-lg-4">
-              <label>Enter Price ($)</label>
-              <input
-                type="number"
-                class="form-control form-control-lg form-control-solid"
-                autocomplete="off"
-                placeholder="Price"
-                name="price"
-                [class.is-invalid]="isControlInvalid('price')"
-                [class.is-valid]="isControlValid('price')"
-                formControlName="price"
-              />
-              <div class="feedback" *ngIf="!isControlTouched('price')">
-                Please enter <b>Price</b>
-              </div>
-              <div class="valid-feedback" *ngIf="isControlValid('price')">
-                Price was entered correct
-              </div>
-              <div
-                class="invalid-feedback"
-                *ngIf="controlHasError('required', 'price')"
-              >
-                Price is required
-              </div>
-              <div
-                class="invalid-feedback"
-                *ngIf="controlHasError('minlength', 'price')"
-              >
-                Price should have at least 3 symbols
-              </div>
-              <div
-                class="invalid-feedback"
-                *ngIf="controlHasError('maxLength', 'price')"
-              >
-                Price should have maximum 100 symbols
-              </div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-lg-4">
-              <label>Enter VIN code</label>
-              <input
-                type="text"
-                class="form-control form-control-lg form-control-solid"
-                autocomplete="off"
-                placeholder="VIN Code"
-                name="VINCode"
-                [class.is-invalid]="isControlInvalid('VINCode')"
-                [class.is-valid]="isControlValid('VINCode')"
-                formControlName="VINCode"
-              />
+              <label>BOLETA</label>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  
+                  <button class="btn btn-primary font-weight-bold" type="button" (click)="create()">Add</button>
+                </div>
+              <input type="text" class="form-control form-control-lg form-control-solid" autocomplete="off" 
+              placeholder="Eligue su Boleta" name="VINCode" [class.is-invalid]="isControlInvalid('VINCode')"
+                [class.is-valid]="isControlValid('VINCode')" formControlName="VINCode"/>
               <div class="feedback" *ngIf="!isControlTouched('VINCode')">
                 Please enter <b>VIN code</b>
               </div>
               <div class="valid-feedback" *ngIf="isControlValid('VINCode')">
                 VIN code was entered correct
               </div>
-              <div
-                class="invalid-feedback"
-                *ngIf="controlHasError('required', 'VINCode')"
-              >
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'VINCode')">
                 VIN code is required
               </div>
             </div>
-            <div class="col-lg-4">
-              <label>Select Status</label>
-              <select
-                class="form-control form-control-lg form-control-solid"
-                name="status"
-                formControlName="status"
-              >
-                <option value="1">Selling</option>
-                <option value="2">Sold</option>
-              </select>
-              <div class="feedback">Please select <b>Status</b></div>
-            </div>
-            <div class="col-lg-4">
-              <label>Select Condition</label>
-              <select
-                class="form-control form-control-lg form-control-solid"
-                name="condition"
-                formControlName="condition"
-              >
-                <option value="1">New</option>
-                <option value="2">Used</option>
-              </select>
-              <div class="feedback">Please select <b>Condition</b></div>
             </div>
           </div>
-          <div class="form-group">
-            <label>Description</label>
-            <textarea
-              name="description"
-              class="form-control form-control-solid"
-              formControlName="description"
-            ></textarea>
+
+
+          <div class="form-group row">
+            <div class="col-lg-4">
+            </div>
           </div>
+
+         
+
           <div class="float-right">
             <a
               class="btn btn-default font-weight-bold mr-2"
@@ -248,12 +134,9 @@
       </div>
     </ng-container>
 
-    <ng-container *ngIf="activeTabId === tabs.REMARKS_TAB">
+  
 
-    </ng-container>
 
-    <ng-container  *ngIf="activeTabId === tabs.SPECIFICATIONS_TAB">
 
-    </ng-container>
   </div>
 </div>

@@ -1,15 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
+import { LayoutService } from '../../../../_metronic/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TicketPaymentsComponent } from '../ticket-payments/ticket-payments.component';
 @Component({
   selector: 'app-new-payment',
   templateUrl: './new-payment.component.html',
   styleUrls: ['./new-payment.component.scss']
 })
 export class NewPaymentComponent implements OnInit {
+  toppings = new FormControl();
+  toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
+;
   formGroup: FormGroup;
+  
   isLoading$: Observable<boolean>;
   errorMessage = '';
   tabs = {
@@ -19,14 +28,29 @@ export class NewPaymentComponent implements OnInit {
   };
   activeTabId = this.tabs.BASIC_TAB; // 0 => Basic info | 1 => Remarks | 2 => Specifications
   private subscriptions: Subscription[] = [];
-  constructor() { }
+  constructor(private layout: LayoutService,private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.isLoading$ = this.isLoading$;
+
+    
   }
 
   save() {
 
+    }
+
+    create() {
+      this.edit(undefined);
+    }
+  
+    edit(id: number) {
+      const modalRef = this.modalService.open(TicketPaymentsComponent);
+      modalRef.componentInstance.id = id;
+      modalRef.result.then(() =>
+     //   this.customerService.fetch(),
+        () => { }
+      );
     }
 
   changeTab(tabId: number) {
