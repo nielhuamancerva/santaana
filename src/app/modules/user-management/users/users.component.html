@@ -1,1 +1,131 @@
-<p><b>Users:</b> - Coming soon in the following updates (ETA [v8.x.x]).</p>
+<div class="card card-custom gutter-b">
+  <div class="card-header">
+    <div class="card-title">
+      <h3 class="card-label">Customers list</h3>
+    </div>
+    <div class="card-toolbar">
+      <button type="button" class="btn btn-primary" (click)="create()">New Customer</button>
+    </div>
+  </div>
+  <div class="card-body">
+
+    
+
+    <!-- begin: Grouping -->
+    <ng-container>
+      <div class="form">
+        <div class="row align-items-center form-group-actions margin-top-20 margin-bottom-20">
+          <div class="col-xl-12">
+            <div class="form-group form-group-inline">
+              <div class="form-label form-label-no-wrap">
+                <label class="font-bold font-danger"><span>Selected records count:
+                    <b>grouping.getSelectedRowsCount()</b></span></label>
+              </div>
+              <div>
+                <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-1"
+                  >
+                  <i class="fa fa-trash"></i> Delete All
+                </button>&nbsp;
+                <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                  >
+                  <i class="fa fa-stream"></i> Fetch Selected
+                </button>&nbsp;
+                <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                  >
+                  <i class="fa fa-sync-alt"></i> Update Status
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <!-- end: Grouping -->
+
+    <!-- begin:Table -->
+    <div class="table-responsive angular-bootstrap-table">
+      <table class="table table-head-custom table-vertical-center overflow-hidden">
+        <thead>
+          <th class="selection-cell-header" data-row-selection="true">
+            <label class="checkbox checkbox-single"><input type="checkbox"
+                /><span></span></label>
+          </th>
+          <th>
+            ID
+         
+          </th>
+          <th>
+            FIRSTNAME
+           
+          </th>
+          <th>
+            LASTNAME
+            
+          </th>
+          <th>
+            EMAIL
+           
+          </th>
+          <th>
+            GENDER
+           
+          </th>
+          <th>
+            STATUS
+           
+          </th>
+          <th>
+            TYPE
+          
+          </th>
+          <th>ACTIONS</th>
+        </thead>
+        <tbody>
+          <tr >
+            <td class="selection-cell">
+              <label class="checkbox checkbox-single"><input type="checkbox"/>
+                <span></span>
+              </label>
+            </td>
+            <td>customer.id </td>
+            <td>customerfirstName</td>
+            <td>customerlastName</td>
+            <td>customeremail</td>
+            <td>customer.gender</td>
+            <td>
+              <span class="label label-lg label-inline">
+                <ng-container >Suspended</ng-container>
+           <!--     <ng-container *ngIf="customer.status === 2">Active</ng-container>
+                <ng-container *ngIf="customer.status === 3">Pending</ng-container>-->
+              </span>
+            </td>
+            <td>
+              <span class="label label-dot label-primary mr-2"></span>&nbsp;<span class="font-bold font-primary">
+                <ng-container>Business</ng-container>
+           <!--    <ng-container *ngIf="customer.type === 2">Individual</ng-container>-->
+              </span>
+            </td>
+            <td>
+
+              <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                >
+                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary">
+                </span>
+              </a>
+
+              <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                >
+                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger">
+                </span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- end: Table -->
+  
+  </div>
+</div>

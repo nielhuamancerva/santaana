@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormControl, FormGroup, Validators } from '@angular/forms';
 
+
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { LayoutService } from '../../../../_metronic/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TicketPaymentsComponent } from '../ticket-payments/ticket-payments.component';
 @Component({
   selector: 'app-new-payment',

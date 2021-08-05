@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-edit-user-modal',
   templateUrl: './edit-user-modal.component.html',
@@ -15,8 +16,10 @@ export class EditUserModalComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log("a");
   }
 
+  
   
   getPic() {
    // if (!this.user.pic) {

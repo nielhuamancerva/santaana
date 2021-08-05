@@ -19,6 +19,7 @@ import {
   IGroupingView,
   ISearchView,
 } from '../../../../_metronic/shared/crud-table';
+import { CustomersService } from 'src/app/modules/e-commerce/_services/customers.service';
 @Component({
   selector: 'app-list-user',
   templateUrl: './list-user.component.html',
@@ -26,7 +27,6 @@ import {
 })
 export class ListUserComponent implements   OnInit,
 IGroupingView{
-  
 paginator: PaginatorState;
 sorting: SortState;
 grouping: GroupingState;
@@ -36,9 +36,11 @@ searchGroup: FormGroup;
 private subscriptions: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
 
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal,
+    public customerService: CustomersService) { }
 
   ngOnInit(): void {
+ 
   }
 
  // sorting
@@ -67,7 +69,7 @@ private subscriptions: Subscription[] = []; // Read more: => https://brianflove.
     const modalRef = this.modalService.open(EditUserModalComponent, { size: 'xl' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(() =>
-     // this.customerService.fetch(),
+     this.customerService.fetch(),
       () => { }
     );
   }

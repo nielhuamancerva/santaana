@@ -82,9 +82,7 @@
                 Model year should have maximum 100 symbols
               </div>
             </div>
-          </div>
 
-          <div class="form-group row">
             <div class="col-lg-4">
               <label>BOLETA</label>
               <div class="input-group mb-3">
@@ -108,10 +106,265 @@
             </div>
           </div>
 
-
           <div class="form-group row">
             <div class="col-lg-4">
+              <label>Usuario Creación</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
             </div>
+
+            <div class="col-lg-4">
+              <label>Fecha Creación</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+              <label>Hora Creación</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+           
+            <div class="col-lg-4">
+              <label>Telefono1</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>  
+
+            <div class="col-lg-4">
+              <label>Telefono2</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>  
+
+            <div class="col-lg-4">
+              <label>Nota</label>
+              <input type="textarea" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>  
+
+            <div class="col-lg-4">
+              <label>Inporte Total a Pagar</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>  
+
+            <div class="col-lg-4">
+              <label>Inporte Pendiente a Pagar</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>  
+
+            <div class="col-lg-4">
+              <label>Inporte A Cobrar</label>
+              <input type="text" class="form-control form-control-lg form-control-solid"
+                placeholder="Dni Beneficiario" name="beneficiary_dni" [class.is-invalid]="isControlInvalid('modelYear')"
+                [class.is-valid]="isControlValid('modelYear')" formControlName="modelYear"/>
+              <div class="feedback" *ngIf="!isControlTouched('modelYear')">
+                Please enter <b>Model</b>
+              </div>
+              <div class="valid-feedback" *ngIf="isControlValid('modelYear')">
+                Model year was entered correct
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('required', 'modelYear')">
+                Model year is required
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'modelYear')">
+                Model year should have at least 3 symbols
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('min', 'modelYear')">
+                Model year can't be less than 1900
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('max', 'modelYear')">
+                Model year can't be more than 2023
+              </div>
+              <div class="invalid-feedback" *ngIf="controlHasError('maxLength', 'modelYear')">
+                Model year should have maximum 100 symbols
+              </div>
+            </div>  
+
+
+
           </div>
 
          

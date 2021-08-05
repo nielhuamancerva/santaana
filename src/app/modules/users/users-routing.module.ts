@@ -11,11 +11,8 @@ const routes: Routes = [
     path: 'list',
     component: ListUserComponent,
   },
-  {
-    path: '**',
-    pathMatch: 'full',
-    redirectTo: 'dashboard'
-  }
+  { path: '', redirectTo: 'users', pathMatch: 'full' },
+  { path: '**', redirectTo: 'users', pathMatch: 'full' },
 ];
 
 @NgModule({

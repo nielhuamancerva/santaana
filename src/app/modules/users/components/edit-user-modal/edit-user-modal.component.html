@@ -1,3 +1,4 @@
+<ng-container>
 <div class="modal-content">
     <div class="modal-header">
       <div class="modal-title h4" id="example-modal-sizes-title-lg">
@@ -420,6 +421,7 @@
                   Latitud fue ingresada correctamente
                 </div>
               </div>
+              
           </div>
 
           <div class="form-group row">  
@@ -438,15 +440,10 @@
                         <i class="fa fa-pen icon-sm text-muted"></i>
                         <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg"  />
                         <input type="hidden" name="profile_avatar_remove" formControlName="pic" />
+
                       </label>
                         <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
                           data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
-                          <i class="ki ki-bold-close icon-xs text-muted"></i>
-                        </span>
-                        <span
-                          class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                          (click)="deletePic()"
-                          data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
                           <i class="ki ki-bold-close icon-xs text-muted"></i>
                         </span>
                 </div>
@@ -546,6 +543,8 @@
                 <span class="form-text text-muted">Tipos de archivo permitidos: png, jpg, jpeg.</span>
           
             </div>
+
+            
           </div>
 
         </form>
@@ -569,4 +568,4 @@
       </ng-container>
     </div>
   </div>
-  
+</ng-container>
