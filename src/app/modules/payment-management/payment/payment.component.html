@@ -1,0 +1,255 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">
+            <ng-container>
+                BENEFICIARIO
+            </ng-container>
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a
+                type="button"
+                class="btn btn-primary"
+                routerLink="/payment-management/payment/list"
+                >Lista de pagos</a
+            >
+        </div>
+    </div>
+    <div class="card-body">
+        <ng-container >
+            <div class="mt-5">
+                <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>Codigo de Factura</label>
+                            <input 
+                                type="text"
+                                class="form-control form-control-lg form-control-solid"
+                                autocomplete="off"
+                                placeholder="Código de Factura" 
+                                name="invoiceCode"
+                                [class.is-invalid]="isControlInvalid('invoiceCode')"
+                                [class.is-valid]="isControlValid('invoiceCode')"
+                                formControlName="invoiceCode"
+                            />
+                            <span class="form-text text-muted" *ngIf="span">Boleta N° 0001</span>
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'invoiceCode')"
+                            >
+                                Código de factura es requerido
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Dni</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Dni Beneficiario" 
+                                name="beneficiaryDni"
+                                [class.is-invalid]="isControlInvalid('beneficiaryDni')"
+                                [class.is-valid]="isControlValid('beneficiaryDni')"
+                                formControlName="beneficiaryDni"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'beneficiaryDni')"
+                            >
+                                Dni del beneficiario es requerido
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>BOLETA</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-primary font-weight-bold" type="button" (click)="createModal()">Agregar</button>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    class="form-control form-control-lg form-control-solid" 
+                                    autocomplete="off" 
+                                    placeholder="Elija su Boleta" 
+                                    name="VINCode"
+                                    [class.is-invalid]="isControlInvalid('VINCode')"
+                                    [class.is-valid]="isControlValid('VINCode')"
+                                    formControlName="VINCode"
+                                />
+                                <div
+                                    class="invalid-feedback"
+                                    *ngIf="controlHasError('required', 'VINCode')"
+                                >
+                                   Boleta es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>Usuario Creación</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Usuario de creación" 
+                                name="createdUser"
+                                [class.is-invalid]="isControlInvalid('createdUser')"
+                                [class.is-valid]="isControlValid('createdUser')"
+                                formControlName="createdUser"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'createdUser')"
+                            >
+                                Usuario de creación es requerido
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Fecha Creación</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Fecha de creación" 
+                                name="createdDate" 
+                                readonly
+                                [class.is-invalid]="isControlInvalid('createdDate')"
+                                [class.is-valid]="isControlValid('createdDate')"
+                                formControlName="createdDate"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'createdDate')"
+                            >
+                                Fecha de creación es requerido
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Hora Creación</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Hora de creación" 
+                                name="createdHour" 
+                                readonly
+                                [class.is-invalid]="isControlInvalid('createdHour')"
+                                [class.is-valid]="isControlValid('createdHour')"
+                                formControlName="createdHour"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'createdDate')"
+                            >
+                                Hora de creación es requerido
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>Telefono1</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese teléfono 1" 
+                                name="phonenumber1"
+                                [class.is-invalid]="isControlInvalid('phonenumber1')"
+                                [class.is-valid]="isControlValid('phonenumber1')"
+                                formControlName="phonenumber1"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'phonenumber1')"
+                            >
+                                Número de teléfono es requerido
+                            </div>
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Telefono2</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese teléfono 2" 
+                                name="phonenumber2"
+                                [class.is-invalid]="isControlInvalid('phonenumber2')"
+                                [class.is-valid]="isControlValid('phonenumber2')"
+                                formControlName="phonenumber2"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'phonenumber2')"
+                            >
+                                Número de teléfono es requerido
+                            </div>
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Nota</label>
+                            <input 
+                                type="textarea" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese una nota si así lo desea" 
+                                name="note"
+                                [class.is-invalid]="isControlInvalid('note')"
+                                [class.is-valid]="isControlValid('note')"
+                                formControlName="note"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'note')"
+                            >
+                                Nota es requerido
+                            </div>
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Importe Total a Pagar</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese el importe a pagar" 
+                                name="totalPay"
+                                value="{{payment.totalPay}}"
+                                readonly
+                            />
+   
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Importe Pendiente a Pagar</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Importe por pagar" 
+                                name="mountToPay"
+
+                                value="{{payment.totalPay}}"
+                                readonly
+                            />
+
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Importe a Cobrar</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Monto a cobrar" 
+                                name="mountToCollect"
+
+                                value="{{payment.totalPay}}"
+                                readonly
+                            />
+
+                        </div>
+                    </div>
+                    <div class="float-right">
+                    <a
+                        class="btn btn-default font-weight-bold mr-2"
+                        >Cancelar</a
+                    >
+                    <button
+                        type="submit"
+                        class="btn btn-primary font-weight-bold mr-2"
+                    >
+                        Guardar
+                    </button>
+                    </div>
+                </form>
+            </div>
+        </ng-container>
+    </div>
+</div>

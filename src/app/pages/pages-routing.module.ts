@@ -39,12 +39,13 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'users',
+        path: 'payment-management',
         loadChildren: () =>
-          import('../modules/users/users.module').then(
-            (m) => m.UsersModule
+          import('../modules/payment-management/payment-management.module').then(
+            (m) => m.PaymentManagementModule
             ),
-      },
+      }
+      ,
       {
         path: 'payments',
         loadChildren: () =>

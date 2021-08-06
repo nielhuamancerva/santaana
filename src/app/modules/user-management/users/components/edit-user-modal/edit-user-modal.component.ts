@@ -2,6 +2,26 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, finalize, first, tap } from 'rxjs/operators';
+import { User } from '../../../models/user.model';
+
+const EMPTY_USER: User ={
+    id: undefined,
+    firstName: '',
+    lastName: '',
+    firstApellido: '',
+    lastApellido: '',
+    businessName: '',
+    documentType: '',
+    document: '',
+    firstPhone: '',
+    secondPhone: '',
+    email: '',
+    ubigeo: '',
+    address: '',
+    latitude: '',
+    longitude: ''
+};
+
 interface HtmlInputEvent extends Event{
   target: HTMLInputElement & EventTarget;
 }
@@ -10,6 +30,7 @@ interface HtmlInputEvent extends Event{
   templateUrl: './edit-user-modal.component.html',
   styleUrls: ['./edit-user-modal.component.scss']
 })
+
 export class EditUserModalComponent implements OnInit {
   @Input() id: number;
 
@@ -19,12 +40,57 @@ export class EditUserModalComponent implements OnInit {
   photoSelected3:  String | ArrayBuffer;
   photoSelected4:  String | ArrayBuffer;
   photoSelected5:  String | ArrayBuffer;
-  constructor(public modal: NgbActiveModal) { }
+  isRucSelected: Boolean;
+  isDniSelected: Boolean;
+  formGroup: FormGroup;
+  user: User;
+  
+  constructor(
+    private fb: FormBuilder, 
+    public modal: NgbActiveModal
+  ) { }
 
   ngOnInit(): void {
-
+    this.loadUser();
   }
   
+  loadUser() {
+    if (!this.id) {
+      this.user = EMPTY_USER;
+      this.loadForm();
+    }  
+  }
+
+  loadForm() {
+    this.formGroup = this.fb.group({
+      firstName: [this.user.firstName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+      lastName: [this.user.lastName, Validators.compose([Validators.required])],
+      firstApellido: [this.user.firstApellido, Validators.compose([Validators.required])],
+      lastApellido: [this.user.lastApellido, Validators.compose([Validators.required])],
+      businessName: [this.user.businessName, Validators.compose([Validators.required])],
+      document: [this.user.document, Validators.compose([Validators.required])],
+      firstPhone: [this.user.firstPhone, Validators.compose([Validators.required])],
+      secondPhone: [this.user.secondPhone, Validators.compose([Validators.required])],
+      email: [this.user.email, Validators.compose([Validators.required])],
+      ubigeo: [this.user.ubigeo, Validators.compose([Validators.required])],
+      address: [this.user.address, Validators.compose([Validators.required])],
+      longitude: [this.user.longitude, Validators.compose([Validators.required])],
+      latitude: [this.user.latitude, Validators.compose([Validators.required])]
+    });
+    console.log(this.formGroup);
+  }
+
+  desactivar(e){
+    let valor = e.currentTarget.value;
+    if(valor == '6'){
+      this.isRucSelected = true;
+      this.isDniSelected = false;
+    }else if(valor == '1'){
+      this.isDniSelected = true;
+      this.isRucSelected = false;
+    }
+    console.log(this.isRucSelected);
+  }
   
   getPic() {
     // if (!this.user.pic) {
@@ -34,54 +100,78 @@ export class EditUserModalComponent implements OnInit {
    //  return `url('${this.user.pic}')`;
    }
  
-   deletePic() {
+  deletePic() {
    //  this.user.pic = '';
-   }
-   btn1(event:HtmlInputEvent): void{
-      if(event.target.files && event.target.files[0])
-      {
-        this.file = <File>event.target.files[0];
-        const reader = new FileReader();
-        reader.onload= e => this.photoSelected1 =reader.result;
-        reader.readAsDataURL(this.file);
-      }
-   }
-   btn2(event:HtmlInputEvent): void{
+  }
+
+save()
+{
+  
+}
+
+  btn1(event:HtmlInputEvent): void{
     if(event.target.files && event.target.files[0])
     {
       this.file = <File>event.target.files[0];
       const reader = new FileReader();
-      reader.onload= e => this.photoSelected2 =reader.result;
+      reader.onload= e => this.photoSelected1 =reader.result;
       reader.readAsDataURL(this.file);
     }
- }
- btn3(event:HtmlInputEvent): void{
-  if(event.target.files && event.target.files[0])
-  {
-    this.file = <File>event.target.files[0];
-    const reader = new FileReader();
-    reader.onload= e => this.photoSelected3=reader.result;
-    reader.readAsDataURL(this.file);
   }
-}
-btn4(event:HtmlInputEvent): void{
-  if(event.target.files && event.target.files[0])
-  {
-    this.file = <File>event.target.files[0];
-    const reader = new FileReader();
-    reader.onload= e => this.photoSelected4 =reader.result;
-    reader.readAsDataURL(this.file);
+  btn2(event:HtmlInputEvent): void{
+    if(event.target.files && event.target.files[0])
+    {
+        this.file = <File>event.target.files[0];
+        const reader = new FileReader();
+        reader.onload= e => this.photoSelected2 =reader.result;
+        reader.readAsDataURL(this.file);
+      }
   }
-}
-btn5(event:HtmlInputEvent): void{
-  if(event.target.files && event.target.files[0])
-  {
-    this.file = <File>event.target.files[0];
-    const reader = new FileReader();
-    reader.onload= e => this.photoSelected5 =reader.result;
-    reader.readAsDataURL(this.file);
-  
+  btn3(event:HtmlInputEvent): void{
+    if(event.target.files && event.target.files[0])
+    {
+      this.file = <File>event.target.files[0];
+      const reader = new FileReader();
+      reader.onload= e => this.photoSelected3=reader.result;
+      reader.readAsDataURL(this.file);
+    }
   }
-}
+  btn4(event:HtmlInputEvent): void{
+    if(event.target.files && event.target.files[0])
+    {
+      this.file = <File>event.target.files[0];
+      const reader = new FileReader();
+      reader.onload= e => this.photoSelected4 =reader.result;
+      reader.readAsDataURL(this.file);
+    }
+  }
+  btn5(event:HtmlInputEvent): void{
+    if(event.target.files && event.target.files[0])
+    {
+      this.file = <File>event.target.files[0];
+      const reader = new FileReader();
+      reader.onload= e => this.photoSelected5 =reader.result;
+      reader.readAsDataURL(this.file);
+    
+    }
+  }
+  isControlValid(controlName: string): boolean {
+    const control = this.formGroup.controls[controlName];
+    return control.valid && (control.dirty || control.touched);
+  }
 
+  isControlInvalid(controlName: string): boolean {
+    const control = this.formGroup.controls[controlName];
+    return control.invalid && (control.dirty || control.touched);
+  }
+
+  controlHasError(validation, controlName): boolean {
+    const control = this.formGroup.controls[controlName];
+    return control.hasError(validation) && (control.dirty || control.touched);
+  }
+
+  isControlTouched(controlName): boolean {
+    const control = this.formGroup.controls[controlName];
+    return control.dirty || control.touched;
+  }
 }

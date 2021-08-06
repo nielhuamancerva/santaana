@@ -16,14 +16,11 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { SplashScreenModule } from './_metronic/partials/layout/splash-screen/splash-screen.module';
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
-//import { EditUserModalComponent } from './modules/users/components/edit-user-modal/edit-user-modal.component';
-import { UsersRoutingModule } from './modules/users/users-routing.module';
-import { UsersModule } from './modules/users/users.module';
-//import { NewPaymentComponent } from './modules/payments/components/new-payment/new-payment.component';
 import { PaymentsRoutingModule } from './modules/payments/payments-routing.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 // #fake-end#
-
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
 function appInitializer(authService: AuthService) {
   return () => {
     return new Promise((resolve) => {
@@ -54,10 +51,10 @@ function appInitializer(authService: AuthService) {
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
-    UsersRoutingModule,
-    UsersModule,
     PaymentsRoutingModule,
     PaymentsModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
   ],
   providers: [
     {
