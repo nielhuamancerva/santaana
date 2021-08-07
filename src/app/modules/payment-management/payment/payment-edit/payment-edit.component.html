@@ -1,7 +1,7 @@
 <div class="card card-custom gutter-b">
     <div class="card-header">
       <div class="card-title">
-        <h3 class="card-label">Products list</h3>
+        <h3 class="card-label">Cobro list</h3>
       </div>
       <div class="card-toolbar">
         <a type="button" class="btn btn-light" routerLink="/payment-management/payment">
@@ -16,9 +16,9 @@
       <!-- begin: Filtration form -->
       <div class="form form-label-right">
         <div class="form-group row">
-          <div class="col-lg-4">
+          <div class="col-lg-10">
             <div class="row" [formGroup]="filterGroup">
-              <div class="col-lg-6">
+              <div class="col-lg-3">
                 <input
                 type="text"
                 class="form-control"
@@ -30,7 +30,7 @@
                 ><b>Buscar</b> por Código de Beneficiario</small
                 >
               </div>
-              <div class="col-lg-6">
+              <div class="col-lg-3">
                 <input
                 type="text"
                 class="form-control"
@@ -42,8 +42,19 @@
                 ><b>Buscar</b> por nombre de beneficiario</small
                 >
               </div>
+              <div class="col-lg-2">
+                <mat-form-field appearance="fill">
+                  <mat-label>Enter a date range</mat-label>
+                  <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date">
+                    <input matEndDate placeholder="End date">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+              </div>
             </div>
-          </div>
+
         </div>
       </div>
       <!-- end: Filtration form -->

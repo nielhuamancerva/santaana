@@ -3,7 +3,7 @@
         <div class="card-title">
             <h3 class="card-label">
             <ng-container>
-                BENEFICIARIO
+                COBRO
             </ng-container>
             </h3>
         </div>
@@ -22,7 +22,7 @@
                 <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
                     <div class="form-group row">
                         <div class="col-lg-4">
-                            <label>Codigo de Factura</label>
+                            <label>Codigo de Beneficiario</label>
                             <input 
                                 type="text"
                                 class="form-control form-control-lg form-control-solid"
@@ -62,19 +62,33 @@
                         <div class="col-lg-4">
                             <label>BOLETA</label>
                             <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-primary font-weight-bold" type="button" (click)="createModal()">Agregar</button>
+    
+
+                                
+                                <div class="example-button-row">
+                                
+                                    <mat-form-field class="example-chip-list" appearance="fill">
+                                        <mat-label>Favorite Fruits</mat-label>
+                                        <mat-chip-list #chipList aria-label="Fruit selection">
+                                          <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
+                                                   [removable]="removable" (removed)="remove(fruit)">
+                                            {{fruit.name}}
+                                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                          </mat-chip>
+                                          <input placeholder="New fruit..."
+                                                 [matChipInputFor]="chipList"
+                                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                 [matChipInputAddOnBlur]="addOnBlur"
+                                                 (matChipInputTokenEnd)="add($event)">
+                                        </mat-chip-list>
+                                      </mat-form-field>
                                 </div>
-                                <input 
-                                    type="text" 
-                                    class="form-control form-control-lg form-control-solid" 
-                                    autocomplete="off" 
-                                    placeholder="Elija su Boleta" 
-                                    name="VINCode"
-                                    [class.is-invalid]="isControlInvalid('VINCode')"
-                                    [class.is-valid]="isControlValid('VINCode')"
-                                    formControlName="VINCode"
-                                />
+
+                                <button mat-button matSuffix mat-stroked-button aria-label="search" color="warn" (click)="createModal()">
+                                    <mat-icon>+</mat-icon>
+                                </button>
+
+
                                 <div
                                     class="invalid-feedback"
                                     *ngIf="controlHasError('required', 'VINCode')"
@@ -111,35 +125,20 @@
                                 placeholder="Fecha de creación" 
                                 name="createdDate" 
                                 readonly
-                                [class.is-invalid]="isControlInvalid('createdDate')"
-                                [class.is-valid]="isControlValid('createdDate')"
                                 formControlName="createdDate"
+                                value={{fecha_actual}}
                             />
-                            <div
-                                class="invalid-feedback"
-                                *ngIf="controlHasError('required', 'createdDate')"
-                            >
-                                Fecha de creación es requerido
-                            </div>
                         </div>
                         <div class="col-lg-4">
-                            <label>Hora Creación</label>
+                            <label>{{hora_actual |date:'hh:mm:ss'}}</label>
                             <input 
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Hora de creación" 
                                 name="createdHour" 
                                 readonly
-                                [class.is-invalid]="isControlInvalid('createdHour')"
-                                [class.is-valid]="isControlValid('createdHour')"
-                                formControlName="createdHour"
+                                value="{{hora_actual |date:'hh:mm:ss'}}"
                             />
-                            <div
-                                class="invalid-feedback"
-                                *ngIf="controlHasError('required', 'createdDate')"
-                            >
-                                Hora de creación es requerido
-                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -204,10 +203,21 @@
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Ingrese el importe a pagar" 
                                 name="totalPay"
+
+                 
+   
+                                [class.is-invalid]="isControlInvalid('totalPay')"
+                                [class.is-valid]="isControlValid('totalPay')"
+                                formControlName="totalPay"
                                 value="{{payment.totalPay}}"
                                 readonly
                             />
-   
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'totalPay')"
+                            >
+                                Importe a pagar es requerido
+                            </div>
                         </div>  
                         <div class="col-lg-4">
                             <label>Importe Pendiente a Pagar</label>
@@ -217,10 +227,21 @@
                                 placeholder="Importe por pagar" 
                                 name="mountToPay"
 
+
+               
+
+                                [class.is-invalid]="isControlInvalid('mountToPay')"
+                                [class.is-valid]="isControlValid('mountToPay')"
+                                formControlName="mountToPay"
                                 value="{{payment.totalPay}}"
                                 readonly
                             />
-
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'mountToPay')"
+                            >
+                                Importe por pagar requerido
+                            </div>
                         </div>  
                         <div class="col-lg-4">
                             <label>Importe a Cobrar</label>
@@ -230,10 +251,18 @@
                                 placeholder="Monto a cobrar" 
                                 name="mountToCollect"
 
+                                [class.is-invalid]="isControlInvalid('mountToCollect')"
+                                [class.is-valid]="isControlValid('mountToCollect')"
+                                formControlName="mountToCollect"
                                 value="{{payment.totalPay}}"
                                 readonly
                             />
-
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'mountToCollect')"
+                            >
+                                Monto a cobrar es requerido
+                            </div>
                         </div>
                     </div>
                     <div class="float-right">
@@ -253,3 +282,4 @@
         </ng-container>
     </div>
 </div>
+

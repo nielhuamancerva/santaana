@@ -4,6 +4,7 @@ import { NgbActiveModal, NgbDateAdapter, NgbDateParserFormatter } from '@ng-boot
 import { catchError, finalize, first, tap } from 'rxjs/operators';
 import { User } from '../../../models/user.model';
 
+
 const EMPTY_USER: User ={
     id: undefined,
     firstName: '',
@@ -19,7 +20,8 @@ const EMPTY_USER: User ={
     ubigeo: '',
     address: '',
     latitude: '',
-    longitude: ''
+    longitude: '',
+    userName: ''
 };
 
 interface HtmlInputEvent extends Event{
@@ -44,6 +46,7 @@ export class EditUserModalComponent implements OnInit {
   isDniSelected: Boolean;
   formGroup: FormGroup;
   user: User;
+  userName: String = 'royer';
   
   constructor(
     private fb: FormBuilder, 
@@ -61,6 +64,21 @@ export class EditUserModalComponent implements OnInit {
     }  
   }
 
+  asignUserNamePartOne(){
+    if(this.user.firstName.length > 3){
+      let texto = this.user.firstName.substr(0,3);
+      this.userName = texto;
+    }
+  }
+
+  asignUserNamePartTwo(){
+    if(this.user.lastName.length > 3){
+      console.log("ejecuta la 2da parte")
+      let texto = this.user.lastName.substr(0,3);
+      this.userName = this.userName + texto;
+    }
+  }
+
   loadForm() {
     this.formGroup = this.fb.group({
       firstName: [this.user.firstName, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
@@ -75,9 +93,9 @@ export class EditUserModalComponent implements OnInit {
       ubigeo: [this.user.ubigeo, Validators.compose([Validators.required])],
       address: [this.user.address, Validators.compose([Validators.required])],
       longitude: [this.user.longitude, Validators.compose([Validators.required])],
-      latitude: [this.user.latitude, Validators.compose([Validators.required])]
+      latitude: [this.user.latitude, Validators.compose([Validators.required])],
+      userName: [this.user.userName, Validators.compose([Validators.required])]
     });
-    console.log(this.formGroup);
   }
 
   desactivar(e){
@@ -87,6 +105,9 @@ export class EditUserModalComponent implements OnInit {
       this.isDniSelected = false;
     }else if(valor == '1'){
       this.isDniSelected = true;
+      this.isRucSelected = false;
+    }else if(valor != '1' || valor != '6'){
+      this.isDniSelected = false;
       this.isRucSelected = false;
     }
     console.log(this.isRucSelected);

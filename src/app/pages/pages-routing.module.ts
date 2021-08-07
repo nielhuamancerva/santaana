@@ -39,6 +39,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'gestor',
+        loadChildren: () =>
+          import('../modules/users/users.module').then(
+            (m) => m.UsersModule
+          ),
+      },
+      {
         path: 'payment-management',
         loadChildren: () =>
           import('../modules/payment-management/payment-management.module').then(
@@ -46,13 +53,6 @@ const routes: Routes = [
             ),
       }
       ,
-      {
-        path: 'payments',
-        loadChildren: () =>
-          import('../modules/payments/payments.module').then(
-            (m) => m.PaymentsModule
-            ),
-      },
       {
         path: 'ngbootstrap',
         loadChildren: () =>

@@ -15,5 +15,6 @@ export interface User extends BaseModel {
     ubigeo: string;
     address: string;
     latitude: string;
-    longitude: string
+    longitude: string;
+    userName: string;
 }

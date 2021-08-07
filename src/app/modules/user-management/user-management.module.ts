@@ -11,6 +11,7 @@ import { CRUDTableModule } from 'src/app/_metronic/shared/crud-table';
 import { NgbDatepickerModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditUserModalComponent } from './users/components/edit-user-modal/edit-user-modal.component';
 
+
 @NgModule({
   declarations: [
     UsersComponent,
@@ -26,7 +27,9 @@ import { EditUserModalComponent } from './users/components/edit-user-modal/edit-
     CRUDTableModule,
     NgbModalModule,
     NgbDatepickerModule, 
-    UserManagementRoutingModule],
+    UserManagementRoutingModule,
+
+  ],
     entryComponents: [
       EditUserModalComponent
     ]

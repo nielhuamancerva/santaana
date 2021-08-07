@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {NgbDate, NgbCalendar, NgbDateParserFormatter, NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import { isInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
+import {
+  MatDialogRef,
+MAT_DIALOG_DATA} from '@angular/material/dialog';
 
+import { Inject } from '@angular/core';
+import { Deuda, PaymentComponent } from '../../payment.component';
 @Component({
   selector: 'app-ticket-payment-modal',
   templateUrl: './ticket-payment-modal.component.html',
@@ -12,15 +16,15 @@ export class TicketPaymentModalComponent implements OnInit {
 
 textoHijo: Number; 
 @Input() ss:Number;
-@Input() public payment;
+
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
-  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter,public modal: NgbActiveModal) {this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10); }
+  constructor(@Inject(MAT_DIALOG_DATA) public data:any, public dialogRef: MatDialogRef<PaymentComponent>,public formatter: NgbDateParserFormatter) { }
 
   ngOnInit(): void {
-    console.log(this.payment);
+    
+    console.log(this.data);
   }
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
@@ -35,28 +39,35 @@ textoHijo: Number;
 
   add(e){
 
+
     if(e.currentTarget.checked==true)
     {
-      this.payment.totalPay=Number(e.currentTarget.value)+Number(this.payment.totalPay);
-  
+      console.log(this.data.deuda);
+      
+    for (let numero of this.data.deuda){
+          if(numero.Codigo_Factura==e.currentTarget.value){
+          numero.Checked="true";
+          }
+     }
        
     }
     else{
-      this.payment.totalPay=Number(this.payment.totalPay)-Number(e.currentTarget.value);
- 
+      for (let numero of this.data.deuda){
+        if(numero.Codigo_Factura==e.currentTarget.value){
+        numero.Checked="false";
+        }
+   }
       
     }
      
- 
-   
   }
 
-  botonClick() {
-  
+    
 
-    this.enviar.emit(this.payment);
-    this.modal.close(this.payment);
+  BotonClose() {
  
+      this.dialogRef.close(this.data);
+
   }
 
 
@@ -73,8 +84,8 @@ textoHijo: Number;
     return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
   }
 
-  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
-    const parsed = this.formatter.parse(input);
-    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
-  }
+ // validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+  //  const parsed = this.formatter.parse(input);
+   // return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+//  }
 }

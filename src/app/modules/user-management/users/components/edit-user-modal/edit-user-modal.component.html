@@ -13,13 +13,14 @@
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            name="firstName"
                             placeholder="Primer nombre"
                             autocomplete="off"
                             [readonly]="isRucSelected"
-                            [class.is-invalid]="isControlInvalid('firstName')"
+                            [class.is-invalid]="isControlInvalid('firstName') && !isRucSelected"
                             [class.is-valid]="isControlValid('firstName')"
                             formControlName="firstName"
+                            [(ngModel)]="user.firstName"
+                            (ngModelChange)="asignUserNamePartOne()"
                         />
                         <div class="valid-feedback" *ngIf="isControlValid('firstName')">
                             Primer nombre fue ingresado correctamente
@@ -42,13 +43,14 @@
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            name="lastName"
                             placeholder="Segundo nombre"
                             autocomplete="off"
                             [readonly]="isRucSelected"
                             formControlName="lastName"
-                            [class.is-invalid]="isControlInvalid('lastName')"
+                            [(ngModel)]="user.lastName"
+                            [class.is-invalid]="isControlInvalid('lastName') && !isRucSelected"
                             [class.is-valid]="isControlValid('lastName')"
+                            (blur)="asignUserNamePartTwo()"
                         />
                         <div
                             class="invalid-feedback"
@@ -58,7 +60,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <label class="form-label">Ingresar primer apellido</label>
+                        <label class="form-label">Ingresar z</label>
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
@@ -67,7 +69,7 @@
                             autocomplete="off"
                             [readonly]="isRucSelected"
                             formControlName="firstApellido"
-                            [class.is-invalid]="isControlInvalid('firstApellido')"
+                            [class.is-invalid]="isControlInvalid('firstApellido') && !isRucSelected"
                             [class.is-valid]="isControlValid('firstApellido')"
                         />
                         <div
@@ -87,7 +89,7 @@
                             autocomplete="off"
                             [readonly]="isRucSelected"
                             formControlName="lastApellido"
-                            [class.is-invalid]="isControlInvalid('lastApellido')"
+                            [class.is-invalid]="isControlInvalid('lastApellido') && !isRucSelected"
                             [class.is-valid]="isControlValid('lastApellido')"
                         />
                         <div
@@ -205,6 +207,17 @@
                         >
                             Email es requerido
                         </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">hola {{userName}}</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            formControlName="userName"
+                            [(ngModel)]="userName"
+                            [class.is-invalid]="isControlInvalid('userName')"
+                            [class.is-valid]="isControlValid('userName')"
+                        />
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label">Ingresar Ubigeo</label>

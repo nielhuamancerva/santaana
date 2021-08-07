@@ -1,17 +1,9 @@
+import { MatRadioModule } from '@angular/material/radio';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PaymentComponent } from './payment/payment.component';
-import { PaymentManagementComponent } from './payment-management.component';
-import {PaymentManagementRoutingModule} from './payment-management-routing.module'
-import { HttpClientModule } from '@angular/common/http';
+import { UserComponent } from './user/user.component';
+import { UserModalComponent } from './user/components/user-modal/user-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { InlineSVGModule } from 'ng-inline-svg';
-import { CRUDTableModule } from 'src/app/_metronic/shared/crud-table';
-import { NgbDatepickerModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-import { TicketPaymentModalComponent } from './payment/components/ticket-payment-modal/ticket-payment-modal.component';
-import { PaymentEditComponent } from './payment/payment-edit/payment-edit.component';
-
-
 import { CoreModule } from '../../_metronic/core';
 import { GeneralModule } from '../../_metronic/partials/content/general/general.module';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -56,20 +48,18 @@ import {
 } from '@angular/material/bottom-sheet';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatRadioModule } from '@angular/material/radio';
-@NgModule({
-  declarations: [PaymentManagementComponent, PaymentComponent, TicketPaymentModalComponent, PaymentEditComponent],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InlineSVGModule,
-    CRUDTableModule,
-    NgbModalModule,
-    NgbDatepickerModule, 
-    PaymentManagementRoutingModule,
+import { UsersGestorComponent } from './users-gestor.component';
+import { UsersRoutingModule } from './users-routing.module';
 
+@NgModule({
+  declarations: [
+    UserComponent,
+    UsersGestorComponent,
+     UserModalComponent],
+  imports: [
+    UsersRoutingModule,
+    CommonModule,
+    // material modules
     MatInputModule,
     MatFormFieldModule,
     MatDatepickerModule,
@@ -107,9 +97,11 @@ import { MatRadioModule } from '@angular/material/radio';
     MatTreeModule,
     MatButtonToggleModule,
     GeneralModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   entryComponents: [
-    TicketPaymentModalComponent
+    UserModalComponent
   ]
 })
-export class PaymentManagementModule { }
+export class UsersModule { }

@@ -1,183 +1,85 @@
- <!--begin::List Widget 10-->
- <div class="card card-custom">
-    <!--begin::Header-->
-    <div class="modal-header">
-     <h4 class="modal-title">Ticket</h4>
-     <button type="button" class="close" aria-label="Close">
-       <span aria-hidden="true">&times;</span>
-     </button>
-   </div>
-   <!--end::Header-->
+<h2 mat-dialog-title>TICKET</h2>
+
+<div mat-dialog-content>
   
-   <div class="modal-header">
-    <form class="form-inline">
-    
 
-    </form>
+  <mat-form-field class="example-form-field" appearance="fill" >
+    <mat-label>Favorite Animal</mat-label>
+    <input matInput >
+  </mat-form-field>
+
+
+
+  <mat-form-field class="example-form-field"  appearance="fill">
+    <mat-label>Enter a date range</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate placeholder="Start date">
+      <input matEndDate placeholder="End date">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>
+
+</div>
+<mat-dialog-content class="mat-typography">
+
+
+
+  
+  
+
+     <!--begin::Item-->
+     <div class="col-12" *ngFor="let d of data.deuda">
+       <!--begin::Content-->
+       <div class="d-flex align-items-center flex-grow-1">
+         <!--begin::Checkbox-->
+         <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
+           <input type="checkbox" [checked]="d.Checked==='true'"  value="{{d.Codigo_Factura}}" (click)="add($event)" />
+           <span></span>
+         </label>
+         <!--end::Checkbox-->
+ 
+         <!--begin::Section-->
+         <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
+           <!--begin::Info-->
+           <div class="d-flex flex-column align-items-cente py-2 w-100">
+             <!--begin::Title-->
+             <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg">
+              Codigo_Factura:{{d.Codigo_Factura}}
+             </a>
+             <!--end::Title-->
+             <span class="text-muted font-weight-bold">Periodo:{{d.Periodo}} </span>
+             
+             <!--begin::Data-->
     
-    <hr/>
-    <pre>From date model: {{ fromDate | json }}</pre>
-    <pre>To date model: {{ toDate | json }}</pre>
+             <span class="text-muted font-weight-bold">Fecha_Vencimiento:{{d.Fecha_Vencimiento}}</span>
+             <span class="text-muted font-weight-bold">Monto_Total:{{d.Monto_Total}} </span>
+             <span class="text-muted font-weight-bold">Monto_Pagado:{{d.Monto_Pagado}} </span>
+             <span class="text-muted font-weight-bold">Monto_Apagar:{{d.Monto_Apagar}} </span>
+             <!--end::Data-->
+           </div>
+           <!--end::Info-->
+         </div>
+         <!--end::Section-->
+       </div>
+       <!--end::Content-->
+     </div>
+     <!--end::Item-->
+
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button cdkFocusInitial (click)="BotonClose()">Install</button>
+</mat-dialog-actions>
+ 
+
+
+
 
  
-   </div>
  
- 
- 
-  <!--begin::Body-->
-  <div class="card-body pt-0">
-    
-     <!--begin::Item-->
-     <div class="mb-6">
-       <!--begin::Content-->
-       <div class="d-flex align-items-center flex-grow-1">
-         
-         <!--begin::Checkbox-->
-         <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
-           <input type="checkbox" value="40" (change)="add($event)" />
-           <span></span>
-         </label>
-         <!--end::Checkbox-->
- 
-         <!--begin::Section-->
-         <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
-           <!--begin::Info-->
-           <div class="d-flex flex-column align-items-cente py-2 w-75">
-             <!--begin::Title-->
-             <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">
-               Codigo de factura: F001-123456
-             </a>
-             <!--end::Title-->
- 
-             <!--begin::Data-->
-             <span class="text-muted font-weight-bold"> Periodo: 08/2021 </span>
-             <span class="text-muted font-weight-bold"> Fecha de vencimiento: 3/09/2021 </span>
-             <span class="text-muted font-weight-bold"> Monto total: S/ 100.00 </span>
-             <span class="text-muted font-weight-bold"> Monto Pagado: S/ 60.00 </span>
-             <span class="text-muted font-weight-bold"> Monto a pagar: S/ 40.00 </span>
-             <!--end::Data-->
-           </div>
-           <!--end::Info-->
-         </div>
-         <!--end::Section-->
-       </div>
-       <!--end::Content-->
-     </div>
-     <!--end::Item-->
- 
-     <!--begin::Item-->
-     <div class="mb-6">
-       <!--begin::Content-->
-       <div class="d-flex align-items-center flex-grow-1">
-         <!--begin::Checkbox-->
-         <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
-           <input type="checkbox" value="40" />
-           <span></span>
-         </label>
-         <!--end::Checkbox-->
- 
-         <!--begin::Section-->
-         <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
-           <!--begin::Info-->
-           <div class="d-flex flex-column align-items-cente py-2 w-75">
-             <!--begin::Title-->
-             <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">
-               Codigo de factura: F001-123456
-             </a>
-             <!--end::Title-->
- 
-             <!--begin::Data-->
-             <span class="text-muted font-weight-bold"> Periodo: 08/2021 </span>
-             <span class="text-muted font-weight-bold"> Fecha de vencimiento: 3/09/2021 </span>
-             <span class="text-muted font-weight-bold"> Monto total: S/ 100.00 </span>
-             <span class="text-muted font-weight-bold"> Monto Pagado: S/ 60.00 </span>
-             <span class="text-muted font-weight-bold"> Monto a pagar: S/ 40.00 </span>
-             <!--end::Data-->
-           </div>
-           <!--end::Info-->
-         </div>
-         <!--end::Section-->
-       </div>
-       <!--end::Content-->
-     </div>
-     <!--end::Item-->
-     <!--begin::Item-->
-     <div class="mb-6">
-       <!--begin::Content-->
-       <div class="d-flex align-items-center flex-grow-1">
-         <!--begin::Checkbox-->
-         <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
-           <input type="checkbox" value="40" />
-           <span></span>
-         </label>
-         <!--end::Checkbox-->
- 
-         <!--begin::Section-->
-         <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
-           <!--begin::Info-->
-           <div class="d-flex flex-column align-items-cente py-2 w-75">
-             <!--begin::Title-->
-             <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">
-               Codigo de factura: F001-123456
-             </a>
-             <!--end::Title-->
- 
-             <!--begin::Data-->
-             <span class="text-muted font-weight-bold"> Periodo: 08/2021 </span>
-             <span class="text-muted font-weight-bold"> Fecha de vencimiento: 3/09/2021 </span>
-             <span class="text-muted font-weight-bold"> Monto total: S/ 100.00 </span>
-             <span class="text-muted font-weight-bold"> Monto Pagado: S/ 60.00 </span>
-             <span class="text-muted font-weight-bold"> Monto a pagar: S/ 40.00 </span>
-             <!--end::Data-->
-           </div>
-           <!--end::Info-->
-         </div>
-         <!--end::Section-->
-       </div>
-       <!--end::Content-->
-     </div>
-     <!--end::Item-->
- 
-     <!--begin::Item-->
-     <div class="mb-6">
-       <!--begin::Content-->
-       <div class="d-flex align-items-center flex-grow-1">
-         <!--begin::Checkbox-->
-         <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
-           <input type="checkbox" value="40" />
-           <span></span>
-         </label>
-         <!--end::Checkbox-->
- 
-         <!--begin::Section-->
-         <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
-           <!--begin::Info-->
-           <div class="d-flex flex-column align-items-cente py-2 w-75">
-             <!--begin::Title-->
-             <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg mb-1">
-               Codigo de factura: F001-123456
-             </a>
-             <!--end::Title-->
- 
-             <!--begin::Data-->
-             <span class="text-muted font-weight-bold"> Periodo: 08/2021 </span>
-             <span class="text-muted font-weight-bold"> Fecha de vencimiento: 3/09/2021 </span>
-             <span class="text-muted font-weight-bold"> Monto total: S/ 100.00 </span>
-             <span class="text-muted font-weight-bold"> Monto Pagado: S/ 60.00 </span>
-             <span class="text-muted font-weight-bold"> Monto a pagar: S/ 40.00 </span>
-             <!--end::Data-->
-           </div>
-           <!--end::Info-->
-         </div>
-         <!--end::Section-->
-       </div>
-       <!--end::Content-->
-     </div>
-     <!--end::Item-->
-   
-   </div>
-   <button type="button" class="btn btn-primary" (click)="botonClick()">Nuevo Pago</button>
-   <!--end: Card Body-->
- </div>
- <!--end: Card-->
- <!--end: List Widget 10-->
+
+
+
+     
