@@ -3,18 +3,16 @@
 <div mat-dialog-content>
   
 
-  <mat-form-field class="example-form-field" appearance="fill" >
-    <mat-label>Favorite Animal</mat-label>
+  <mat-form-field class="palabra-form-field" appearance="fill" >
+    <mat-label>Palabra a buscar</mat-label>
     <input matInput >
   </mat-form-field>
 
-
-
   <mat-form-field class="example-form-field"  appearance="fill">
-    <mat-label>Enter a date range</mat-label>
+    <mat-label>Rango de fecha</mat-label>
     <mat-date-range-input [rangePicker]="picker">
-      <input matStartDate placeholder="Start date">
-      <input matEndDate placeholder="End date">
+      <input matStartDate placeholder="Inicio">
+      <input matEndDate placeholder="Fin">
     </mat-date-range-input>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-date-range-picker #picker></mat-date-range-picker>
@@ -69,8 +67,8 @@
 
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-button cdkFocusInitial (click)="BotonClose()">Install</button>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button cdkFocusInitial (click)="BotonClose()">+Agregar</button>
 </mat-dialog-actions>
  
 

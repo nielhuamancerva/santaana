@@ -1,37 +1,95 @@
 <div class="card card-custom gutter-b">
   <div class="card-header">
     <div class="card-title">
-      <h3 class="card-label">Customers list</h3>
+      <h3 class="card-label">Lista de Usuarios</h3>
     </div>
     <div class="card-toolbar">
-      <button type="button" class="btn btn-primary" (click)="create()">New Customer</button>
+      <button type="button" class="btn btn-primary" (click)="create()">Nuevo Usuario</button>
     </div>
   </div>
   <div class="card-body">
-
-    
+    <!-- begin: Filtration form -->
+    <div class="form form-label-right">
+      <div class="form-group row">
+        <div class="col-lg-10">
+          <div class="row" [formGroup]="filterGroup">
+            <div class="col-lg-3">
+              <input
+              type="text"
+              class="form-control"
+              name="searchText"
+              placeholder="Buscar por código de beneficiario"
+              value=""
+              formControlName="searchTerm"
+              /><small class="form-text text-muted"
+              ><b>Buscar</b> por Código de Beneficiario</small
+              >
+            </div>
+            <div class="col-lg-3">
+              <input
+              type="text"
+              class="form-control"
+              name="searchText"
+              placeholder="Buscar por nombre de beneficiario"
+              value=""
+              formControlName="searchTerm"
+              /><small class="form-text text-muted"
+              ><b>Buscar</b> por nombre de beneficiario</small
+              >
+            </div>
+            <div class="col-lg-2">
+              <mat-form-field appearance="fill">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate placeholder="Start date">
+                  <input matEndDate placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end: Filtration form -->
 
     <!-- begin: Grouping -->
-    <ng-container>
+    <ng-container *ngIf="grouping.getSelectedRowsCount()">
       <div class="form">
-        <div class="row align-items-center form-group-actions margin-top-20 margin-bottom-20">
+        <div
+          class="row align-items-center form-group-actions margin-top-20 margin-bottom-20"
+        >
           <div class="col-xl-12">
             <div class="form-group form-group-inline">
               <div class="form-label form-label-no-wrap">
-                <label class="font-bold font-danger"><span>Selected records count:
-                    <b>grouping.getSelectedRowsCount()</b></span></label>
+                <label class="font-bold font-danger"
+                  ><span
+                    >Selected records count:
+                    <b>{{ grouping.getSelectedRowsCount() }}</b></span
+                  ></label
+                >
               </div>
               <div>
-                <button type="button" class="btn btn-danger font-weight-bolder font-size-sm mr-1"
-                  >
-                  <i class="fa fa-trash"></i> Delete All
-                </button>&nbsp;
-                <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
-                  >
-                  <i class="fa fa-stream"></i> Fetch Selected
-                </button>&nbsp;
-                <button type="button" class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
-                  >
+                <button
+                  type="button"
+                  class="btn btn-danger font-weight-bolder font-size-sm mr-1"
+                  (click)="deleteSelected()"
+                >
+                  <i class="fa fa-trash"></i> Delete All</button
+                >&nbsp;
+                <button
+                  type="button"
+                  class="btn btn-light-primary font-weight-bolder font-size-sm mr-1"
+                  (click)="fetchSelected()"
+                >
+                  <i class="fa fa-stream"></i> Fetch Selected</button
+                >&nbsp;
+                <button
+                  type="button"
+                  class="btn btn-light-primary font-weight-bolder font-size-sm"
+                  (click)="updateStatusForSelected()"
+                >
                   <i class="fa fa-sync-alt"></i> Update Status
                 </button>
               </div>
@@ -41,83 +99,109 @@
       </div>
     </ng-container>
     <!-- end: Grouping -->
-
     <!-- begin:Table -->
     <div class="table-responsive angular-bootstrap-table">
-      <table class="table table-head-custom table-vertical-center overflow-hidden">
+      <table
+        class="table table-head-custom table-vertical-center overflow-hidden"
+      >
         <thead>
           <th class="selection-cell-header" data-row-selection="true">
-            <label class="checkbox checkbox-single"><input type="checkbox"
-                /><span></span></label>
+            <label class="checkbox checkbox-single"
+              ><input
+                type="checkbox"
+                (click)="grouping.selectAllRows()"
+                [checked]="grouping.checkAreAllRowsSelected()" /><span></span
+            ></label>
           </th>
           <th>
-            ID
-         
+            FECHA COBRO
+            <app-sort-icon
+              column="VINCode"
+              [activeColumn]="sorting.column"
+              [activeDirection]="sorting.direction"
+              (sort)="sort($event)"
+            ></app-sort-icon>
           </th>
           <th>
-            FIRSTNAME
-           
+            CODIGO BENEFICIARIO
+            <app-sort-icon
+              column="manufacture"
+              [activeColumn]="sorting.column"
+              [activeDirection]="sorting.direction"
+              (sort)="sort($event)"
+            ></app-sort-icon>
           </th>
           <th>
-            LASTNAME
-            
+            NOMBRE BENEFICIARIO
+            <app-sort-icon
+              column="model"
+              [activeColumn]="sorting.column"
+              [activeDirection]="sorting.direction"
+              (sort)="sort($event)"
+            ></app-sort-icon>
           </th>
           <th>
-            EMAIL
-           
+            BOLETAS PAGADAS
+            <app-sort-icon
+              column="modelYear"
+              [activeColumn]="sorting.column"
+              [activeDirection]="sorting.direction"
+              (sort)="sort($event)"
+            ></app-sort-icon>
           </th>
           <th>
-            GENDER
-           
+            MONTO PAGADO
+            <app-sort-icon
+              column="color"
+              [activeColumn]="sorting.column"
+              [activeDirection]="sorting.direction"
+              (sort)="sort($event)"
+            ></app-sort-icon>
           </th>
-          <th>
-            STATUS
-           
-          </th>
-          <th>
-            TYPE
-          
-          </th>
-          <th>ACTIONS</th>
+          <th>OPCIONES</th>
         </thead>
         <tbody>
-          <tr >
+          <tr *ngFor="let product of productsService.items$ | async">
             <td class="selection-cell">
-              <label class="checkbox checkbox-single"><input type="checkbox"/>
+              <label class="checkbox checkbox-single"
+                ><input
+                  type="checkbox"
+                  (click)="grouping.selectRow(product.id)"
+                  [checked]="grouping.isRowSelected(product.id)"
+                />
                 <span></span>
               </label>
             </td>
-            <td>customer.id </td>
-            <td>customerfirstName</td>
-            <td>customerlastName</td>
-            <td>customeremail</td>
-            <td>customer.gender</td>
+            <td>{{ product.VINCode }}</td>
+            <td>{{ product.manufacture }}</td>
+            <td>{{ product.model }}</td>
+            <td>{{ product.modelYear }}</td>
+            <td>$ {{ product.price }}</td>
             <td>
-              <span class="label label-lg label-inline">
-                <ng-container >Suspended</ng-container>
-           <!--     <ng-container *ngIf="customer.status === 2">Active</ng-container>
-                <ng-container *ngIf="customer.status === 3">Pending</ng-container>-->
-              </span>
-            </td>
-            <td>
-              <span class="label label-dot label-primary mr-2"></span>&nbsp;<span class="font-bold font-primary">
-                <ng-container>Business</ng-container>
-           <!--    <ng-container *ngIf="customer.type === 2">Individual</ng-container>-->
-              </span>
-            </td>
-            <td>
-
-              <a title="Edit customer" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+              <a
+                title="Edit product"
+                class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                [routerLink]="'/ecommerce/product/edit/' + product.id"
+              >
+                <span
+                  [inlineSVG]="
+                    './assets/media/svg/icons/Communication/Write.svg'
+                  "
+                  cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-primary"
                 >
-                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
-                  class="svg-icon svg-icon-md svg-icon-primary">
                 </span>
               </a>
-
-              <a title="Delete customer" class="btn btn-icon btn-light btn-hover-danger btn-sm"
+              <a
+                title="Delete product"
+                class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                (click)="delete(product.id)"
+              >
+                <span
+                  [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                  cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger"
                 >
-                <span [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'" cacheSVG="true"
-                  class="svg-icon svg-icon-md svg-icon-danger">
                 </span>
               </a>
             </td>
@@ -126,6 +210,11 @@
       </table>
     </div>
     <!-- end: Table -->
-  
+    <app-paginator
+      class="d-flex justify-content-between align-items-center flex-wrap"
+      [paginator]="paginator"
+      [isLoading]="isLoading"
+      (paginate)="paginate($event)"
+    ></app-paginator>
   </div>
 </div>

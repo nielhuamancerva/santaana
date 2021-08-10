@@ -27,7 +27,7 @@
                         </div>
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('required', 'firstName')"
+                            *ngIf="controlHasError('required', 'firstName') && isControlTouched('firstName')"
                         >
                             Primer nombre es requerido
                         </div>

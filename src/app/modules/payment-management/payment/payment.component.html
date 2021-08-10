@@ -1,3 +1,4 @@
+
 <div class="card card-custom gutter-b">
     <div class="card-header">
         <div class="card-title">
@@ -27,37 +28,30 @@
                                 type="text"
                                 class="form-control form-control-lg form-control-solid"
                                 autocomplete="off"
-                                placeholder="Código de Factura" 
+                                placeholder="Código de Beneficiario" 
                                 name="invoiceCode"
                                 [class.is-invalid]="isControlInvalid('invoiceCode')"
                                 [class.is-valid]="isControlValid('invoiceCode')"
                                 formControlName="invoiceCode"
                             />
-                            <span class="form-text text-muted" *ngIf="span">Boleta N° 0001</span>
+                            <span class="form-text text-muted" *ngIf="span">DNI ª 70213603</span>
                             <div
                                 class="invalid-feedback"
                                 *ngIf="controlHasError('required', 'invoiceCode')"
                             >
-                                Código de factura es requerido
+                                Código de Beneficiario es requerido
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <label>Dni</label>
+                            <label>Nombes y Apellidos</label>
                             <input 
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
-                                placeholder="Dni Beneficiario" 
+                                placeholder="Nombes y Apellidos" 
                                 name="beneficiaryDni"
-                                [class.is-invalid]="isControlInvalid('beneficiaryDni')"
-                                [class.is-valid]="isControlValid('beneficiaryDni')"
+                                readonly
                                 formControlName="beneficiaryDni"
                             />
-                            <div
-                                class="invalid-feedback"
-                                *ngIf="controlHasError('required', 'beneficiaryDni')"
-                            >
-                                Dni del beneficiario es requerido
-                            </div>
                         </div>
                         <div class="col-lg-4">
                             <label>BOLETA</label>
@@ -68,27 +62,24 @@
                                 <div class="example-button-row">
                                 
                                     <mat-form-field class="example-chip-list" appearance="fill">
-                                        <mat-label>Favorite Fruits</mat-label>
+                                        <mat-label>Boleta de Pagos</mat-label>
                                         <mat-chip-list #chipList aria-label="Fruit selection">
                                           <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
                                                    [removable]="removable" (removed)="remove(fruit)">
-                                            {{fruit.name}}
+                                            {{fruit.name}} - S/. {{fruit.monto}}
                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                           </mat-chip>
-                                          <input placeholder="New fruit..."
+                                          <input placeholder="Boleta de Pagos..."
                                                  [matChipInputFor]="chipList"
                                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                                 [matChipInputAddOnBlur]="addOnBlur"
-                                                 (matChipInputTokenEnd)="add($event)">
+                                                 [matChipInputAddOnBlur]="addOnBlur" readonly > 
+                                              
                                         </mat-chip-list>
+                                        <button matSuffix mat-icon-button (click)="createModal()">
+                                            <mat-icon>add_box</mat-icon>
+                                        </button>
                                       </mat-form-field>
                                 </div>
-
-                                <button mat-button matSuffix mat-stroked-button aria-label="search" color="warn" (click)="createModal()">
-                                    <mat-icon>+</mat-icon>
-                                </button>
-
-
                                 <div
                                     class="invalid-feedback"
                                     *ngIf="controlHasError('required', 'VINCode')"
@@ -96,6 +87,7 @@
                                    Boleta es requerido
                                 </div>
                             </div>
+                        
                         </div>
                     </div>
                     <div class="form-group row">
@@ -130,14 +122,14 @@
                             />
                         </div>
                         <div class="col-lg-4">
-                            <label>{{hora_actual |date:'hh:mm:ss'}}</label>
+                            <label>Hora creación</label>
                             <input 
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
-                                placeholder="Hora de creación" 
-                                name="createdHour" 
+                                placeholder="Hora de creación"
                                 readonly
                                 value="{{hora_actual |date:'hh:mm:ss'}}"
+                                formControlName="createdHour"
                             />
                         </div>
                     </div>
@@ -264,6 +256,18 @@
                                 Monto a cobrar es requerido
                             </div>
                         </div>
+                        <div class="col-lg-12" style="margin-top: 20px;">
+                            <input type='file' (change)="onSelectFile($event)" multiple>
+                            <div class="col-lg-12">
+                                <div>
+                                    <label class="form-label">Imagenes</label>
+                                </div>
+                                <div class="image-input image-input-outline" *ngFor='let item of urls' [id]="item">
+                                    <img class="image-input-wrapper" [src]="item" height="200"> <br/>
+                                    <button type="button" class="btn btn-primary font-weight-bold mr-2" [id]="item" (click)="eliminar($event)">Eliminar</button>
+                                </div>
+                            </div>                    
+                        </div>
                     </div>
                     <div class="float-right">
                     <a
@@ -283,3 +287,6 @@
     </div>
 </div>
 
+<span class="time" style="display: none;">
+    <i class="far fa-clock"></i> {{ utcTime$ | async }}
+</span>

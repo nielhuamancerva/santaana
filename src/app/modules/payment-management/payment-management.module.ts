@@ -57,6 +57,7 @@ import {
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatRadioModule } from '@angular/material/radio';
+
 @NgModule({
   declarations: [PaymentManagementComponent, PaymentComponent, TicketPaymentModalComponent, PaymentEditComponent],
   imports: [
@@ -106,7 +107,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatRadioModule,
     MatTreeModule,
     MatButtonToggleModule,
-    GeneralModule,
+    GeneralModule
   ],
   entryComponents: [
     TicketPaymentModalComponent

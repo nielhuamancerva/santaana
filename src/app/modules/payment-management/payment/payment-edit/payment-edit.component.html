@@ -42,6 +42,7 @@
                 ><b>Buscar</b> por nombre de beneficiario</small
                 >
               </div>
+              
               <div class="col-lg-2">
                 <mat-form-field appearance="fill">
                   <mat-label>Enter a date range</mat-label>
@@ -54,7 +55,7 @@
                 </mat-form-field>
               </div>
             </div>
-
+          </div>
         </div>
       </div>
       <!-- end: Filtration form -->
@@ -183,23 +184,6 @@
               <td>{{ product.modelYear }}</td>
               <td>
                 <span [style.color]="product.color">{{ product.color }}</span>
-              </td>
-              <td>$ {{ product.price }}</td>
-              <td>
-                <span
-                  class="label label-lg label-inline"
-                  [class.label-light-success]="product.status === 1"
-                  [class.label-light-primary]="product.status === 2"
-                >
-                  <ng-container *ngIf="product.status === 1"
-                    >Selling</ng-container
-                  >
-                  <ng-container *ngIf="product.status === 2">Sold</ng-container>
-                </span>
-              </td>
-              <td>
-                <ng-container *ngIf="product.condition === 1">NEW</ng-container>
-                <ng-container *ngIf="product.condition === 2">USED</ng-container>
               </td>
               <td>
                 <a

@@ -10,6 +10,12 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { CRUDTableModule } from 'src/app/_metronic/shared/crud-table';
 import { NgbDatepickerModule, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditUserModalComponent } from './users/components/edit-user-modal/edit-user-modal.component';
+import {
+  MatNativeDateModule,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -28,6 +34,9 @@ import { EditUserModalComponent } from './users/components/edit-user-modal/edit-
     NgbModalModule,
     NgbDatepickerModule, 
     UserManagementRoutingModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule
 
   ],
     entryComponents: [

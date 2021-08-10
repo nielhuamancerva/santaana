@@ -1,9 +1,10 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component,Input, OnInit, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
+import { Component,Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import {TicketPaymentModalComponent} from './components/ticket-payment-modal/ticket-payment-modal.component'
 import { Payment } from '../models/payment.model';
 import * as moment from 'moment'
-
+import {interval, timer, Subject, Subscription} from 'rxjs';
+import {Observable} from 'rxjs/internal/Observable'
 import {MatDialog} from '@angular/material/dialog';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -35,16 +36,31 @@ Checked:string
 
 export interface Fruit {
   name: string;
+  monto: number;
 }
 
 
 @Component({
   selector: 'app-payment',
   templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.scss']
+  styleUrls: ['./payment.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class PaymentComponent implements OnInit{
+export class PaymentComponent implements OnInit,OnDestroy{
+
+  private utcSubscription: Subscription;
+
+  name = 'Angular 4';
+  date:Date;
+  hours:any;
+  minutes:any;
+  seconds:any;
+  currentLocale: any;
+  urls = [];
+
+  isTwelveHrFormat:false;
+  test:any;
 
 public deuda: Deuda []= [{
   Codigo_Factura:'C001',
@@ -86,13 +102,19 @@ public deuda: Deuda []= [{
   public payment: Payment;
   fecha_actual: String;
   hora_actual: Date;
+  hora_imprimir: String = new Date().toISOString();
   id: any;
   
   constructor(
     public dialog: MatDialog,
-    private fb: FormBuilder,
-  ) { }
+    private fb: FormBuilder
+  ) { 
+    
+  }
+  private utcTimeSubject: Subject<string> = new Subject<string>();
+  utcTime$ = this.utcTimeSubject.asObservable();
 
+  
   ngOnInit(): void {
     this.span = true;
     this.fecha_actual = moment(new Date()).format('YYYY-MM-DD');
@@ -102,6 +124,24 @@ public deuda: Deuda []= [{
     }, 1000);
     this.loadPayment();
 
+    
+    this.loadPayment();
+    const contador= interval(1000);
+
+    contador.subscribe((n)=>{
+      this.reloj();
+    })
+
+    this.utcSubscription = interval(1000).subscribe(() => this.getUtcTime());
+  }
+  ngOnDestroy() {
+    this.utcSubscription.unsubscribe();
+    this.utcTimeSubject.complete();
+  }
+
+  getUtcTime() {
+    const time = new Date().toISOString().slice(11, 19);
+    this.utcTimeSubject.next(time);
   }
 
   loadPayment() {
@@ -110,6 +150,12 @@ public deuda: Deuda []= [{
       this.loadForm();
     }
   }
+  
+  reloj(){
+    this.hora_actual = new Date();
+    this.hora_imprimir = this.hora_actual.getHours() + ":" + this.hora_actual.getMinutes() + ":" + this.hora_actual.getSeconds();
+    console.log(this.hora_imprimir)
+  }
 
   loadForm() {
     this.formGroup = this.fb.group({
@@ -117,6 +163,8 @@ public deuda: Deuda []= [{
       beneficiaryDni: [this.payment.beneficiaryDni, Validators.compose([Validators.required])],
       VINCode: [this.payment.VINCode, Validators.compose([Validators.required])],
       createdUser: [this.payment.createdUser, Validators.compose([Validators.required])],
+      createdDate:[this.fecha_actual],
+      createdHour:[this.hora_imprimir],
       phonenumber1: [this.payment.phonenumber1, Validators.compose([Validators.required])],
       phonenumber2: [this.payment.phonenumber2, Validators.compose([Validators.required])],
       note: [this.payment.note, Validators.compose([Validators.required])],
@@ -124,9 +172,6 @@ public deuda: Deuda []= [{
       totalPay: [this.payment.totalPay, Validators.compose([Validators.required])],
       mountToCollect: [this.payment.mountToCollect, Validators.compose([Validators.required])]
     });
-
-
-
   }
 
 
@@ -137,13 +182,7 @@ public deuda: Deuda []= [{
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our fruit
-    if (value) {
-      this.fruits.push({name: value});
-    }
-
-    // Clear the input value
-   // event.chipInput!.clear();
+   
   }
 
   remove(fruit: Fruit): void {
@@ -175,7 +214,7 @@ public deuda: Deuda []= [{
           console.log("cerrado:", data)
           for (let numero of data.deuda){
             if(numero.Checked=="true" && !this.fruits.find( fruta => fruta.name === numero.Codigo_Factura )){
-              this.fruits.push({name: numero.Codigo_Factura});
+              this.fruits.push({name: numero.Codigo_Factura, monto: numero.Monto_Apagar});
             }
           }
       }
@@ -205,5 +244,31 @@ public deuda: Deuda []= [{
   isControlTouched(controlName): boolean {
     const control = this.formGroup.controls[controlName];
     return control.dirty || control.touched;
+  }
+
+  onSelectFile(event) {
+    if (event.target.files && event.target.files[0] && this.urls.length < 3) {
+      var filesAmount = event.target.files.length;
+      for (let i = 0; i < filesAmount; i++) {
+        var reader = new FileReader();
+
+        reader.onload = (event:any) => {
+          //console.log(event.target);
+          this.urls.push(event.target.result);
+        }
+
+        reader.readAsDataURL(event.target.files[i]);
+      }
+    }
+  }
+
+  eliminar(event){
+    var id = event.path[0].id;
+    var el = document.getElementById(id);
+    el.remove();
+    var cars = this.urls.filter(function(car) {
+      return car !== id; 
+    });
+    this.urls = cars;
   }
 }

@@ -193,6 +193,6 @@ save()
 
   isControlTouched(controlName): boolean {
     const control = this.formGroup.controls[controlName];
-    return control.dirty || control.touched;
+    return control.dirty && control.touched;
   }
 }
