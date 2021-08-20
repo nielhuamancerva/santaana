@@ -38,14 +38,14 @@ textoHijo: Number;
   }
 
   add(e){
-
-
     if(e.currentTarget.checked==true)
     {
-      console.log(this.data.deuda);
+      console.log(e.currentTarget.value);
       
     for (let numero of this.data.deuda){
-          if(numero.Codigo_Factura==e.currentTarget.value){
+      console.log(numero);
+ 
+          if(numero.id==e.currentTarget.value){
           numero.Checked="true";
           }
      }
@@ -53,7 +53,7 @@ textoHijo: Number;
     }
     else{
       for (let numero of this.data.deuda){
-        if(numero.Codigo_Factura==e.currentTarget.value){
+        if(numero.id==e.currentTarget.value){
         numero.Checked="false";
         }
    }
@@ -62,12 +62,8 @@ textoHijo: Number;
      
   }
 
-    
-
   BotonClose() {
- 
-      this.dialogRef.close(this.data);
-
+     this.dialogRef.close(this.data);
   }
 
 

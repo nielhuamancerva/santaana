@@ -32,7 +32,7 @@
        <div class="d-flex align-items-center flex-grow-1">
          <!--begin::Checkbox-->
          <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
-           <input type="checkbox" [checked]="d.Checked==='true'"  value="{{d.Codigo_Factura}}" (click)="add($event)" />
+           <input type="checkbox" [checked]="d.Checked==='true'"  value="{{d.id}}" (click)="add($event)" />
            <span></span>
          </label>
          <!--end::Checkbox-->
@@ -43,17 +43,17 @@
            <div class="d-flex flex-column align-items-cente py-2 w-100">
              <!--begin::Title-->
              <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg">
-              Codigo_Factura:{{d.Codigo_Factura}}
+              SERIE {{d.serie}} - {{d.number}}
              </a>
              <!--end::Title-->
-             <span class="text-muted font-weight-bold">Periodo:{{d.Periodo}} </span>
+             <span class="text-muted font-weight-bold">PERIODO {{d.date}} </span>
              
              <!--begin::Data-->
     
-             <span class="text-muted font-weight-bold">Fecha_Vencimiento:{{d.Fecha_Vencimiento}}</span>
-             <span class="text-muted font-weight-bold">Monto_Total:{{d.Monto_Total}} </span>
-             <span class="text-muted font-weight-bold">Monto_Pagado:{{d.Monto_Pagado}} </span>
-             <span class="text-muted font-weight-bold">Monto_Apagar:{{d.Monto_Apagar}} </span>
+             <span class="text-muted font-weight-bold">VENCIMIENTO S/ {{d.date_expiration}}</span>
+             <span class="text-muted font-weight-bold">MONTO PENDIENTE S/ {{d.pending_payment}} </span>
+             <!--span class="text-muted font-weight-bold">Monto_Pagado:{{d.fl_deleted}} </span-->
+             <!--span class="text-muted font-weight-bold">Monto_Apagar:{{d.pending_payment}} </span-->
              <!--end::Data-->
            </div>
            <!--end::Info-->

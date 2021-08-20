@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import {TicketPaymentModalComponent} from './components/ticket-payment-modal/ticket-payment-modal.component'
 import { Payment } from '../models/payment.model';
 import * as moment from 'moment'
-import {interval, Subject, Subscription} from 'rxjs';
+import {interval, of, Subject, Subscription} from 'rxjs';
 
 
 import {Observable} from 'rxjs/internal/Observable'
@@ -11,8 +11,10 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { BeneficiaryRepositoryService } from '../../auth/_services/auth-repository/beneficiary-repository.service';
-import { finalize, map,debounceTime,distinctUntilChanged  } from 'rxjs/operators';
+import { finalize, map,debounceTime,distinctUntilChanged, catchError  } from 'rxjs/operators';
 import { BeneficiaryModel } from '../../auth/_models/Beneficiary.model';
+import { SalesModel } from '../../auth/_models/Sales.model';
+import { SalesRepositoryService } from '../../auth/_services/auth-repository/sales-repository.service';
 const EMPTY_PAYMENT: Payment ={
   id: undefined,
   invoiceCode: '',
@@ -42,6 +44,7 @@ Checked:string
 export interface Fruit {
   name: string;
   monto: number;
+  numberr: string;
 }
 
 export interface DataImagen {
@@ -61,11 +64,13 @@ export interface DataImagen {
 
 export class PaymentComponent implements OnInit,OnDestroy{
 
-  private utcSubscription: Subscription;
+private utcSubscription: Subscription;
 public isLoading=false;
 public src: string;
 public data$:any;
+public sales$:SalesModel[];
 public name$:any;
+private subscriptions: Subscription[] = [];
 _beneficiary:BeneficiaryModel[];
   date:Date;
   hours:any;
@@ -124,7 +129,8 @@ public deuda: Deuda []= [{
   constructor(
     public dialog: MatDialog,
     private fb: FormBuilder,
-    public beneficiaryService: BeneficiaryRepositoryService
+    public beneficiaryService: BeneficiaryRepositoryService,
+    public salesService: SalesRepositoryService,
   ) { 
     
   }
@@ -141,7 +147,7 @@ public deuda: Deuda []= [{
     }, 1000);
     this.loadPayment();
     const contador= interval(1000);
-
+    this.loadSales()
     contador.subscribe((n)=>{
       this.reloj();
     })
@@ -204,8 +210,8 @@ public deuda: Deuda []= [{
     if (index >= 0) {
       this.fruits.splice(index, 1);
   
-      for (let numero of this.deuda){
-        if(numero.Codigo_Factura==fruit.name){
+      for (let numero of this.sales$){
+        if(numero.id_currency==fruit.name){
          numero.Checked="false";
         }
       }
@@ -217,7 +223,7 @@ public deuda: Deuda []= [{
     const dialogRef = this.dialog.open(TicketPaymentModalComponent, {
       width:'max-width',
       data: {
-        deuda: this.deuda
+        deuda: this.sales$
       }
     });
 
@@ -225,14 +231,17 @@ public deuda: Deuda []= [{
       data => {
         if(data){
           console.log("cerrado:", data)
+          console.log("cerrado:", data.deuda)
           for (let numero of data.deuda){
-            if(numero.Checked=="true" && !this.fruits.find( fruta => fruta.name === numero.Codigo_Factura )){
-              this.fruits.push({name: numero.Codigo_Factura, monto: numero.Monto_Apagar});
+            if(numero.Checked=="true" && !this.fruits.find( fruta => fruta.name === numero.serie )){
+              this.fruits.push({name: numero.serie,numberr:numero.number, monto: numero.total});
+            }
+            else(numero.Checked=="false")
+            {
+              
             }
           }
       }
-     
-     
       }
      
   );  
@@ -308,12 +317,22 @@ this.data$=this.beneficiaryService.getAllBeneficiary(event).pipe(
   finalize(()=>this.isLoading=false)
 )
 this.name$=this.beneficiaryService.getAllBeneficiary(event).pipe(
-  map((_beneficiary)=>_beneficiary.content[0].tx_names),
+  map((_beneficiary)=>_beneficiary.content[0].tx_names +" "+ _beneficiary.content[0].tx_first_last_name +" "+ _beneficiary.content[0].tx_second_last_name),
   distinctUntilChanged(),
   debounceTime(100000),
   finalize(()=>this.isLoading=false)
 )
-
   }
 
+  loadSales(){
+    const sbSales = this.salesService.getAllSales().pipe(
+       catchError((errorMessage) => {
+      return of(errorMessage);
+       })
+   ).subscribe((_sales) => {
+      this.sales$ = _sales.content;
+      console.log(this.sales$);
+   });
+    this.subscriptions.push(sbSales);
+  }
 }

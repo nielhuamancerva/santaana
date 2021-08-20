@@ -1,4 +1,5 @@
-export class SaleModel {
+export class SalesModel {
+    id:string;
     subsidiary_code: string;
     year:string;
     month:string;
@@ -21,4 +22,5 @@ export class SaleModel {
     address:number;
     email:string;
     business_name:string;
+    Checked:"false";
 }

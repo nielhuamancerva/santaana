@@ -64,16 +64,17 @@
                                        
                                 <div class="example-button-row">
                                 
-                                    <mat-form-field class="example-full-width" appearance="fill">
+                                    <mat-form-field class="example-full-width"  appearance="fill">
                                         <mat-label></mat-label>
                                         <mat-chip-list #chipList aria-label="Fruit selection">
                                           <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
                                                    [removable]="removable" (removed)="remove(fruit)">
-                                            {{fruit.name}} - S/. {{fruit.monto}}
+                                            {{fruit.name}}-{{fruit.numberr}} S/.{{fruit.monto}}
                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                           </mat-chip>
                                           <input placeholder="Boleta de Pagos..."
                                                  [matChipInputFor]="chipList"
+                                                 aria-placeholder="Boletas"
                                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                                  [matChipInputAddOnBlur]="addOnBlur"  readonly > 
                                         </mat-chip-list>
@@ -141,7 +142,7 @@
                                 formControlName="totalPay"
                                 value="{{payment.totalPay}}"
                             />
-                            <span class="form-text text-muted" *ngIf="span">Vuelto: S/500</span>
+               <!--            <span class="form-text text-muted" *ngIf="span">Vuelto: S/0</span>-->
                             <div
                                 class="invalid-feedback"
                                 *ngIf="controlHasError('required', 'totalPay')"
@@ -170,7 +171,7 @@
                             </div>
                         </div>  
                         <div class="col-lg-4">
-                            <label>Importe a Cobrar</label>
+                            <label>Importe a Total</label>
                             <input 
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
