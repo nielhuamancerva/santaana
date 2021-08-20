@@ -37,7 +37,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
   loadForm() {
     this.formGroup = this.fb.group({
-      currentPassword: [this.user.password, Validators.required],
+  //    currentPassword: [this.user.password, Validators.required],
       password: ['', Validators.required],
       cPassword: ['', Validators.required]
     }, {
@@ -51,7 +51,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.user.password = this.formGroup.value.password;
+//    this.user.password = this.formGroup.value.password;
     this.userService.isLoadingSubject.next(true);
     setTimeout(() => {
       this.userService.currentUserSubject.next(Object.assign({}, this.user));

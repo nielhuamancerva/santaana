@@ -187,13 +187,13 @@
               </td>
               <td>
                 <a
-                  title="Edit product"
+                  title="Ver Pago"
                   class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
                   [routerLink]="'/ecommerce/product/edit/' + product.id"
                 >
                   <span
                     [inlineSVG]="
-                      './assets/media/svg/icons/Communication/Write.svg'
+                      './assets/media/svg/view.svg'
                     "
                     cacheSVG="true"
                     class="svg-icon svg-icon-md svg-icon-primary"
@@ -201,12 +201,12 @@
                   </span>
                 </a>
                 <a
-                  title="Delete product"
+                  title="PDF"
                   class="btn btn-icon btn-light btn-hover-danger btn-sm"
                   (click)="delete(product.id)"
                 >
                   <span
-                    [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                    [inlineSVG]="'./assets/media/svg/icons/Files/File.svg'"
                     cacheSVG="true"
                     class="svg-icon svg-icon-md svg-icon-danger"
                   >

@@ -51,7 +51,7 @@
       <label class="font-size-h6 font-weight-bolder text-dark">Email</label>
       <input
         class="form-control form-control-solid h-auto py-7 px-6 rounded-lg"
-        type="email"
+        type="text"
         name="email"
         formControlName="email"
         autocomplete="off"
@@ -65,14 +65,14 @@
           control: loginForm.controls['email']
         }"
       ></ng-container>      
-      <ng-container
+     <ng-container
         [ngTemplateOutlet]="formError"
         [ngTemplateOutletContext]="{
-          validation: 'email',
+          validation: 'text',
           message: 'Email is invalid',
           control: loginForm.controls['email']
         }"
-      ></ng-container>
+      ></ng-container> 
       <ng-container
         [ngTemplateOutlet]="formError"
         [ngTemplateOutletContext]="{

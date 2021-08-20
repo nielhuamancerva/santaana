@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable} from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserModel } from '../../_models/user.model';
 import { environment } from '../../../../../environments/environment';
 import { AuthModel } from '../../_models/auth.model';
-
+import { map } from 'rxjs/operators';
+const API_USERS_URLNIE = `${environment.apiUrlNiel}/auth/signin`;
 const API_USERS_URL = `${environment.apiUrl}/auth`;
-
 @Injectable({
   providedIn: 'root',
 })
-export class AuthHTTPService {
+
+export class AuthHTTPServiceURL {
   constructor(private http: HttpClient) { }
 
   // public methods
-  login(email: string, password: string): Observable<any> {
-    return this.http.post<AuthModel>(`${API_USERS_URL}/login`, { email, password });
+ // login(email: string, password: string): Observable<any> {
+  //  return this.http.post<AuthModel>(`${API_USERS_URL}/login`, { email, password });
+ // }
+
+  login(usernameOrEmail: string, password: string): Observable<any>{
+  //  console.log("posto"+usernameOrEmail);
+     //   console.log(API_USERS_URLNIE);
+   
+   // return this.http.post<any>(API_USERS_URLNIE, { usernameOrEmail, password },{observe: 'response' as 'body'});
+   return this.http.post<any>(API_USERS_URLNIE, { usernameOrEmail, password });
   }
+
+  loginToken(usernameOrEmail: string, password: string): Observable<any>{
+     return this.http.post<any>(API_USERS_URLNIE, { usernameOrEmail, password },{observe: 'response' as 'body'});   
+    }
 
   // CREATE =>  POST: add a new user to the server
   createUser(user: UserModel): Observable<UserModel> {

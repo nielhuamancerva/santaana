@@ -1,12 +1,12 @@
 <div class="modal-content">
     <div class="modal-header">
         <div class="modal-title h4" id="example-modal-sizes-title-lg">
-            Crear Usuario
+            Crear Agente de cobro
         </div>
     </div>
     <div class="overlay overlay-block cursor-default modal-body">
         <ng-container>
-            <form action="#" class="form form-label-right" [formGroup]="formGroup">
+            <form action="#" class="form form-label-right" [formGroup]="formGroup" (ngSubmit)="save()">
                 <div class="form-group row">
                     <div class="col-lg-4">
                         <label class="form-label">Ingresar primer nombre</label>
@@ -16,24 +16,24 @@
                             placeholder="Primer nombre"
                             autocomplete="off"
                             [readonly]="isRucSelected"
-                            [class.is-invalid]="isControlInvalid('firstName') && !isRucSelected"
-                            [class.is-valid]="isControlValid('firstName')"
-                            formControlName="firstName"
+                            [class.is-invalid]="isControlInvalid('name') && !isRucSelected"
+                            [class.is-valid]="isControlValid('name')"
+                            formControlName="name"
                             [(ngModel)]="user.firstName"
                             (ngModelChange)="asignUserNamePartOne()"
                         />
-                        <div class="valid-feedback" *ngIf="isControlValid('firstName')">
+                        <div class="valid-feedback" *ngIf="isControlValid('name')">
                             Primer nombre fue ingresado correctamente
                         </div>
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('required', 'firstName') && isControlTouched('firstName')"
+                            *ngIf="controlHasError('required', 'name') && isControlTouched('name')"
                         >
                             Primer nombre es requerido
                         </div>
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('minlength', 'firstName')"
+                            *ngIf="controlHasError('minlength', 'name')"
                         >
                             Primer nombre debe tener por lo menos 3 caracteres
                         </div>
@@ -46,7 +46,7 @@
                             placeholder="Segundo nombre"
                             autocomplete="off"
                             [readonly]="isRucSelected"
-                            formControlName="lastName"
+                            formControlName="secondName"
                             [(ngModel)]="user.lastName"
                             [class.is-invalid]="isControlInvalid('lastName') && !isRucSelected"
                             [class.is-valid]="isControlValid('lastName')"
@@ -60,44 +60,50 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <label class="form-label">Ingresar z</label>
+                        <label class="form-label">Ingresar Apellido Paterno</label>
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            name="firstApellido"
                             placeholder="Primer Apellido"
                             autocomplete="off"
                             [readonly]="isRucSelected"
-                            formControlName="firstApellido"
-                            [class.is-invalid]="isControlInvalid('firstApellido') && !isRucSelected"
-                            [class.is-valid]="isControlValid('firstApellido')"
+                            formControlName="lastName"
+                            [class.is-invalid]="isControlInvalid('lastName') && !isRucSelected"
+                            [class.is-valid]="isControlValid('lastName')"
                         />
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('required', 'firstApellido')"
+                            *ngIf="controlHasError('required', 'lastName')"
                         >
                             Primer apellido es requerido
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <label class="form-label">Ingresar segundo apellido</label>
+                        <label class="form-label">Ingresar Apellido Materno</label>
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            name="lastApellido"
                             placeholder="Segundo Apellido"
                             autocomplete="off"
                             [readonly]="isRucSelected"
-                            formControlName="lastApellido"
-                            [class.is-invalid]="isControlInvalid('lastApellido') && !isRucSelected"
-                            [class.is-valid]="isControlValid('lastApellido')"
+                            formControlName="secondLastName"
+                            [class.is-invalid]="isControlInvalid('secondLastName') && !isRucSelected"
+                            [class.is-valid]="isControlValid('secondLastName')"
                         />
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('required', 'lastApellido')"
+                            *ngIf="controlHasError('required', 'secondLastName')"
                         >
                             Segundo apellido es requerido
                         </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Tipo de Persona</label>
+                        <select class="form-control form-control-lg form-control-solid" formControlName="typePersonCode"
+                            >
+                            <option value="" hidden disabled>Elija un tipo de persona</option>
+                            <option *ngFor="let item of _typeperson" [value]="item.code">{{ item.description }}</option>
+                        </select>
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label">Ingresar Razón Social</label>
@@ -120,33 +126,29 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <label>Select Tipo Documento</label>
-                        <select
-                            class="form-control form-control-lg form-control-solid"
-                            name="documentType" (change)=desactivar($event)
+                        <label>Tipo Documento</label>
+                        <select class="form-control form-control-lg form-control-solid"
+                        formControlName="typeDocumentCode" (change)=desactivar($event)
                             >
-                            <option value="0">Otros Tipos de Documento</option>
-                            <option value="1">Documento Nacional de Identidad</option>
-                            <option value="4">Carnet Extranjeria</option>
-                            <option value="6">Registro Unico de Contribuyentes</option>
-                            <option value="7">Pasaporte</option>
+                            <option value="" hidden disabled>Seleccione un tipo de documento</option>
+                            <option [value]="item.code" *ngFor="let item of _typedocument">{{ item.description }}</option>
                         </select>
                     </div>
                     <div class="col-lg-4">
-                        <label class="form-label">Ingresar Número de Identidad</label>
+                        <label class="form-label">Ingresar Número de Documento</label>
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            name="document"
+                            name="documentNumber"
                             placeholder="Ejm. 70213603"
                             autocomplete="off"
-                            formControlName="document"
-                            [class.is-invalid]="isControlInvalid('document')"
-                            [class.is-valid]="isControlValid('document')"
+                            formControlName="documentNumber"
+                            [class.is-invalid]="isControlInvalid('documentNumber')"
+                            [class.is-valid]="isControlValid('documentNumber')"
                         />
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('required', 'document')"
+                            *ngIf="controlHasError('required', 'documentNumber')"
                         >
                             Documento es requerido
                         </div>
@@ -156,16 +158,16 @@
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            name="firstPhone"
+                            name="phone1"
                             placeholder="Teléfono 1"
                             autocomplete="off"
-                            formControlName="firstPhone"
-                            [class.is-invalid]="isControlInvalid('firstPhone')"
-                            [class.is-valid]="isControlValid('firstPhone')"
+                            formControlName="phone1"
+                            [class.is-invalid]="isControlInvalid('phone1')"
+                            [class.is-valid]="isControlValid('phone1')"
                         />
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('required', 'firstPhone')"
+                            *ngIf="controlHasError('required', 'phone1')"
                         >
                             Número de teléfono es requerido
                         </div>
@@ -175,16 +177,15 @@
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            name="secondPhone"
                             placeholder="Teléfono 2"
                             autocomplete="off"
-                            formControlName="secondPhone"
-                            [class.is-invalid]="isControlInvalid('secondPhone')"
-                            [class.is-valid]="isControlValid('secondPhone')"
+                            formControlName="phone2"
+                            [class.is-invalid]="isControlInvalid('phone2')"
+                            [class.is-valid]="isControlValid('phone2')"
                         />
                         <div
                             class="invalid-feedback"
-                            *ngIf="controlHasError('required', 'secondPhone')"
+                            *ngIf="controlHasError('required', 'phone2')"
                         >
                             Número de teléfono es requerido
                         </div>
@@ -195,7 +196,7 @@
                             type="email"
                             class="form-control form-control-lg form-control-solid"
                             name="email"
-                            placeholder="Email"
+                            placeholder="ejemplo@ejemplo.com"
                             autocomplete="off"
                             formControlName="email"
                             [class.is-invalid]="isControlInvalid('email')"
@@ -209,14 +210,15 @@
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <label class="form-label">hola {{userName}}</label>
+                        <label class="form-label">Nota</label>
                         <input
                             type="text"
                             class="form-control form-control-lg form-control-solid"
-                            formControlName="userName"
-                            [(ngModel)]="userName"
-                            [class.is-invalid]="isControlInvalid('userName')"
-                            [class.is-valid]="isControlValid('userName')"
+                            name="nota"
+                            placeholder="Ingrese una nota"
+                              formControlName="nota"
+                            [class.is-invalid]="isControlInvalid('nota')"
+                            [class.is-valid]="isControlValid('nota')"
                         />
                     </div>
                     <div class="col-lg-4">
@@ -295,11 +297,28 @@
                             Latitud es requerido
                         </div>
                     </div>
+                    <div class="col-lg-4">
+                        <label for="roles">Roles</label>
+                        <select formControlName="roleCode" class="form-control form-control-lg form-control-solid">
+                            <option value="" hidden disabled>Elija un rol</option>
+                            <option *ngFor="let item of roles" [value]="item.id">{{item.description}}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">User Name</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="User name"
+                            autocomplete="off"
+                            formControlName="userName"
+                        />
+                    </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div>
-                            <label class="form-label">Dni Fotografía frontal</label>
+                            <label class="form-label">Dni Fotografia Frontal.</label>
                         </div>
                         <div class="image-input image-input-outline" id="kt_profile_avatar">
                             <img class="image-input-wrapper" [src]="photoSelected1 || './assets/media/users/blank.png'">
@@ -318,9 +337,9 @@
                                 <i class="ki ki-bold-close icon-xs text-muted"></i>
                             </span>
                         </div>
-                        <span class="form-text text-muted">Tipos de archivo permitidos: png, jpg, jpeg.</span>
+                        <span class="form-text text-muted">Solo Admite: png, jpg, jpeg.</span>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div>
                             <label class="form-label">Dni Fotografía posterior</label>
                         </div>
@@ -341,9 +360,9 @@
                             <i class="ki ki-bold-close icon-xs text-muted"></i>
                             </span>
                         </div>
-                        <span class="form-text text-muted">Tipos de archivo permitidos: png, jpg, jpeg.</span>
+                        <span class="form-text text-muted">Solo Admite: png, jpg, jpeg.</span>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div>
                         <label class="form-label">Contrato Fotografía frontal</label>
                         </div>
@@ -364,9 +383,9 @@
                             <i class="ki ki-bold-close icon-xs text-muted"></i>
                             </span>
                         </div>
-                        <span class="form-text text-muted">Tipos de archivo permitidos: png, jpg, jpeg.</span>
+                        <span class="form-text text-muted">Solo se Admite: png, jpg, jpeg.</span>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <div>
                             <label class="form-label">Contrato Contrato: Frontal</label>
                         </div>
@@ -387,29 +406,27 @@
                                     <i class="ki ki-bold-close icon-xs text-muted"></i>
                                 </span>
                         </div>
-                        <span class="form-text text-muted">Tipos de archivo permitidos: png, jpg, jpeg.</span>
+                        <span class="form-text text-muted">Solo se Admite: png, jpg, jpeg.</span>
                     </div>
                 </div>
             </form>
         </ng-container>
+        
     </div>
     <div class="modal-footer">
         <button
-          type="button"
-          class="btn btn-light btn-elevate mr-2"
-          (click)="modal.dismiss()"
-        >
-          Cancel
+            type="button"
+            class="btn btn-light btn-elevate mr-2"
+            (click)="modal.dismiss()"
+            >Cancel
         </button>
         <ng-container *ngIf="user">
-          <button
-            type="submit"
-            class="btn btn-primary btn-elevate"
-            (click)="save()"
-            [disabled]="formGroup.invalid"
-          >
-            Save
-          </button>
+            <button
+                type="submit"
+                class="btn btn-primary btn-elevate"
+                (click)="save()"
+            >Save
+            </button>
         </ng-container>
     </div>
 </div>

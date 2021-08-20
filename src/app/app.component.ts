@@ -12,7 +12,6 @@ import { locale as esLang } from './modules/i18n/vocabs/es';
 import { locale as jpLang } from './modules/i18n/vocabs/jp';
 import { locale as deLang } from './modules/i18n/vocabs/de';
 import { locale as frLang } from './modules/i18n/vocabs/fr';
-import { SplashScreenService } from './_metronic/partials/layout/splash-screen/splash-screen.service';
 import { Router, NavigationEnd, NavigationError } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TableExtendedService } from './_metronic/shared/crud-table';
@@ -28,7 +27,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private translationService: TranslationService,
-    private splashScreenService: SplashScreenService,
     private router: Router,
     private tableService: TableExtendedService
   ) {
@@ -49,7 +47,6 @@ export class AppComponent implements OnInit, OnDestroy {
         // clear filtration paginations and others
         this.tableService.setDefaults();
         // hide splash screen
-        this.splashScreenService.hide();
 
         // scroll to top on every route change
         window.scrollTo(0, 0);

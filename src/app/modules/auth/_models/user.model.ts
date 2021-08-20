@@ -1,65 +1,64 @@
-import { AuthModel } from './auth.model';
-import { AddressModel } from './address.model';
-import { SocialNetworksModel } from './social-networks.model';
+export class UserModel {
 
-export class UserModel extends AuthModel {
-  id: number;
-  username: string;
-  password: string;
-  fullname: string;
-  email: string;
-  pic: string;
-  roles: number[];
-  occupation: string;
-  companyName: string;
-  phone: string;
-  address?: AddressModel;
-  socialNetworks?: SocialNetworksModel;
-  // personal information
-  firstname: string;
-  lastname: string;
-  website: string;
-  // account information
-  language: string;
-  timeZone: string;
-  communication: {
-    email: boolean,
-    sms: boolean,
-    phone: boolean
-  };
-  // email settings
-  emailSettings: {
-    emailNotification: boolean,
-    sendCopyToPersonalEmail: boolean,
-    activityRelatesEmail: {
-      youHaveNewNotifications: boolean,
-      youAreSentADirectMessage: boolean,
-      someoneAddsYouAsAsAConnection: boolean,
-      uponNewOrder: boolean,
-      newMembershipApproval: boolean,
-      memberRegistration: boolean
-    },
-    updatesFromKeenthemes: {
-      newsAboutKeenthemesProductsAndFeatureUpdates: boolean,
-      tipsOnGettingMoreOutOfKeen: boolean,
-      thingsYouMissedSindeYouLastLoggedIntoKeen: boolean,
-      newsAboutMetronicOnPartnerProductsAndOtherServices: boolean,
-      tipsOnMetronicBusinessProducts: boolean
-    }
-  };
+id: number;
+roleCode:string;
+roleDescription:string;
+typePersonCode:string;
+typePersonDescription:string;
+typeDocumentCode:string;
+typeDocumentDescription:string;
+districtCode:string;
+populatedCenterCode:string;
+documentNumber:number;
+name:string;
+secondName:string;
+lastName: string
+secondLastName:string;
+phone1: number;
+phone2: number;
+referentialAddress: string;
+latitude: string;
+longitude: string;
+frontDocument: string;
+reverseDocument: string;
+lastPage: string;
+evidence: string; 
+userName: string;
+email: string;
+enable: boolean;
+
 
   setUser(user: any) {
-    this.id = user.id;
-    this.username = user.username || '';
-    this.password = user.password || '';
-    this.fullname = user.fullname || '';
-    this.email = user.email || '';
-    this.pic = user.pic || './assets/media/users/default.jpg';
-    this.roles = user.roles || [];
-    this.occupation = user.occupation || '';
-    this.companyName = user.companyName || '';
-    this.phone = user.phone || '';
-    this.address = user.address;
-    this.socialNetworks = user.socialNetworks;
+    this.id = user.id||'';
+    // user valido
+    this.roleCode = user.oleCode || '';
+    this.roleDescription = user.roleDescription|| '';
+    this.typeDocumentCode = user.typeDocumentCode || '';
+    this.typeDocumentDescription = user.typeDocumentDescription|| '';
+    this.districtCode=user.districtCode||'';
+    this.populatedCenterCode = user.populatedCenterCode || [];
+    this.documentNumber = user.documentNumber || '';
+    this.typePersonCode = user.typePersonCode || '';
+    this.name = user.name || '';
+    this.secondName = user.secondName || '';
+    this.lastName = user.lastName||'';
+    this.secondLastName = user.secondLastName||'';
+    this.phone1=user.phone1||'';
+    this.phone2=user.phone2||'';
+    this.referentialAddress=user.referentialAddress||'';
+    this.latitude=user.latitude||'';
+    this.longitude=user.longitude||'';
+    this.frontDocument=user.frontDocument||'';
+    this.reverseDocument=user.reverseDocument||'';
+    this.lastPage=user.lastPage||'';
+    this.evidence=user.evidence||'';
+    this.userName=user.userName||'';
+    this.email=user.email||'';
   }
 }
+
+
+
+
+
+

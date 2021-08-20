@@ -32,17 +32,17 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'internal-users',
+        loadChildren: () =>
+          import('../modules/internal-users/internal-users.module').then(
+            (m) => m.InternalUsersModule
+          ),
+      },
+      {
         path: 'user-profile',
         loadChildren: () =>
           import('../modules/user-profile/user-profile.module').then(
             (m) => m.UserProfileModule
-          ),
-      },
-      {
-        path: 'gestor',
-        loadChildren: () =>
-          import('../modules/users/users.module').then(
-            (m) => m.UsersModule
           ),
       },
       {
@@ -51,28 +51,6 @@ const routes: Routes = [
           import('../modules/payment-management/payment-management.module').then(
             (m) => m.PaymentManagementModule
             ),
-      }
-      ,
-      {
-        path: 'ngbootstrap',
-        loadChildren: () =>
-          import('../modules/ngbootstrap/ngbootstrap.module').then(
-            (m) => m.NgbootstrapModule
-          ),
-      },
-      {
-        path: 'wizards',
-        loadChildren: () =>
-          import('../modules/wizards/wizards.module').then(
-            (m) => m.WizardsModule
-          ),
-      },
-      {
-        path: 'material',
-        loadChildren: () =>
-          import('../modules/material/material.module').then(
-            (m) => m.MaterialModule
-          ),
       },
       {
         path: '',

@@ -16,5 +16,6 @@ export interface User extends BaseModel {
     address: string;
     latitude: string;
     longitude: string;
-    userName: string;
+    nota: string;
+    personType: string
 }

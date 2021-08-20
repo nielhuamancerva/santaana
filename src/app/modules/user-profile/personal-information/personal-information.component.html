@@ -40,7 +40,7 @@
         <div class="form-group row">
           <label class="col-xl-3 col-lg-3 col-form-label">Avatar</label>
           <div class="col-lg-9 col-xl-6">
-            <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]="!user.pic" [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+            <div class="image-input image-input-outline" id="kt_profile_avatar" [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
                 <div class="image-input-wrapper" [style.backgroundImage]="getPic()"></div>
                     <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
                       data-action="change"
@@ -56,12 +56,6 @@
                         data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
                         <i class="ki ki-bold-close icon-xs text-muted"></i>
                       </span>
-                      <span *ngIf="user.pic"
-                        class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
-                        (click)="deletePic()"
-                        data-action="remove" data-toggle="tooltip" title="" data-original-title="Remove avatar">
-                        <i class="ki ki-bold-close icon-xs text-muted"></i>
-                      </span>
               </div>
                       <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
           </div>
@@ -72,9 +66,6 @@
           <div class="col-lg-9 col-xl-6">
             <input class="form-control form-control-lg form-control-solid"
               type="text"
-              formControlName="firstname"
-              [class.is-invalid]="isControlInvalid('firstname')"
-              [class.is-valid]="isControlValid('firstname')"
             />
           </div>
         </div>
@@ -84,9 +75,6 @@
             <input class="form-control form-control-lg form-control-solid"
               type="text"
               value="Bold"
-              formControlName="lastname"
-              [class.is-invalid]="isControlInvalid('lastname')"
-              [class.is-valid]="isControlValid('lastname')"
             />
           </div>
         </div>
@@ -95,9 +83,6 @@
           <div class="col-lg-9 col-xl-6">
             <input class="form-control form-control-lg form-control-solid"
               type="text"
-              formControlName="companyName"
-              [class.is-invalid]="isControlInvalid('companyName')"
-              [class.is-valid]="isControlValid('companyName')"
             />
             <span class="form-text text-muted">If you want your invoices addressed to a company. Leave blank to use your
               full name.</span>
@@ -121,9 +106,6 @@
               <input type="text"
                 class="form-control form-control-lg form-control-solid" 
                 placeholder="Phone"
-                formControlName="phone"
-                [class.is-invalid]="isControlInvalid('phone')"
-                [class.is-valid]="isControlValid('phone')"
               />
             </div>
             <span class="form-text text-muted">We'll never share your email with anyone else.</span>
@@ -141,9 +123,7 @@
               <input type="email"
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Email"
-                formControlName="email"
-                [class.is-invalid]="isControlInvalid('email')"
-                [class.is-valid]="isControlValid('email')"
+
               />
             </div>
           </div>
@@ -155,9 +135,6 @@
               <input type="text"
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Company Website"
-                formControlName="website"
-                [class.is-invalid]="isControlInvalid('website')"
-                [class.is-valid]="isControlValid('website')"
                 />
             </div>
           </div>

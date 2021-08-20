@@ -30,44 +30,45 @@ export class AuthHTTPService {
         }
 
         const user = result.find((u) => {
-          return (
-            u.email.toLowerCase() === email.toLowerCase() &&
-            u.password === password
-          );
-        });
+     //     return (
+     //       u.email.toLowerCase() === email.toLowerCase() &&
+     //       u.password === password
+   //       );
+      });
+        
         if (!user) {
           return notFoundError;
         }
 
         const auth = new AuthModel();
-        auth.authToken = user.authToken;
-        auth.refreshToken = user.refreshToken;
-        auth.expiresIn = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000);
+    //    auth.authToken = user.authToken;
+    //    auth.refreshToken = user.refreshToken;
+   //     auth.expiresIn = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000);
         return auth;
       })
     );
   }
 
   createUser(user: UserModel): Observable<any> {
-    user.roles = [2]; // Manager
-    user.authToken = 'auth-token-' + Math.random();
-    user.refreshToken = 'auth-token-' + Math.random();
-    user.expiresIn = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000);
-    user.pic = './assets/media/users/default.jpg';
+  //  user.roles = [2]; // Manager
+   // user.authToken = 'auth-token-' + Math.random();
+   // user.refreshToken = 'auth-token-' + Math.random();
+  //  user.expiresIn = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000);
+  //  user.pic = './assets/media/users/default.jpg';
 
     return this.http.post<UserModel>(API_USERS_URL, user);
   }
 
-  forgotPassword(email: string): Observable<boolean> {
-    return this.getAllUsers().pipe(
-      map((result: UserModel[]) => {
-        const user = result.find(
-          (u) => u.email.toLowerCase() === email.toLowerCase()
-        );
-        return user !== undefined;
-      })
-    );
-  }
+ // forgotPassword(email: string): Observable<boolean> {
+ //   return this.getAllUsers().pipe(
+ //     map((result: UserModel[]) => {
+     //   const user = result.find(
+      //    (u) => u.email.toLowerCase() === email.toLowerCase()
+     //   );
+//        return user !== undefined;
+   //   })
+  //  );
+ // }
 
   getUserByToken(token: string): Observable<UserModel> {
     const user = UsersTable.users.find((u) => {

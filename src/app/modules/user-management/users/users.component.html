@@ -1,10 +1,10 @@
 <div class="card card-custom gutter-b">
   <div class="card-header">
     <div class="card-title">
-      <h3 class="card-label">Lista de Usuarios</h3>
+      <h3 class="card-label">Lista de Agentes de Cobro</h3>
     </div>
     <div class="card-toolbar">
-      <button type="button" class="btn btn-primary" (click)="create()">Nuevo Usuario</button>
+      <button type="button" class="btn btn-primary" (click)="create()">Nuevo Agente de cobro</button>
     </div>
   </div>
   <div class="card-body">
@@ -13,37 +13,31 @@
       <div class="form-group row">
         <div class="col-lg-10">
           <div class="row" [formGroup]="filterGroup">
-            <div class="col-lg-3">
-              <input
-              type="text"
-              class="form-control"
-              name="searchText"
-              placeholder="Buscar por código de beneficiario"
-              value=""
-              formControlName="searchTerm"
-              /><small class="form-text text-muted"
-              ><b>Buscar</b> por Código de Beneficiario</small
-              >
+
+            <div class="col-lg-4">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Código de Usuario</mat-label>
+                <input matInput placeholder="Codigo" >
+                <mat-hint>Buscar por Código de Usuario</mat-hint>
+              </mat-form-field>
             </div>
-            <div class="col-lg-3">
-              <input
-              type="text"
-              class="form-control"
-              name="searchText"
-              placeholder="Buscar por nombre de beneficiario"
-              value=""
-              formControlName="searchTerm"
-              /><small class="form-text text-muted"
-              ><b>Buscar</b> por nombre de beneficiario</small
-              >
+
+            <div class="col-lg-4">
+              <mat-form-field class="example-full-width" appearance="fill">
+                <mat-label>Nombre de Usuario</mat-label>
+                <input matInput placeholder="Nombre" >
+                <mat-hint>Buscar por nombre de Usuario</mat-hint>
+              </mat-form-field>
             </div>
-            <div class="col-lg-2">
+
+            <div class="col-lg-3">
               <mat-form-field appearance="fill">
-                <mat-label>Enter a date range</mat-label>
+                <mat-label>Rango de fecha</mat-label>
                 <mat-date-range-input [rangePicker]="picker">
-                  <input matStartDate placeholder="Start date">
-                  <input matEndDate placeholder="End date">
+                  <input matStartDate placeholder="Fecha inicio">
+                  <input matEndDate placeholder="Fecha fin">
                 </mat-date-range-input>
+                <mat-hint>Buscar por Rango de Fecha</mat-hint>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker></mat-date-range-picker>
               </mat-form-field>
@@ -65,7 +59,7 @@
               <div class="form-label form-label-no-wrap">
                 <label class="font-bold font-danger"
                   ><span
-                    >Selected records count:
+                    >Total registros seleccionados
                     <b>{{ grouping.getSelectedRowsCount() }}</b></span
                   ></label
                 >
@@ -76,7 +70,7 @@
                   class="btn btn-danger font-weight-bolder font-size-sm mr-1"
                   (click)="deleteSelected()"
                 >
-                  <i class="fa fa-trash"></i> Delete All</button
+                  <i class="fa fa-trash"></i> Eliminar todo</button
                 >&nbsp;
                 <button
                   type="button"
@@ -90,7 +84,7 @@
                   class="btn btn-light-primary font-weight-bolder font-size-sm"
                   (click)="updateStatusForSelected()"
                 >
-                  <i class="fa fa-sync-alt"></i> Update Status
+                  <i class="fa fa-sync-alt"></i> Actualizar estado
                 </button>
               </div>
             </div>
@@ -114,7 +108,7 @@
             ></label>
           </th>
           <th>
-            FECHA COBRO
+            USUARIO
             <app-sort-icon
               column="VINCode"
               [activeColumn]="sorting.column"
@@ -123,7 +117,7 @@
             ></app-sort-icon>
           </th>
           <th>
-            CODIGO BENEFICIARIO
+            NOMBRE
             <app-sort-icon
               column="manufacture"
               [activeColumn]="sorting.column"
@@ -132,7 +126,7 @@
             ></app-sort-icon>
           </th>
           <th>
-            NOMBRE BENEFICIARIO
+            ROL
             <app-sort-icon
               column="model"
               [activeColumn]="sorting.column"
@@ -141,7 +135,7 @@
             ></app-sort-icon>
           </th>
           <th>
-            BOLETAS PAGADAS
+            CORREO
             <app-sort-icon
               column="modelYear"
               [activeColumn]="sorting.column"
@@ -150,7 +144,7 @@
             ></app-sort-icon>
           </th>
           <th>
-            MONTO PAGADO
+            TELÉFONO
             <app-sort-icon
               column="color"
               [activeColumn]="sorting.column"
@@ -172,11 +166,11 @@
                 <span></span>
               </label>
             </td>
-            <td>{{ product.VINCode }}</td>
-            <td>{{ product.manufacture }}</td>
-            <td>{{ product.model }}</td>
-            <td>{{ product.modelYear }}</td>
-            <td>$ {{ product.price }}</td>
+            <td>{{ product.username }}</td>
+              <td>{{ product.fullname }}</td>
+              <td>{{ product.username }}</td>
+              <td>{{ product.email }}</td>
+              <td>{{ product.phone }}</td>
             <td>
               <a
                 title="Edit product"
@@ -184,9 +178,7 @@
                 [routerLink]="'/ecommerce/product/edit/' + product.id"
               >
                 <span
-                  [inlineSVG]="
-                    './assets/media/svg/icons/Communication/Write.svg'
-                  "
+                  [inlineSVG]="'./assets/media/svg/view.svg'"
                   cacheSVG="true"
                   class="svg-icon svg-icon-md svg-icon-primary"
                 >
@@ -194,11 +186,23 @@
               </a>
               <a
                 title="Delete product"
-                class="btn btn-icon btn-light btn-hover-danger btn-sm"
+                class="btn btn-icon btn-light btn-hover-danger btn-sm mx-3"
                 (click)="delete(product.id)"
               >
                 <span
-                  [inlineSVG]="'./assets/media/svg/icons/General/Trash.svg'"
+                  [inlineSVG]="'./assets/media/svg/do-not-disturb.svg'"
+                  cacheSVG="true"
+                  class="svg-icon svg-icon-md svg-icon-danger"
+                >
+                </span>
+              </a>
+              <a
+                title="Delete product"
+                class="btn btn-icon btn-light btn-hover-danger btn-sm mx-3"
+                (click)="delete(product.id)"
+              >
+                <span
+                  [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                   cacheSVG="true"
                   class="svg-icon svg-icon-md svg-icon-danger"
                 >
@@ -209,7 +213,9 @@
         </tbody>
       </table>
     </div>
-    <!-- end: Table -->
+    <!-- end: Table buscar iconos svg
+    https://www.flaticon.com/search?word=block&license=selection&color=2&stroke=0&order_by=4&type=icon
+    -->
     <app-paginator
       class="d-flex justify-content-between align-items-center flex-wrap"
       [paginator]="paginator"

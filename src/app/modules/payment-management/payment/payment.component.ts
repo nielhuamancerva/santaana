@@ -1,13 +1,18 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component,Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import {TicketPaymentModalComponent} from './components/ticket-payment-modal/ticket-payment-modal.component'
 import { Payment } from '../models/payment.model';
 import * as moment from 'moment'
-import {interval, timer, Subject, Subscription} from 'rxjs';
+import {interval, Subject, Subscription} from 'rxjs';
+
+
 import {Observable} from 'rxjs/internal/Observable'
 import {MatDialog} from '@angular/material/dialog';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { BeneficiaryRepositoryService } from '../../auth/_services/auth-repository/beneficiary-repository.service';
+import { finalize, map,debounceTime,distinctUntilChanged  } from 'rxjs/operators';
+import { BeneficiaryModel } from '../../auth/_models/Beneficiary.model';
 const EMPTY_PAYMENT: Payment ={
   id: undefined,
   invoiceCode: '',
@@ -39,6 +44,13 @@ export interface Fruit {
   monto: number;
 }
 
+export interface DataImagen {
+  url: string;
+  edit: boolean;
+  delete: boolean;
+  show: boolean
+}
+
 
 @Component({
   selector: 'app-payment',
@@ -50,14 +62,18 @@ export interface Fruit {
 export class PaymentComponent implements OnInit,OnDestroy{
 
   private utcSubscription: Subscription;
-
-  name = 'Angular 4';
+public isLoading=false;
+public src: string;
+public data$:any;
+public name$:any;
+_beneficiary:BeneficiaryModel[];
   date:Date;
   hours:any;
   minutes:any;
   seconds:any;
   currentLocale: any;
-  urls = [];
+  imagenInicial: DataImagen = {url: './assets/media/users/blank.png', delete: false, edit: true, show: true};
+  urls: DataImagen[] = [this.imagenInicial];
 
   isTwelveHrFormat:false;
   test:any;
@@ -107,7 +123,8 @@ public deuda: Deuda []= [{
   
   constructor(
     public dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    public beneficiaryService: BeneficiaryRepositoryService
   ) { 
     
   }
@@ -122,9 +139,6 @@ public deuda: Deuda []= [{
     setInterval(() => {
       this.hora_actual = new Date();
     }, 1000);
-    this.loadPayment();
-
-    
     this.loadPayment();
     const contador= interval(1000);
 
@@ -154,7 +168,6 @@ public deuda: Deuda []= [{
   reloj(){
     this.hora_actual = new Date();
     this.hora_imprimir = this.hora_actual.getHours() + ":" + this.hora_actual.getMinutes() + ":" + this.hora_actual.getSeconds();
-    console.log(this.hora_imprimir)
   }
 
   loadForm() {
@@ -247,28 +260,60 @@ public deuda: Deuda []= [{
   }
 
   onSelectFile(event) {
-    if (event.target.files && event.target.files[0] && this.urls.length < 3) {
+    if (event.target.files && event.target.files[0] && this.urls.length < 4) {
       var filesAmount = event.target.files.length;
       for (let i = 0; i < filesAmount; i++) {
         var reader = new FileReader();
-
+        var element: DataImagen ={
+          url: '',
+          edit: false,
+          delete: true,
+          show: true
+        };
+        
         reader.onload = (event:any) => {
-          //console.log(event.target);
-          this.urls.push(event.target.result);
+          element.url = event.target.result;
+          this.urls.push(element);
+          if(this.urls.length > 3){
+            this.urls[0].show = false
+          }
+          //console.log(this.urls);
         }
-
         reader.readAsDataURL(event.target.files[i]);
       }
     }
   }
 
   eliminar(event){
-    var id = event.path[0].id;
+    var id = event.currentTarget.id;
     var el = document.getElementById(id);
+    if(this.urls.length > 3){
+      this.urls[0].show = true;
+    }
     el.remove();
     var cars = this.urls.filter(function(car) {
-      return car !== id; 
+      return car.url !== id; 
     });
     this.urls = cars;
+    console.log(this.urls)
   }
+
+  busqueda(event){
+    console.log(event);
+this.isLoading=true;
+this.data$=this.beneficiaryService.getAllBeneficiary(event).pipe(
+  map((_beneficiary)=>_beneficiary.content[0].tx_document_number),
+  distinctUntilChanged(),
+  debounceTime(100000),
+  finalize(()=>this.isLoading=false)
+)
+this.name$=this.beneficiaryService.getAllBeneficiary(event).pipe(
+  map((_beneficiary)=>_beneficiary.content[0].tx_names),
+  distinctUntilChanged(),
+  debounceTime(100000),
+  finalize(()=>this.isLoading=false)
+)
+
+  }
+
 }
