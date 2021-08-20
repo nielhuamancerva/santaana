@@ -46,6 +46,7 @@ export interface Fruit {
   name: string;
   monto: number;
   numberr: string;
+  id:string
 }
 
 export interface DataImagen {
@@ -73,6 +74,7 @@ public src1: string;
 public data$:any;
 public sales$:SalesModel[];
 public name$:any;
+public code$:any;
 private subscriptions: Subscription[] = [];
 _beneficiary:BeneficiaryModel[];
 vuelto:number;
@@ -156,23 +158,33 @@ vuelto:number;
 
   loadForm() {
     this.formGroup = this.fb.group({
-      invoiceCode: [this.payment.invoiceCode, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
+      beneficiary_code: ['', Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
       beneficiaryDni: [this.payment.beneficiaryDni, Validators.compose([Validators.required])],
       VINCode: [this.payment.VINCode, Validators.compose([Validators.required])],
-      boleta: ['', Validators.compose([Validators.required])],
+      boleta: [this.fruits, Validators.compose([Validators.required])],
       createdDate:[this.fecha_actual],
       createdHour:[this.hora_imprimir],
       phonenumber1: [this.payment.phonenumber1, Validators.compose([Validators.required])],
       phonenumber2: [this.payment.phonenumber2, Validators.compose([Validators.required])],
       note: [this.payment.note, Validators.compose([Validators.required])],
       mountToPay: [this.payment.mountToPay, Validators.compose([Validators.required])],
-      totalPay: [this.payment.totalPay, Validators.compose([Validators.required])],
-      mountToCollect: [this.payment.mountToCollect, Validators.compose([Validators.required])]
+      amount_received: [this.payment.totalPay, Validators.compose([Validators.required])],
+      mountToCollect: [this.payment.mountToCollect, Validators.compose([Validators.required])],
+      document_code: [null]
     });
   }
-
+  
 
   save() {
+    
+    var ids = [];
+    for (let numero of this.fruits){
+      ids.push(numero.id)
+    }
+    console.log(this.code$);
+    this.formGroup.patchValue({
+      document_code: ids
+    });
     const formValues = this.formGroup.value;
     this.paymnentService.CreatePayment(formValues,this.urls);
   }
@@ -213,7 +225,7 @@ vuelto:number;
           console.log("cerrado:", data.deuda)
           for (let numero of data.deuda){
             if(numero.Checked=="true" && !this.fruits.find( fruta => fruta.name === numero.serie )){
-              this.fruits.push({name: numero.serie,numberr:numero.number, monto: numero.total});
+              this.fruits.push({name: numero.serie,numberr:numero.number, monto: numero.total, id: numero.id});
             }
             else(numero.Checked=="false")
             {
@@ -301,6 +313,12 @@ this.name$=this.beneficiaryService.getAllBeneficiary(event).pipe(
   debounceTime(100000),
   finalize(()=>this.isLoading=false)
 )
+this.code$=this.beneficiaryService.getAllBeneficiary(event).pipe(
+  map((_beneficiary)=>_beneficiary.content[0].id),
+  distinctUntilChanged(),
+  debounceTime(100000),
+  finalize(()=>this.isLoading=false)
+)
   }
 
   loadSales(){
@@ -318,8 +336,11 @@ this.name$=this.beneficiaryService.getAllBeneficiary(event).pipe(
   vueltorecibido(recivido){
     this.isLoading=true;
     console.log(recivido);
-    this.fruits
-    console.log(this.fruits[0].monto);
-    this.vuelto=this.fruits[0].monto-recivido;
+var a = 0;
+    for (let numero of this.fruits){
+      a+=numero.monto
+    }
+
+    this.vuelto=a-recivido;
   }
 }

@@ -37,4 +37,5 @@ export class BeneficiaryModel {
     tx_number:string;
     int_period:number;
     tx_upf:string;
+    id?:string;
 }

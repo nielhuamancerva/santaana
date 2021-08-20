@@ -29,10 +29,10 @@
                                 class="form-control form-control-lg form-control-solid"
                                 autocomplete="off"
                                 placeholder="Código de Beneficiario" 
-                                name="invoiceCode"
-                                [class.is-invalid]="isControlInvalid('invoiceCode')"
-                                [class.is-valid]="isControlValid('invoiceCode')"
-                                formControlName="invoiceCode"
+                                name="beneficiary_code"
+                                [class.is-invalid]="isControlInvalid('beneficiary_code')"
+                                [class.is-valid]="isControlValid('beneficiary_code')"
+                                formControlName="beneficiary_code"
                                 [ngClass]="{'loading':isLoading}"
                                 (ngModelChange)="busqueda($event)"
                                 [(ngModel)]="src"
@@ -42,7 +42,7 @@
                          
                             <div
                                 class="invalid-feedback"
-                                *ngIf="controlHasError('required', 'invoiceCode')"
+                                *ngIf="controlHasError('required', 'beneficiary_code')"
                             >
                                 Código de Beneficiario es requerido
                             </div>
@@ -77,7 +77,7 @@
                                                  aria-placeholder="Boletas"
                                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                                  [matChipInputAddOnBlur]="addOnBlur" 
-                                      
+                                                readonly
                                                  > 
 
                                         </mat-chip-list>
@@ -130,7 +130,18 @@
                             >
                                 Nota es requerido
                             </div>
-                        </div> 
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Tipo moneda</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="seleccione moneda"
+                                [class.is-invalid]="isControlInvalid('currency')"
+                                [class.is-valid]="isControlValid('currency')"
+                                formControlName="currency"
+                            />
+                        </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-lg-4">
@@ -139,19 +150,18 @@
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Ingrese el importe a pagar" 
-                                name="totalPay"
-                                [class.is-invalid]="isControlInvalid('totalPay')"
-                                [class.is-valid]="isControlValid('totalPay')"
-                                formControlName="totalPay"
+                                name="amount_received"
+                                [class.is-invalid]="isControlInvalid('amount_received')"
+                                [class.is-valid]="isControlValid('amount_received')"
+                                formControlName="amount_received"
                                 [ngClass]="{'loading':isLoading1}"
                                 (ngModelChange)="vueltorecibido($event)"
                                 [(ngModel)]="src1"
-                                value="{{payment.totalPay}}"
                             />
                 <span class="form-text text-muted" *ngIf="span">Vuelto: S/{{vuelto}}</span>
                             <div
                                 class="invalid-feedback"
-                                *ngIf="controlHasError('required', 'totalPay')"
+                                *ngIf="controlHasError('required', 'amount_received')"
                             >
                                 Importe a pagar es requerido
                             </div>
@@ -256,7 +266,6 @@
                         Guardar
                     </button>
                     </div>
-                    <p>{{formGroup.value | json}}</p>
                 </form>
             </div>
         </ng-container>

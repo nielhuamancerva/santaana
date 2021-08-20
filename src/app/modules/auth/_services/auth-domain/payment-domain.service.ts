@@ -13,18 +13,17 @@ import { v4 as uuid } from 'uuid';
     providedIn: 'root',
 })
 export class PaymentHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/api/payment`;
+    API_URL = `${environment.apiUrlNiel}/payment`;
   constructor(private http: HttpClient,
     private auth: AuthService) { }
 
-    CreatePayment($user: UserModel, $img): Observable<UserModel> {
+    CreatePayment($user: PaymentModel, $img): Observable<UserModel> {
         console.log($user);
         const fileJson = new File([JSON.stringify(this.setuser($user))], "file2.json", {type: "application/json"});
-    
-        
+        const f1 = new File([$img], "file.jpg", {type: "application/jpg"});
         const formData: FormData = new FormData();
         formData.append('payment', fileJson);
-        formData.append('files', $img, 'files');
+        formData.append('files', f1, 'files');
 
         const header = this.buildHeader();
         this.http.post(this.API_URL, formData,{headers: header})
@@ -56,8 +55,6 @@ private handleError(err: HttpErrorResponse): Observable<never> {
     let headers: HttpHeaders = new HttpHeaders()
         .set("Authorization", "Bearer " + this.getAuthFromLocalStorage() )
         //.set("Connection", retrieveStringFromStorage("ConnectionCompany") ) 99dedcc7-ffbc-41e0-8494-73cfae25dffe
-        .set("payload", "company" )
-        .set("Company", "ac3e02e6-69b2-4e36-bda6-de98673fc74b" )
         .set("Access-Control-Allow-Origin", "*")
         return headers;
     }
@@ -75,14 +72,16 @@ private handleError(err: HttpErrorResponse): Observable<never> {
 
     setuser(result){
         const payment = new PaymentModel();
-        payment.beneficiary_code=result.beneficiary_code;
+        payment.beneficiary_code='e2f2befe-41c6-4023-bfde-6ed01d097c54';
         payment.document_code=result.document_code;
         payment.canal="WEB";
-        payment.canal_code=uuid(result.canal_code);
+        payment.canal_code=uuid();
         payment.version="1";
         payment.note=result.note;
         payment.currency="SOL";
         payment.amount_received=result.amount_received;
         return payment;
+
+
     }
 }
