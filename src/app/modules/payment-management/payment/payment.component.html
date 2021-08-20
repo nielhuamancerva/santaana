@@ -68,7 +68,7 @@
                                         <mat-label></mat-label>
                                         <mat-chip-list #chipList aria-label="Fruit selection">
                                           <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
-                                                   [removable]="removable" (removed)="remove(fruit)">
+                                                   [removable]="removable" (removed)="remove(fruit)" formControlName = "boleta">
                                             {{fruit.name}}-{{fruit.numberr}} S/.{{fruit.monto}}
                                             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                                           </mat-chip>
@@ -76,7 +76,10 @@
                                                  [matChipInputFor]="chipList"
                                                  aria-placeholder="Boletas"
                                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                                 [matChipInputAddOnBlur]="addOnBlur"  readonly > 
+                                                 [matChipInputAddOnBlur]="addOnBlur" 
+                                      
+                                                 > 
+
                                         </mat-chip-list>
                                         <button matSuffix mat-icon-button (click)="createModal()">
                                             <mat-icon>add_box</mat-icon>
@@ -140,9 +143,12 @@
                                 [class.is-invalid]="isControlInvalid('totalPay')"
                                 [class.is-valid]="isControlValid('totalPay')"
                                 formControlName="totalPay"
+                                [ngClass]="{'loading':isLoading1}"
+                                (ngModelChange)="vueltorecibido($event)"
+                                [(ngModel)]="src1"
                                 value="{{payment.totalPay}}"
                             />
-               <!--            <span class="form-text text-muted" *ngIf="span">Vuelto: S/0</span>-->
+                <span class="form-text text-muted" *ngIf="span">Vuelto: S/{{vuelto}}</span>
                             <div
                                 class="invalid-feedback"
                                 *ngIf="controlHasError('required', 'totalPay')"
@@ -250,6 +256,7 @@
                         Guardar
                     </button>
                     </div>
+                    <p>{{formGroup.value | json}}</p>
                 </form>
             </div>
         </ng-container>

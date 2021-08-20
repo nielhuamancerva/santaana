@@ -15,6 +15,7 @@ import { finalize, map,debounceTime,distinctUntilChanged, catchError  } from 'rx
 import { BeneficiaryModel } from '../../auth/_models/Beneficiary.model';
 import { SalesModel } from '../../auth/_models/Sales.model';
 import { SalesRepositoryService } from '../../auth/_services/auth-repository/sales-repository.service';
+import { PaymentHTTPServiceDomain } from '../../auth/_services/auth-domain/payment-domain.service';
 const EMPTY_PAYMENT: Payment ={
   id: undefined,
   invoiceCode: '',
@@ -66,12 +67,15 @@ export class PaymentComponent implements OnInit,OnDestroy{
 
 private utcSubscription: Subscription;
 public isLoading=false;
+public isLoading1=false;
 public src: string;
+public src1: string;
 public data$:any;
 public sales$:SalesModel[];
 public name$:any;
 private subscriptions: Subscription[] = [];
 _beneficiary:BeneficiaryModel[];
+vuelto:number;
   date:Date;
   hours:any;
   minutes:any;
@@ -82,34 +86,6 @@ _beneficiary:BeneficiaryModel[];
 
   isTwelveHrFormat:false;
   test:any;
-
-public deuda: Deuda []= [{
-  Codigo_Factura:'C001',
-  Periodo:'01/08/2021',
-  Fecha_Vencimiento:'01/08/2021',
-  Monto_Total:40.00,
-  Monto_Pagado:20.00,
-  Monto_Apagar:20.00,
-  Checked:"false"
-},{
-  Codigo_Factura:'C002',
-  Periodo:'01/08/2021',
-  Fecha_Vencimiento:'01/08/2021',
-  Monto_Total:60.00,
-  Monto_Pagado:10.00,
-  Monto_Apagar:50.00,
-  Checked:"false"
-},{
-  Codigo_Factura:'C003',
-  Periodo:'01/08/2021',
-  Fecha_Vencimiento:'01/08/2021',
-  Monto_Total:60.00,
-  Monto_Pagado:10.00,
-  Monto_Apagar:50.00,
-  Checked:"false"
-}
- 
-];
 
   selectable = true;
   removable = true;
@@ -127,6 +103,7 @@ public deuda: Deuda []= [{
   id: any;
   
   constructor(
+    private paymnentService: PaymentHTTPServiceDomain,
     public dialog: MatDialog,
     private fb: FormBuilder,
     public beneficiaryService: BeneficiaryRepositoryService,
@@ -140,6 +117,7 @@ public deuda: Deuda []= [{
   
   ngOnInit(): void {
     this.span = true;
+    this.vuelto=0;
     this.fecha_actual = moment(new Date()).format('YYYY-MM-DD');
     this.hora_actual = new Date();
     setInterval(() => {
@@ -181,7 +159,7 @@ public deuda: Deuda []= [{
       invoiceCode: [this.payment.invoiceCode, Validators.compose([Validators.required, Validators.minLength(3), Validators.maxLength(100)])],
       beneficiaryDni: [this.payment.beneficiaryDni, Validators.compose([Validators.required])],
       VINCode: [this.payment.VINCode, Validators.compose([Validators.required])],
-      createdUser: [this.payment.createdUser, Validators.compose([Validators.required])],
+      boleta: ['', Validators.compose([Validators.required])],
       createdDate:[this.fecha_actual],
       createdHour:[this.hora_imprimir],
       phonenumber1: [this.payment.phonenumber1, Validators.compose([Validators.required])],
@@ -195,7 +173,8 @@ public deuda: Deuda []= [{
 
 
   save() {
-
+    const formValues = this.formGroup.value;
+    this.paymnentService.CreatePayment(formValues,this.urls);
   }
 
   add(event: MatChipInputEvent): void {
@@ -334,5 +313,13 @@ this.name$=this.beneficiaryService.getAllBeneficiary(event).pipe(
       console.log(this.sales$);
    });
     this.subscriptions.push(sbSales);
+  }
+
+  vueltorecibido(recivido){
+    this.isLoading=true;
+    console.log(recivido);
+    this.fruits
+    console.log(this.fruits[0].monto);
+    this.vuelto=this.fruits[0].monto-recivido;
   }
 }

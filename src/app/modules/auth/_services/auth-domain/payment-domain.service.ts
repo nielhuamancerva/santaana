@@ -17,20 +17,15 @@ export class PaymentHTTPServiceDomain {
   constructor(private http: HttpClient,
     private auth: AuthService) { }
 
-    CreatePayment($user: UserModel): Observable<UserModel> {
+    CreatePayment($user: UserModel, $img): Observable<UserModel> {
         console.log($user);
         const fileJson = new File([JSON.stringify(this.setuser($user))], "file2.json", {type: "application/json"});
-        const f1 = new File(['./assets/media/users/default.jpg'], "file.jpg", {type: "application/jpg"});
-        const f2 = new File(['./assets/media/users/default.jpg'], "file.jpg", {type: "application/jpg"});
-        const f3 = new File(['./assets/media/users/default.jpg'], "file.jpg", {type: "application/jpg"});
-        const f4 = new File(['./assets/media/users/default.jpg'], "file.jpg", {type: "application/jpg"});
+    
         
         const formData: FormData = new FormData();
-        formData.append('user', fileJson);
-        formData.append('frontDocument', f1, 'name1');
-        formData.append('reverseDocument', f2, 'name1');
-        formData.append('lastPage', f3, 'name1');
-        formData.append('evidence', f4, 'name1');
+        formData.append('payment', fileJson);
+        formData.append('files', $img, 'files');
+
         const header = this.buildHeader();
         this.http.post(this.API_URL, formData,{headers: header})
         .subscribe(
