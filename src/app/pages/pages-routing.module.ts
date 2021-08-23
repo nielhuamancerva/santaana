@@ -25,20 +25,6 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'user-management',
-        loadChildren: () =>
-          import('../modules/user-management/user-management.module').then(
-            (m) => m.UserManagementModule
-          ),
-      },
-      {
-        path: 'internal-users',
-        loadChildren: () =>
-          import('../modules/internal-users/internal-users.module').then(
-            (m) => m.InternalUsersModule
-          ),
-      },
-      {
         path: 'user-profile',
         loadChildren: () =>
           import('../modules/user-profile/user-profile.module').then(
@@ -46,11 +32,25 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'payment-management',
+        path: 'internal-users',
         loadChildren: () =>
-          import('../modules/payment-management/payment-management.module').then(
-            (m) => m.PaymentManagementModule
+        import('../modules/admin/internal-users/internal-users.module').then(
+            (m) => m.InternalUsersModule
             ),
+      },
+      {
+          path: 'user-management',
+          loadChildren: () =>
+          import('../modules/admin/user-management/user-management.module').then(
+              (m) => m.UserManagementModule
+              ),
+      },
+      {
+          path: 'payment-management',
+          loadChildren: () =>
+          import('../modules/admin/payment-management/payment-management.module').then(
+              (m) => m.PaymentManagementModule
+              ),
       },
       {
         path: '',

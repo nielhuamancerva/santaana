@@ -1,0 +1,262 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">
+            <ng-container>
+                COBRO | {{fecha_actual}} {{ utcTime$ | async }}
+            </ng-container>
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a
+                type="button"
+                class="btn btn-primary"
+                routerLink="/payment-management/payment/list"
+                >Lista de pagos</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ng-container >
+            <div class="mt-5">
+                <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
+                    <div class="form-group row" *ngIf="BENEFICIARIO || !BENEFICIARIO">
+                        <div class="col-lg-4" >
+                            <label>Codigo de Beneficiario</label>
+                            <input 
+                                type="text"
+                                class="form-control form-control-lg form-control-solid"
+                                autocomplete="off"
+                                placeholder="Código de Beneficiario" 
+                                name="beneficiary_code"
+                                [class.is-invalid]="isControlInvalid('beneficiary_code')"
+                                [class.is-valid]="isControlValid('beneficiary_code')"
+                                formControlName="beneficiary_code"
+                                [ngClass]="{'loading':isLoading}"
+                                (keyup)="busqueda(hola.value)"
+                                [(ngModel)]="src"
+                                #hola
+                            />
+                            <span class="form-text text-muted" >{{ data$ | async }}{{BENEFICIARIO.tx_document_number}}</span>
+
+                         
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'beneficiary_code')"
+                            >
+                                Código de Beneficiario es requerido
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Nombes y Apellidos</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Nombes y Apellidos" 
+                                name="beneficiaryDni"
+                                readonly
+                                [value]="BENEFICIARIO.tx_names + ' ' + BENEFICIARIO.tx_first_last_name + ' ' + BENEFICIARIO.tx_second_last_name"
+                                formControlName="beneficiaryDni"
+                            />
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Boleta</label>
+                                       
+                                <div class="example-button-row"  >
+                                    <ng-container >
+                                    <mat-form-field class="example-full-width"  appearance="fill" >
+                                        <mat-chip-list #chipList aria-label="Fruit selection" >
+                                            <mat-label *ngFor="let document of sales$">
+                                                <mat-label *ngFor="let fruit of payment.document_code">
+                                                    <mat-chip  [selectable]="selectable"
+                                                            [removable]="removable" (removed)="remove(fruit)" *ngIf="fruit == document.id">
+                                                        {{document.serie}}-{{document.number}} S/.{{document.total}}
+                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                    </mat-chip>
+                                                </mat-label>
+                                            </mat-label>
+                                            <input placeholder="Boleta de Pagos..."
+                                                    [matChipInputFor]="chipList"
+                                                    aria-placeholder="Boletas"
+                                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                    [matChipInputAddOnBlur]="addOnBlur" 
+                                                    readonly
+                                                    formControlName="document_code"
+                                                    > 
+                                        </mat-chip-list>
+                                        <button matSuffix mat-icon-button (click)="createModal()">
+                                            <mat-icon>add_box</mat-icon>
+                                        </button>
+                                    </mat-form-field>
+                                    </ng-container>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>Canal</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Canal" 
+                                name="canal"
+                                [class.is-invalid]="isControlInvalid('canal')"
+                                [class.is-valid]="isControlValid('canal')"
+                                formControlName="canal"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'canal')"
+                            >
+                                Número de teléfono es requerido
+                            </div>
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Nota</label>
+                            <input 
+                                type="textarea" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese una nota si así lo desea" 
+                                name="note"
+                                [class.is-invalid]="isControlInvalid('note')"
+                                [class.is-valid]="isControlValid('note')"
+                                formControlName="note"
+                            />
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'note')"
+                            >
+                                Nota es requerido
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Tipo moneda</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="seleccione moneda"
+                                [class.is-invalid]="isControlInvalid('currency')"
+                                [class.is-valid]="isControlValid('currency')"
+                                formControlName="currency"
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>Importe Recibido</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese el importe a pagar" 
+                                name="amount_received"
+                                [class.is-invalid]="isControlInvalid('amount_received')"
+                                [class.is-valid]="isControlValid('amount_received')"
+                                formControlName="amount_received"
+                                [ngClass]="{'loading':isLoading1}"
+                                (keyup)="vueltorecibido(importe)"
+                                [(ngModel)]="src1"
+                                #importe
+                            />
+                <span class="form-text text-muted" *ngIf="span">Vuelto: S/{{vuelto}}</span>
+                            <div
+                                class="invalid-feedback"
+                                *ngIf="controlHasError('required', 'amount_received')"
+                            >
+                                Importe a pagar es requerido
+                            </div>
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Importe Pendiente a Pagar</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Importe por pagar" 
+                                readonly
+                            />
+                            <div
+                                class="invalid-feedback"
+                            >
+                                Importe por pagar requerido
+                            </div>
+                        </div>  
+                        <div class="col-lg-4">
+                            <label>Importe a Total</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Monto a cobrar" 
+                                name="mountToCollect"
+                                readonly
+                            />
+                            <div
+                                class="invalid-feedback"
+                            >
+                                Monto a cobrar es requerido
+                            </div>
+                        </div>
+                        <!-- <div class="col-lg-12" style="margin-top: 20px;">
+                            <input type='file' (change)="onSelectFile($event)" multiple>
+                            <div class="col-lg-12">
+                                <div>
+                                    <label class="form-label">Imagenes</label>
+                                </div>
+                                <div class="image-input image-input-outline" *ngFor='let item of urls' [id]="item">
+                                    <img class="image-input-wrapper" [src]="item" height="200"> <br/>
+                                    <button type="button" class="btn btn-primary font-weight-bold mr-2" [id]="item" (click)="eliminar($event)">Eliminar</button>
+                                </div>
+                            </div>                    
+                        </div> -->
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-lg-3" *ngFor='let item of urls' [id]="item.url">
+                            <div *ngIf="item.show">
+                                <div>
+                                    <label class="form-label">Imagen</label>
+                                </div>
+                                <div class="image-input image-input-outline" id="kt_profile_avatar">
+                                    <img class="image-input-wrapper" [src]="item.url">
+                                    <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                    data-action="change"
+                                    data-toggle="tooltip"
+                                    title=""
+                                    data-original-title="Change avatar"
+                                    *ngIf="item.edit"
+                                    >
+                                    <i class="fa fa-pen icon-sm text-muted"></i>
+                                    <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" (change)="onSelectFile($event)" multiple  />
+                                    <input type="file" name="profile_avatar_remove" />
+                                    </label>
+                                    <span [id]="item.url"
+                                        class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                        (click)="eliminar($event)"
+                                        *ngIf="item.delete"
+                                        data-action="remove" title="" data-original-title="Remove avatar">
+                                        <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                    </span>
+                                    <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                        data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                                        <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                    </span>
+                                </div>
+                                <span class="form-text text-muted">Max 3 imagenes de: png, jpg, jpeg.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="float-right">
+                    <a
+                        class="btn btn-default font-weight-bold mr-2"
+                        >Cancelar</a
+                    >
+                    <button
+                        type="submit"
+                        class="btn btn-primary font-weight-bold mr-2"
+                    >
+                        Guardar
+                    </button>
+                    </div>
+                </form>
+
+                <a>{{formGroup.value | json}}</a>
+            </div>
+        </ng-container>
+    </div>
+</div>

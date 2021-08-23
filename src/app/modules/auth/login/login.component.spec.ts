@@ -12,7 +12,7 @@ import { AuthService } from '../_services/auth.service';
 import { LoginComponent } from './login.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
-import { UserModel } from '../_models/user.model';
+import { UserModel } from '../../admin/_models/user.model';
 import { LogoutComponent } from '../logout/logout.component';
 import { TranslationModule } from '../../i18n/translation.module';
 import { TranslateModule } from '@ngx-translate/core';
@@ -43,11 +43,11 @@ class FakeAuthService {
       return of(undefined);
     }
 
-    const user = new UserModel();
-    user.username = 'admin';
-    user.password = 'demo';
-    user.email = 'admin@demo.com';
-    return of(user);
+  //  const user = new UserModel();
+ //   user.username = 'admin';
+  //  user.password = 'demo';
+  //  user.email = 'admin@demo.com';
+  //  return of(user);
   }
 }
 

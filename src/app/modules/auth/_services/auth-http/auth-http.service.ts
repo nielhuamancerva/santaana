@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { UserModel } from '../../_models/user.model';
+import { UserModel } from '../../../admin/_models/user.model';
 import { environment } from '../../../../../environments/environment';
 import { AuthModel } from '../../_models/auth.model';
 import { map } from 'rxjs/operators';

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
-import { UserModel } from '../../../_models/user.model';
+import { UserModel } from '../../../../admin/_models/user.model';
 import { AuthModel } from '../../../_models/auth.model';
 import { UsersTable } from '../../../../../_fake/fake-db/users.table';
 import { environment } from '../../../../../../environments/environment';

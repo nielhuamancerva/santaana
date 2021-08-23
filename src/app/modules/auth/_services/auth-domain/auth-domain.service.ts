@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthHTTPServiceURL } from '../auth-http/auth-http.service';
-import { UserModel } from '../../../auth/_models/user.model';
+import { UserModel } from '../../../admin/_models/user.model';
 import { AuthModel } from '../../../auth/_models/auth.model';
 import { environment } from '../../../../../../src/environments/environment';
 
@@ -27,28 +27,36 @@ export class AuthHTTPServiceDomain {
           return notFoundError;
         }
 
-        const user = new UserModel();
-        user.id = result.body.data.id;
-        user.roleCode = result.body.data.roleCode;
-        user.roleDescription = result.body.data.roleDescription;
-        user.typeDocumentCode = result.body.data.typeDocumentCode;
-        user.typeDocumentDescription = result.body.data.typeDocumentDescription;
-        user.districtCode=result.body.data.districtCode;
-        user.populatedCenterCode = result.body.data.populatedCenterCode;
-        user.documentNumber = result.body.data.documentNumber;
-        user.name = result.body.data.name;
-        user.secondName = result.body.data.secondName;
-        user.lastName = result.body.data.lastName;
-        user.secondLastName = result.body.data.secondName;
-        user.phone1=result.body.data.phone1;
-        user.phone2=result.body.data.phone2;
-        user.referentialAddress=result.body.data.referentialAddress;
-        user.latitude=result.body.data.latitude;
-        user.longitude=result.body.data.longitude;
-        user.frontDocument=result.body.data.frontDocument;
-        user.reverseDocument=result.body.data.reverseDocument;
+        let user:UserModel={
+          roleCode:result.body.data.roleCode,//set
+          roleDescription : result.body.data.roleDescription,
+          typeDocumentCode : result.body.data.typeDocumentCode,//set
+          typeDocumentDescription : result.body.data.typeDocumentDescription,
+          districtCode:result.body.data.districtCode,
+          populatedCenterCode :result.body.data.populatedCenterCode,
+          documentNumber : result.body.data.documentNumber,//set
+          name : result.body.data.name,//set
+          secondName : result.body.data.secondName,//set
+          lastName : result.body.data.lastName,//set
+          secondLastName : result.body.data.secondName,//set
+          typePersonCode: result.body.data.typePersonCode,//set
+          typePersonDescription:result.body.data.typePersonCode,
+          email: result.body.data.email,//set
+          userName: result.userName,//set
+          phone1:result.body.data.phone1,//set
+          phone2:result.body.data.phone2,
+          referentialAddress:result.body.data.referentialAddress,
+          latitude:result.body.data.latitude,
+          longitude:result.body.data.longitude,
+          frontDocument:result.body.data.frontDocument,
+          reverseDocument:result.body.data.reverseDocument,
+          lastPage:result.body.data.lastPage,
+          evidence:result.body.data.evidence, 
+          enable:result.body.data.enable,
+          };
+
+
         sessionStorage.setItem("user", JSON.stringify(user));
-         console.log(user);
 
         const auth = new AuthModel();
         auth.authToken = result.headers.get('BearerAuthorization');
@@ -63,6 +71,7 @@ export class AuthHTTPServiceDomain {
 
   getUserByToken(token): Observable<any> {
     let item = JSON.parse(sessionStorage.getItem('user'));
+      
     return of(item);
 
   }

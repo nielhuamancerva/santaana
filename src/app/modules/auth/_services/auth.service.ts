@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { map, catchError, switchMap, finalize } from 'rxjs/operators';
-import { UserModel } from '../_models/user.model';
+import { UserModel } from '../../admin/_models/user.model';
 import { AuthModel } from '../_models/auth.model';
 import { AuthHTTPService } from './auth-http';
 import { AuthHTTPServiceDomain } from './auth-domain/auth-domain.service';

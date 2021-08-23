@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LayoutService } from '../../../../../core';
 import { Observable } from 'rxjs';
-import { UserModel } from '../../../../../../modules/auth/_models/user.model';
+import { UserModel } from '../../../../../../modules/admin/_models/user.model';
 import { AuthService } from '../../../../../../modules/auth/_services/auth.service';
 
 import { EditProfileModalComponent } from './edit-profile-modal/edit-profile-modal.component';

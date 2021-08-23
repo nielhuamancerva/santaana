@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>TICKET</h2>
+
+<div mat-dialog-content>
+    <mat-form-field class="palabra-form-field" appearance="fill" >
+        <mat-label>Palabra a buscar</mat-label>
+        <input matInput >
+    </mat-form-field>
+    <mat-form-field class="example-form-field"  appearance="fill">
+        <mat-label>Rango de fecha</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Inicio">
+            <input matEndDate placeholder="Fin">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+</div>
+<mat-dialog-content class="mat-typography">
+    <div class="col-12" *ngFor="let d of data.deuda">
+        <div class="d-flex align-items-center flex-grow-1">
+            <label class="checkbox checkbox-lg checkbox-lg flex-shrink-0 mr-4">
+                <input type="checkbox" [checked]="d.Checked==='true'"  value="{{d.id}}" (click)="add($event)" />
+                <span></span>
+            </label>
+            <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
+                <div class="d-flex flex-column align-items-cente py-2 w-100">
+                    <a href="#" class="text-dark-75 font-weight-bold text-hover-primary font-size-lg">
+                        SERIE {{d.serie}} - {{d.number}}
+                    </a>
+                    <span class="text-muted font-weight-bold">PERIODO {{d.date}} </span>
+                    <span class="text-muted font-weight-bold">VENCIMIENTO S/ {{d.date_expiration}}</span>
+                    <span class="text-muted font-weight-bold">MONTO PENDIENTE S/ {{d.pending_payment}} </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button cdkFocusInitial (click)="BotonClose()">+Agregar</button>
+</mat-dialog-actions>

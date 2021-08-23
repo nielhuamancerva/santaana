@@ -1,0 +1,432 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title h4" id="example-modal-sizes-title-lg">
+            Crear Agente de cobro
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body">
+        <ng-container>
+            <form action="#" class="form form-label-right" [formGroup]="formGroup" (ngSubmit)="save()">
+                <div class="form-group row">
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar primer nombre</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Primer nombre"
+                            autocomplete="off"
+                            [readonly]="isRucSelected"
+                            [class.is-invalid]="isControlInvalid('name') && !isRucSelected"
+                            [class.is-valid]="isControlValid('name')"
+                            formControlName="name"
+                            [(ngModel)]="user.firstName"
+                            (ngModelChange)="asignUserNamePartOne()"
+                        />
+                        <div class="valid-feedback" *ngIf="isControlValid('name')">
+                            Primer nombre fue ingresado correctamente
+                        </div>
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'name') && isControlTouched('name')"
+                        >
+                            Primer nombre es requerido
+                        </div>
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('minlength', 'name')"
+                        >
+                            Primer nombre debe tener por lo menos 3 caracteres
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar segundo nombre</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Segundo nombre"
+                            autocomplete="off"
+                            [readonly]="isRucSelected"
+                            formControlName="secondName"
+                            [(ngModel)]="user.lastName"
+                            [class.is-invalid]="isControlInvalid('lastName') && !isRucSelected"
+                            [class.is-valid]="isControlValid('lastName')"
+                            (blur)="asignUserNamePartTwo()"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'lastName')"
+                        >
+                            Segundo nombre es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Apellido Paterno</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Primer Apellido"
+                            autocomplete="off"
+                            [readonly]="isRucSelected"
+                            formControlName="lastName"
+                            [class.is-invalid]="isControlInvalid('lastName') && !isRucSelected"
+                            [class.is-valid]="isControlValid('lastName')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'lastName')"
+                        >
+                            Primer apellido es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Apellido Materno</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Segundo Apellido"
+                            autocomplete="off"
+                            [readonly]="isRucSelected"
+                            formControlName="secondLastName"
+                            [class.is-invalid]="isControlInvalid('secondLastName') && !isRucSelected"
+                            [class.is-valid]="isControlValid('secondLastName')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'secondLastName')"
+                        >
+                            Segundo apellido es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Tipo de Persona</label>
+                        <select class="form-control form-control-lg form-control-solid" formControlName="typePersonCode"
+                            >
+                            <option value="" hidden disabled>Elija un tipo de persona</option>
+                            <option *ngFor="let item of _typeperson" [value]="item.code">{{ item.description }}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Razón Social</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="businessName"
+                            placeholder="Razón Social"
+                            autocomplete="off"
+                            [readonly]="isDniSelected"
+                            formControlName="businessName"
+                            [class.is-invalid]="isControlInvalid('businessName')"
+                            [class.is-valid]="isControlValid('businessName')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'businessName')"
+                        >
+                            Razón social es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Tipo Documento</label>
+                        <select class="form-control form-control-lg form-control-solid"
+                        formControlName="typeDocumentCode" (change)=desactivar($event)
+                            >
+                            <option value="" hidden disabled>Seleccione un tipo de documento</option>
+                            <option [value]="item.code" *ngFor="let item of _typedocument">{{ item.description }}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Número de Documento</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="documentNumber"
+                            placeholder="Ejm. 70213603"
+                            autocomplete="off"
+                            formControlName="documentNumber"
+                            [class.is-invalid]="isControlInvalid('documentNumber')"
+                            [class.is-valid]="isControlValid('documentNumber')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'documentNumber')"
+                        >
+                            Documento es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Telefono 1</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="phone1"
+                            placeholder="Teléfono 1"
+                            autocomplete="off"
+                            formControlName="phone1"
+                            [class.is-invalid]="isControlInvalid('phone1')"
+                            [class.is-valid]="isControlValid('phone1')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'phone1')"
+                        >
+                            Número de teléfono es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Telefono 2</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Teléfono 2"
+                            autocomplete="off"
+                            formControlName="phone2"
+                            [class.is-invalid]="isControlInvalid('phone2')"
+                            [class.is-valid]="isControlValid('phone2')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'phone2')"
+                        >
+                            Número de teléfono es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Email</label>
+                        <input
+                            type="email"
+                            class="form-control form-control-lg form-control-solid"
+                            name="email"
+                            placeholder="ejemplo@ejemplo.com"
+                            autocomplete="off"
+                            formControlName="email"
+                            [class.is-invalid]="isControlInvalid('email')"
+                            [class.is-valid]="isControlValid('email')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'email')"
+                        >
+                            Email es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Nota</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="nota"
+                            placeholder="Ingrese una nota"
+                              formControlName="nota"
+                            [class.is-invalid]="isControlInvalid('nota')"
+                            [class.is-valid]="isControlValid('nota')"
+                        />
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Ubigeo</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="ubigeo"
+                            placeholder="Ubigeo"
+                            autocomplete="off"
+                            formControlName="ubigeo"
+                            [class.is-invalid]="isControlInvalid('ubigeo')"
+                            [class.is-valid]="isControlValid('ubigeo')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'ubigeo')"
+                        >
+                            Ubigeo es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Dirección Referencial</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="address"
+                            placeholder="Ejm. Jr. Ejemplo"
+                            autocomplete="off"
+                            formControlName="address"
+                            [class.is-invalid]="isControlInvalid('address')"
+                            [class.is-valid]="isControlValid('address')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'address')"
+                        >
+                            Dirección Referencial es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Longitud</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="longitude"
+                            placeholder="Longitud"
+                            autocomplete="off"
+                            formControlName="longitude"
+                            [class.is-invalid]="isControlInvalid('longitude')"
+                            [class.is-valid]="isControlValid('longitude')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'longitude')"
+                        >
+                            Longitud es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">Ingresar Latitud</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            name="latitude"
+                            placeholder="Latitud"
+                            autocomplete="off"
+                            formControlName="latitude"
+                            [class.is-invalid]="isControlInvalid('latitude')"
+                            [class.is-valid]="isControlValid('latitude')"
+                        />
+                        <div
+                            class="invalid-feedback"
+                            *ngIf="controlHasError('required', 'latitude')"
+                        >
+                            Latitud es requerido
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="roles">Roles</label>
+                        <select formControlName="roleCode" class="form-control form-control-lg form-control-solid">
+                            <option value="" hidden disabled>Elija un rol</option>
+                            <option *ngFor="let item of $_roles" [value]="item.id">{{item.description}}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label">User Name</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="User name"
+                            autocomplete="off"
+                            formControlName="userName"
+                        />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-3">
+                        <div>
+                            <label class="form-label">Dni Fotografia Frontal.</label>
+                        </div>
+                        <div class="image-input image-input-outline" id="kt_profile_avatar">
+                            <img class="image-input-wrapper" [src]="photoSelected1 || './assets/media/users/blank.png'">
+                            <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="change"
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title="Change avatar"
+                            >
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" (change)="btn1($event)"  />
+                            <input type="hidden" name="profile_avatar_remove" />
+                            </label>
+                            <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                                <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                        </div>
+                        <span class="form-text text-muted">Solo Admite: png, jpg, jpeg.</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <div>
+                            <label class="form-label">Dni Fotografía posterior</label>
+                        </div>
+                        <div class="image-input image-input-outline" id="kt_profile_avatar">
+                            <img class="image-input-wrapper" [src]="photoSelected2 || './assets/media/users/blank.png'">
+                            <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="change"
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title="Change avatar"
+                            >
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" (change)="btn2($event)"  />
+                            <input type="hidden" name="profile_avatar_remove" />
+                            </label>
+                            <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                        </div>
+                        <span class="form-text text-muted">Solo Admite: png, jpg, jpeg.</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <div>
+                        <label class="form-label">Contrato Fotografía frontal</label>
+                        </div>
+                        <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]=" " [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+                            <img class="image-input-wrapper" [src]="photoSelected3 || './assets/media/users/blank.png'">
+                            <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="change"
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title="Change avatar"
+                            >
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" (change)="btn3($event)"  />
+                            <input type="hidden" name="profile_avatar_remove" />
+                            </label>
+                            <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                            <i class="ki ki-bold-close icon-xs text-muted"></i>
+                            </span>
+                        </div>
+                        <span class="form-text text-muted">Solo se Admite: png, jpg, jpeg.</span>
+                    </div>
+                    <div class="col-lg-3">
+                        <div>
+                            <label class="form-label">Contrato Contrato: Frontal</label>
+                        </div>
+                        <div class="image-input image-input-outline" id="kt_profile_avatar" [class.image-input-empty]=" " [style.backgroundImage]="'url(./assets/media/users/blank.png)'">
+                        <img class="image-input-wrapper" [src]="photoSelected4 || './assets/media/users/blank.png'">
+                        <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                            data-action="change"
+                            data-toggle="tooltip"
+                            title=""
+                            data-original-title="Change avatar"
+                        >
+                            <i class="fa fa-pen icon-sm text-muted"></i>
+                            <input type="file" name="profile_avatar" accept=".png, .jpg, .jpeg" (change)="btn4($event)"  />
+                            <input type="hidden" name="profile_avatar_remove" />
+                        </label>
+                                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                    data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                </span>
+                        </div>
+                        <span class="form-text text-muted">Solo se Admite: png, jpg, jpeg.</span>
+                    </div>
+                </div>
+            </form>
+        </ng-container>
+        
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-light btn-elevate mr-2"
+            (click)="modal.dismiss()"
+            >Cancel
+        </button>
+        <ng-container *ngIf="user">
+            <button
+                type="submit"
+                class="btn btn-primary btn-elevate"
+                (click)="save()"
+            >Save
+            </button>
+        </ng-container>
+    </div>
+</div>

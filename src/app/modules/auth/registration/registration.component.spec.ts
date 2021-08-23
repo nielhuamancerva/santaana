@@ -10,7 +10,7 @@ import { LoginComponent } from '../login/login.component';
 import { LogoutComponent } from '../logout/logout.component';
 import { Routes, RouterModule } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { UserModel } from '../_models/user.model';
+import { UserModel } from '../../admin/_models/user.model';
 import { AuthService } from '../_services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
