@@ -46,6 +46,13 @@ const routes: Routes = [
               ),
       },
       {
+        path: 'asign-internal-user',
+        loadChildren: () =>
+        import('../modules/admin/asign-internal-user/asign-internal-user.module').then(
+            (m) => m.AsignInternalUserModule
+            ),
+      },
+      {
           path: 'payment-management',
           loadChildren: () =>
           import('../modules/admin/payment-management/payment-management.module').then(

@@ -13,6 +13,14 @@ import { CollectionAgentHTTPServiceDomain } from '../../../../_services/collecti
 import { RolesModel } from 'src/app/modules/admin/_models/Roles.model';
 import { Observable } from 'rxjs';
 import { RoleRepositoryService } from 'src/app/modules/admin/_services-repository/role-repository.service';
+import { DepartamentModel } from '../../../../_models/Departament.model';
+import { DistrictModel } from '../../../../_models/District.model';
+import { ProvinceModel } from '../../../../_models/Province.model';
+import { CcppModel } from '../../../../_models/Ccpp.model';
+import { DepartamentRepositoryService } from '../../../../_services-repository/departament-repository.service';
+import { ProvinceRepositoryService } from '../../../../_services-repository/province-repository.service';
+import { DistrictRepositoryService } from '../../../../_services-repository/distric-repository.service';
+import { CcppRepositoryService } from '../../../../_services-repository/ccpp-repository.service';
 
 const EMPTY_USER: User ={
     id: undefined,
@@ -59,6 +67,10 @@ export class EditUserModalComponent implements OnInit {
     user: User;
     userName: String = '';
     $_roles: Observable<RolesModel[]>;
+    $_departament: Observable<DepartamentModel[]>;
+    $_province: Observable<ProvinceModel[]>;
+    $_district: Observable<DistrictModel[]>;
+    $_Ccpp: Observable<CcppModel[]>;
     
     constructor(
         private collectionAgentService: CollectionAgentHTTPServiceDomain,
@@ -67,6 +79,10 @@ export class EditUserModalComponent implements OnInit {
         public modal: NgbActiveModal,
         private typodocumentService: TypeDocumentRepositoryService,
         private typopersonService: TypePersonRepositoryService,
+        private departamentService: DepartamentRepositoryService,
+        private provinceService: ProvinceRepositoryService,
+        private districtService: DistrictRepositoryService,
+        private CcppService: CcppRepositoryService,
     ) { }
 
     ngOnInit(): void {
@@ -75,6 +91,10 @@ export class EditUserModalComponent implements OnInit {
         this.loadUser();
         this.loadTypeperson();
         this.loadTypedocument();
+        this.loadDepartament();
+        this.loadPronvince();
+        this.loadDistrict();
+        this.loadCcpp();
     }
 
     loadRoles() {
@@ -156,7 +176,11 @@ export class EditUserModalComponent implements OnInit {
             foto1: [null],
             foto2: [null],
             foto3: [null],
-            foto4: [null]
+            foto4: [null],
+            department: ['NODATA', Validators.compose([Validators.required])],
+            province: ['', Validators.compose([Validators.required])],
+            districtCode: ['', Validators.compose([Validators.required])],
+            populatedCenterCode: ['NODATA', Validators.compose([Validators.required])]
         });
     }
 
@@ -270,5 +294,67 @@ export class EditUserModalComponent implements OnInit {
     isControlTouched(controlName): boolean {
         const control = this.formGroup.controls[controlName];
         return control.dirty && control.touched;
+    }
+
+    loadDepartament(){
+        const sbDepartament = this.departamentService.getAllDepartament().pipe(
+            catchError((errorMessage) => {
+            return of(errorMessage);
+            })
+        ).subscribe((_departament) => {
+            this.$_departament = _departament.content;
+        });
+        this.subscriptions.push(sbDepartament);
+    }
+
+    loadPronvince(){
+        const sbProvince = this.provinceService.getAllProvince().pipe(
+            catchError((errorMessage) => {
+            return of(errorMessage);
+            })
+        ).subscribe((_pronvince) => {
+            this.$_province = _pronvince.content;
+        });
+        this.subscriptions.push(sbProvince);
+    }
+
+    loadDistrict(){
+        const sbDistrict = this.districtService.getAllDistrict().pipe(
+            catchError((errorMessage) => {
+            return of(errorMessage);
+            })
+        ).subscribe((_district) => {
+            this.$_district = _district.content;
+        });
+        this.subscriptions.push(sbDistrict);
+    }
+
+    loadCcpp(){
+        const sbCcpp = this.CcppService.getAllCcpp().pipe(
+            catchError((errorMessage) => {
+            return of(errorMessage);
+            })
+        ).subscribe((_sbCcpp) => {
+            this.$_Ccpp= _sbCcpp.content;
+        });
+        this.subscriptions.push(sbCcpp);
+    }
+
+    isDepartmentValid(controlName: string): boolean {
+        let control = this.formGroup.controls[controlName];
+        if(control.value == "NODATA"){
+            return true;
+        }else{
+            return null;
+        }
+    }
+
+    isProvinceValid(controlName: string): boolean {
+        let control = this.formGroup.controls[controlName];
+        if(control.value == ""){
+            return true;
+        }else{
+            return null;
+        }
     }
 }
