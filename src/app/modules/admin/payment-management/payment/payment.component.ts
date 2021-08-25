@@ -81,13 +81,6 @@ export interface Deuda {
     Checked:string
 }
 
-export interface Fruit {
-    name: string;
-    monto: number;
-    numberr: string;
-    id:string
-}
-
 export interface DataImagen {
     url: string;
     edit: boolean;
@@ -123,7 +116,7 @@ export class PaymentComponent implements OnInit,OnDestroy{
     currentLocale: any;
     imagenInicial: DataImagen = {url: './assets/media/users/blank.png', delete: false, edit: true, show: true};
     urls: DataImagen[] = [this.imagenInicial];
-
+    tx_document_number:string;
     isTwelveHrFormat:false;
     test:any;
 
@@ -131,8 +124,7 @@ export class PaymentComponent implements OnInit,OnDestroy{
     removable = true;
     addOnBlur = true;
     readonly separatorKeysCodes = [ENTER, COMMA] as const;
-    fruits: Fruit[] = [];
-  
+
     formGroup: FormGroup;
     span: Boolean;
     public payment: Payment;
@@ -155,7 +147,7 @@ export class PaymentComponent implements OnInit,OnDestroy{
 
     ngOnInit(): void {
         this.BENEFICIARIO = EMPTY_PAYMENTS;
-
+        this.tx_document_number='';
         this.span = true;
         this.vuelto=0;
         this.fecha_actual = moment(new Date()).format('YYYY-MM-DD');
@@ -210,12 +202,6 @@ export class PaymentComponent implements OnInit,OnDestroy{
     }
 
     save() {
-        console.log(this.payment);
-        console.log(this.fruits);
-        console.log(this.payment.beneficiaryfullname);   
-        this.formGroup.patchValue({
-        beneficiaryDni: this.BENEFICIARIO.tx_names + ' ' + this.BENEFICIARIO.tx_first_last_name + ' ' + this.BENEFICIARIO.tx_second_last_name
-        });
         const formValues = this.formGroup.value;
         this.paymnentService.CreatePayment(formValues,this.urls);
     }
@@ -367,20 +353,23 @@ export class PaymentComponent implements OnInit,OnDestroy{
             this.isLoading=false;
         }else{
             this.beneficiaryService.getAllBeneficiary(prueba).pipe(
+         
                 catchError((errorMessage) => {
                     return of(errorMessage);
                 })
             ).subscribe((response) => {
+                this.tx_document_number=response.content[0].tx_document_number;
                     this.prueba = response.content;
             });
         }
     }
 
     selectBeneficiary(event){
-        var cod = event.srcElement.firstElementChild.innerHTML;
+        var _beneficiary_code = event.srcElement.firstElementChild.innerHTML;
         this.formGroup.patchValue({
             beneficiaryDni: event.target.firstChild.data,
-            beneficiary_code: cod
+            beneficiary_code: _beneficiary_code,
+           
         });
         this.isLoading=false;
     }

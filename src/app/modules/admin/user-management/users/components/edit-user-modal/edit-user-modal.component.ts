@@ -87,13 +87,14 @@ export class EditUserModalComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadRoles();
-        console.log(this.loadRoles());
+
         this.loadUser();
         this.loadTypeperson();
         this.loadTypedocument();
         this.loadDepartament();
-        this.loadPronvince();
-        this.loadDistrict();
+ 
+      // this.loadPronvince();
+       // this.loadDistrict();
         this.loadCcpp();
     }
 
@@ -307,8 +308,8 @@ export class EditUserModalComponent implements OnInit {
         this.subscriptions.push(sbDepartament);
     }
 
-    loadPronvince(){
-        const sbProvince = this.provinceService.getAllProvince().pipe(
+    loadPronvince(codeprovince){
+        const sbProvince = this.provinceService.getAllProvince(codeprovince).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
@@ -318,8 +319,8 @@ export class EditUserModalComponent implements OnInit {
         this.subscriptions.push(sbProvince);
     }
 
-    loadDistrict(){
-        const sbDistrict = this.districtService.getAllDistrict().pipe(
+    loadDistrict(codedistrict){
+        const sbDistrict = this.districtService.getAllDistrict(codedistrict).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
@@ -356,5 +357,16 @@ export class EditUserModalComponent implements OnInit {
         }else{
             return null;
         }
+    }
+
+    onOptionsSelectedDepartament(check){
+        console.log(check.currentTarget.options[check.currentTarget.options.selectedIndex].id);
+        const DepartamentCode=check.currentTarget.options[check.currentTarget.options.selectedIndex].id;
+        this.loadPronvince(DepartamentCode);
+    }
+    onOptionsSelectedProvince(checks){
+        console.log(checks.currentTarget.options[checks.currentTarget.options.selectedIndex].id);
+        const ProvinceCode=checks.currentTarget.options[checks.currentTarget.options.selectedIndex].id;
+        this.loadDistrict(ProvinceCode);
     }
 }

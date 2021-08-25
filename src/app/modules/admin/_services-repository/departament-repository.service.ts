@@ -19,6 +19,7 @@ export class DepartamentRepositoryService {
         return this._departmentservicedomain.getAllDepartament().pipe(
             map(
             response => {
+                console.log(response.data);
                 return response.data;
             }
         ));    

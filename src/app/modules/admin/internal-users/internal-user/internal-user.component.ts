@@ -84,8 +84,8 @@ export class EditInternalUserComponent implements OnInit, OnDestroy{
         this.loadRoles();
         this.loadTypeDocuments();
         this.loadDepartament();
-        this.loadPronvince();
-        this.loadDistrict();
+     //   this.loadPronvince();
+      //  this.loadDistrict();
         this.loadCcpp();
         this.loadUser();
         this.loadTypeperson()
@@ -156,27 +156,27 @@ export class EditInternalUserComponent implements OnInit, OnDestroy{
         this.subscriptions.push(sbDepartament);
     }
 
-    loadPronvince(){
-        const sbProvince = this.provinceService.getAllProvince().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_pronvince) => {
-            this.$_province = _pronvince.content;
-        });
-        this.subscriptions.push(sbProvince);
-    }
+  //  loadPronvince(){
+  //      const sbProvince = this.provinceService.getAllProvince().pipe(
+   //         catchError((errorMessage) => {
+   //         return of(errorMessage);
+    //        })
+     //   ).subscribe((_pronvince) => {
+     //       this.$_province = _pronvince.content;
+     //   });
+     //   this.subscriptions.push(sbProvince);
+   // }
 
-    loadDistrict(){
-        const sbDistrict = this.districtService.getAllDistrict().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_district) => {
-            this.$_district = _district.content;
-        });
-        this.subscriptions.push(sbDistrict);
-    }
+  //  loadDistrict(){
+  ///      const sbDistrict = this.districtService.getAllDistrict().pipe(
+   //         catchError((errorMessage) => {
+   //         return of(errorMessage);
+   //         })
+  //      ).subscribe((_district) => {
+   //         this.$_district = _district.content;
+   //     });
+   //     this.subscriptions.push(sbDistrict);
+   // }
 
     loadCcpp(){
         const sbCcpp = this.CcppService.getAllCcpp().pipe(

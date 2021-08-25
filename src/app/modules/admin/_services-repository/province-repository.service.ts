@@ -14,10 +14,11 @@ export class ProvinceRepositoryService {
         private _provinceservicedomain: ProvinceHTTPServiceDomain
     ) {}
 
-    getAllProvince(): Observable<PagedResponse<ProvinceModel>> {
-        return this._provinceservicedomain.getAllProvince().pipe(
+    getAllProvince(code): Observable<PagedResponse<ProvinceModel>> {
+        return this._provinceservicedomain.getAllProvince(code).pipe(
             map(
             response => {
+            //    console.log(response)
                 return response.data;
             }
         ));    

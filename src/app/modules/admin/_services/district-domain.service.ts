@@ -19,9 +19,9 @@ export class DistrictHTTPServiceDomain {
         private buildheader:BuildHeaderService
     ) { }
 
-    getAllDistrict(): Observable<ApiResponse<PagedResponse<DistrictModel>>> {
+    getAllDistrict(codedistrict): Observable<ApiResponse<PagedResponse<DistrictModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<DistrictModel>>>(this.API_URL,{
+        return this.http.get<ApiResponse<PagedResponse<DistrictModel>>>( `${environment.apiUrlNiel}/ubigee/district?code=${codedistrict}`,{
             headers: header 
         })
             .pipe(map(response => response))

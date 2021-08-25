@@ -78,6 +78,8 @@
                             Primer apellido es requerido
                         </div>
                     </div>
+                </div>    
+                <div class="form-group row">
                     <div class="col-lg-4">
                         <label class="form-label">Ingresar Apellido Materno</label>
                         <input
@@ -125,6 +127,8 @@
                             Razón social es requerido
                         </div>
                     </div>
+                </div>  
+                <div class="form-group row">
                     <div class="col-lg-4">
                         <label>Tipo Documento</label>
                         <select class="form-control form-control-lg form-control-solid"
@@ -172,6 +176,8 @@
                             Número de teléfono es requerido
                         </div>
                     </div>
+                </div>    
+                <div class="form-group row">
                     <div class="col-lg-4">
                         <label class="form-label">Ingresar Telefono 2</label>
                         <input
@@ -221,6 +227,8 @@
                             [class.is-valid]="isControlValid('nota')"
                         />
                     </div>
+                </div>
+                <div class="form-group row">
                     <div class="col-lg-4">
                         <label class="form-label">Ingresar Ubigeo</label>
                         <input
@@ -278,6 +286,8 @@
                             Longitud es requerido
                         </div>
                     </div>
+                </div>
+                <div class="form-group row">
                     <div class="col-lg-4">
                         <label class="form-label">Ingresar Latitud</label>
                         <input
@@ -320,16 +330,16 @@
                 <div class="form-group row">    
                     <div class="col-lg-4">
                         <label>Departamento</label>
-                        <select formControlName="department" class="form-control form-control-lg form-control-solid">
+                        <select formControlName="department" class="form-control form-control-lg form-control-solid" (change)="onOptionsSelectedDepartament($event)">
                             <option value="NODATA" hidden disabled>Ninguno</option>
-                            <option *ngFor="let item of $_departament" [value]="item.code">{{item.description}}</option>
+                            <option *ngFor="let item of $_departament" [id]="item.code" [value]="item.id">{{item.description}}</option>
                         </select>
                     </div>                   
                     <div class="col-lg-4">
                         <label>Provincia</label>
-                        <select formControlName="province" class="form-control form-control-lg form-control-solid" [attr.disabled]="isDepartmentValid('department')">
+                        <select formControlName="province" class="form-control form-control-lg form-control-solid" (change)="onOptionsSelectedProvince($event)" [attr.disabled]="isDepartmentValid('department')">
                             <option value="" hidden disabled>Seleccione una provincia</option>
-                            <option *ngFor="let item of $_province" [value]="item.code">{{item.description}}</option>
+                            <option *ngFor="let item of $_province" [id]="item.code" [value]="item.id">{{item.description}}</option>
                         </select>
                     </div>
                     <div class="col-lg-4">

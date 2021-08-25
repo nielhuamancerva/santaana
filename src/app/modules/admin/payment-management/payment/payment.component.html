@@ -19,7 +19,7 @@
         <ng-container >
             <div class="mt-5">
                 <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
-                    <div class="form-group row" *ngIf="BENEFICIARIO || !BENEFICIARIO">
+                    <div class="form-group row">
                         <!-- <div class="col-lg-4" >
                             <label>Codigo de Beneficiario</label>
                             <input 
@@ -47,18 +47,6 @@
                             </div>
                         </div> -->
                         <div class="col-lg-4">
-                            <label>Nombes y Apellidos</label>
-                            <input 
-                                type="text" 
-                                class="form-control form-control-lg form-control-solid"
-                                placeholder="Nombes y Apellidos" 
-                                name="beneficiaryDni"
-                                readonly
-                                [value]="BENEFICIARIO.tx_names + ' ' + BENEFICIARIO.tx_first_last_name + ' ' + BENEFICIARIO.tx_second_last_name"
-                                formControlName="beneficiaryDni"
-                            />
-                        </div>
-                        <div class="col-lg-4">
                             <label>Codigo de Beneficiario</label>
                             <input 
                                 type="text" 
@@ -69,7 +57,7 @@
                                 [(ngModel)]="prueba2"
                                 formControlName="beneficiary_code"
                             />
-                            <span class="form-text text-muted">{{BENEFICIARIO.tx_document_number}}</span>
+                            <span class="form-text text-muted" >{{tx_document_number}}</span>
                             <div class="results" *ngIf="isLoading">
                                 <ul>
                                   <li *ngFor="let item of prueba">
@@ -82,10 +70,21 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
+                            <label>Nombes y Apellidos</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Nombes y Apellidos" 
+                                name="beneficiaryDni"
+                                readonly
+                                [value]="BENEFICIARIO.tx_names + ' ' + BENEFICIARIO.tx_first_last_name + ' ' + BENEFICIARIO.tx_second_last_name"
+                                formControlName="beneficiaryDni"
+                            />
+                        </div>
+                        <div class="col-lg-4">
                             <label>Boleta</label>
                                        
                                 <div class="example-button-row"  >
-                                    <ng-container >
                                     <mat-form-field class="example-full-width"  appearance="fill" >
                                         <mat-chip-list #chipList aria-label="Fruit selection" >
                                             <mat-label *ngFor="let document of sales$">
@@ -97,9 +96,8 @@
                                                     </mat-chip>
                                                 </mat-label>
                                             </mat-label>
-                                            <input placeholder="Boleta de Pagos..."
-                                                    [matChipInputFor]="chipList"
-                                                    aria-placeholder="Boletas"
+                                            <input  [matChipInputFor]="chipList"
+                                                    placeholder="Boletas"
                                                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                                     [matChipInputAddOnBlur]="addOnBlur" 
                                                     readonly
@@ -110,7 +108,6 @@
                                             <mat-icon>add_box</mat-icon>
                                         </button>
                                     </mat-form-field>
-                                    </ng-container>
                                 </div>
                         </div>
                     </div>
@@ -169,7 +166,7 @@
                             <input 
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
-                                placeholder="Ingrese el importe a pagar" 
+                                placeholder="Ingrese Recibido" 
                                 name="amount_received"
                                 [class.is-invalid]="isControlInvalid('amount_received')"
                                 [class.is-valid]="isControlValid('amount_received')"
@@ -192,7 +189,7 @@
                             <input 
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
-                                placeholder="Importe por pagar" 
+                                placeholder="Importe Pendiente a Pagar" 
                                 readonly
                             />
                             <div
@@ -206,7 +203,7 @@
                             <input 
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
-                                placeholder="Monto a cobrar" 
+                                placeholder="Importe a Total" 
                                 name="mountToCollect"
                                 readonly
                             />

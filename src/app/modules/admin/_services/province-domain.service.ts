@@ -13,15 +13,17 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 })
 
 export class ProvinceHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/ubigee/province`;
+    API_URL = `${environment.apiUrlNiel}/ubigee/province?code=13`;
+
+    codedepart:string="";
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService
     ) { }
 
-    getAllProvince(): Observable<ApiResponse<PagedResponse<ProvinceModel>>> {
+    getAllProvince(code): Observable<ApiResponse<PagedResponse<ProvinceModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<ProvinceModel>>>(this.API_URL,{
+        return this.http.get<ApiResponse<PagedResponse<ProvinceModel>>>(`${environment.apiUrlNiel}/ubigee/province?code=${code}`,{
             headers: header 
         })
             .pipe(map(response => response))

@@ -15,10 +15,11 @@ export class DistrictRepositoryService {
         private _districtservicedomain: DistrictHTTPServiceDomain
     ) {}
 
-    getAllDistrict(): Observable<PagedResponse<DistrictModel>> {
-        return this._districtservicedomain.getAllDistrict().pipe(
+    getAllDistrict(codedistrict): Observable<PagedResponse<DistrictModel>> {
+        return this._districtservicedomain.getAllDistrict(codedistrict).pipe(
             map(
             response => {
+                console.log(response)
                 return response.data;
             }
         ));    
