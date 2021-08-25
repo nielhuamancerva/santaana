@@ -90,14 +90,14 @@
                             <label>Centro Poblado</label>
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
-                                    <mat-label>Distritos</mat-label>
+                                    <mat-label>Centros poblados:</mat-label>
                                     <mat-select [formControl]="pokemonControl" multiple>
-                                      <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name"
-                                                    [disabled]="group.disabled">
-                                        <mat-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
-                                          {{pokemon.viewValue}}
-                                        </mat-option>
-                                      </mat-optgroup>
+                                        <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
+                                                        [disabled]="false">
+                                            <mat-option *ngFor="let pokemon of group.provinces" [value]="pokemon.description" (click)="selectProvince($event)">
+                                            {{pokemon.code}}
+                                            </mat-option>
+                                        </mat-optgroup>
                                     </mat-select>
                                 </mat-form-field>
                             </div>

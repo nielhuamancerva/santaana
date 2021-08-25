@@ -15,13 +15,19 @@ import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 
 export class ProvinceHTTPServiceDomain {
     API_URL = `${environment.apiUrlNiel}/ubigee/province?code=13`;
+    API_URL1 = `${environment.apiUrlNiel}/ubigee/province`;
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
     data: Data;
     private _provinces: Content[] = [];
+    private _provincesByDepartament: Content[] = [];
 
     get provinces(){
         return [...this._provinces];
+    }
+
+    get provincesByDepartament(){
+        return [...this._provincesByDepartament];
     }
 
     constructor(
@@ -43,6 +49,14 @@ export class ProvinceHTTPServiceDomain {
             headers: this.header
         }).subscribe( (resp) => {
             this._provinces = resp.data.content;
+        })
+    }
+
+    getByDepartament(code){
+        return this.http.get<ApiRespuesta>(this.API_URL1 + `?code=${code}`,{
+            headers: this.header
+        }).subscribe( (resp) => {
+            this._provincesByDepartament = resp.data.content;
         })
     }
 

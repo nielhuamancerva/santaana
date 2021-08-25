@@ -45,10 +45,6 @@ export class DepartamentHTTPServiceDomain {
             this._departaments = resp.data.content;
         })
     }
-    
-    getByCode(){
-
-    }
 
     private handleError(err: HttpErrorResponse): Observable<never> {
         let errorMessage = "";
