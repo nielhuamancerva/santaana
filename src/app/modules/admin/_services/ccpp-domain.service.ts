@@ -7,6 +7,7 @@ import { ApiResponse } from '../../../_commons/_models/ApiResponse.model';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
 import { CcppModel } from '../_models/Ccpp.model';
 import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.service';
+import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -15,6 +16,15 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 export class CcppHTTPServiceDomain {
 
     API_URL = `${environment.apiUrlNiel}/ubigee/ccpp`;
+    header = this.buildheader.buildHeader();
+    responseApi: ApiRespuesta;
+    data: Data;
+    _ccpps: Content[] = [];
+
+    get ccpps(){
+        return [...this._ccpps];
+    }
+
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService
@@ -27,6 +37,14 @@ export class CcppHTTPServiceDomain {
         })
             .pipe(map(response => response))
             .pipe(catchError(this.handleError));
+    }
+
+    getAll(){
+        return this.http.get<ApiRespuesta>(this.API_URL,{
+            headers: this.header
+        }).subscribe( (resp) => {
+            this._ccpps = resp.data.content;
+        })
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {

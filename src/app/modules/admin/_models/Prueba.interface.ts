@@ -7,7 +7,7 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-export interface SearchDepartament {
+export interface ApiRespuesta {
     success:   boolean;
     message:   string;
     timestamp: string;
@@ -32,11 +32,11 @@ export interface Content {
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
-    public static toSearchDepartament(json: string): SearchDepartament {
+    public static toSearchDepartament(json: string): ApiRespuesta {
         return cast(JSON.parse(json), r("SearchDepartament"));
     }
 
-    public static searchDepartamentToJson(value: SearchDepartament): string {
+    public static searchDepartamentToJson(value: ApiRespuesta): string {
         return JSON.stringify(uncast(value, r("SearchDepartament")), null, 2);
     }
 }

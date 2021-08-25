@@ -7,6 +7,7 @@ import { ApiResponse } from '../../../_commons/_models/ApiResponse.model';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
 import { DepartamentModel } from '../_models/Departament.model';
 import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.service';
+import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +15,15 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 
 export class DepartamentHTTPServiceDomain {
     API_URL = `${environment.apiUrlNiel}/ubigee/department`;
+    header = this.buildheader.buildHeader();
+    responseApi: ApiRespuesta;
+    data: Data;
+    _departaments: Content[] = [];
+
+    get departaments(){
+        return [...this._departaments];
+    }
+
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService
@@ -26,6 +36,18 @@ export class DepartamentHTTPServiceDomain {
         })
             .pipe(map(response => response))
             .pipe(catchError(this.handleError));
+    }
+    
+    getAll(){
+        return this.http.get<ApiRespuesta>(this.API_URL,{
+            headers: this.header
+        }).subscribe( (resp) => {
+            this._departaments = resp.data.content;
+        })
+    }
+    
+    getByCode(){
+
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {

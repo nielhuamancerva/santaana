@@ -7,6 +7,7 @@ import { ApiResponse } from '../../../_commons/_models/ApiResponse.model';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
 import { ProvinceModel } from '../_models/Province.model';
 import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.service';
+import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -14,8 +15,15 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 
 export class ProvinceHTTPServiceDomain {
     API_URL = `${environment.apiUrlNiel}/ubigee/province?code=13`;
+    header = this.buildheader.buildHeader();
+    responseApi: ApiRespuesta;
+    data: Data;
+    private _provinces: Content[] = [];
 
-    codedepart:string="";
+    get provinces(){
+        return [...this._provinces];
+    }
+
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService
@@ -28,6 +36,14 @@ export class ProvinceHTTPServiceDomain {
         })
             .pipe(map(response => response))
             .pipe(catchError(this.handleError));
+    }
+
+    getAll(){
+        return this.http.get<ApiRespuesta>(this.API_URL,{
+            headers: this.header
+        }).subscribe( (resp) => {
+            this._provinces = resp.data.content;
+        })
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {

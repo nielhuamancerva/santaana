@@ -1,27 +1,26 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
+import {FormControl} from '@angular/forms';
 import { catchError } from 'rxjs/operators';
-
-import { RoleRepositoryService } from '../../_services-repository/role-repository.service';
-import { TypeDocumentRepositoryService } from '../../_services-repository/typedocument-repository.service';
 import { of, interval, Subject, Subscription, Observable } from 'rxjs';
+
 import { RolesModel } from '../../_models/Roles.model';
 import { TypeDocumentModel } from '../..//_models/TypeDocument.model';
 import { InternalUser } from '../../internal-users/models/internal-user.model';
-import { DepartamentRepositoryService } from '../../_services-repository/departament-repository.service';
 import { DepartamentModel } from '../../_models/Departament.model';
 import { ProvinceModel } from '../..//_models/Province.model';
-import { ProvinceRepositoryService } from '../../_services-repository/province-repository.service';
 import { DistrictModel } from '../../_models/District.model';
-import { DistrictRepositoryService } from '../../_services-repository/distric-repository.service';
 import { CcppModel } from '../../_models/Ccpp.model';
-import { CcppRepositoryService } from '../../_services-repository/ccpp-repository.service';
 import { UserModel } from '../../_models/user.model';
 import { UserHTTPServiceDomain } from '../../_services/user-domain.service';
 import { TypePersonModel } from '../../_models/TypePerson.model';
 import { TypePersonRepositoryService } from '../../_services-repository/typeperson-repository.service';
+import { ProvinceHTTPServiceDomain } from '../../_services/province-domain.service';
+import { DepartamentHTTPServiceDomain } from '../../_services/departament-domain.service';
+import { DistrictHTTPServiceDomain } from '../../_services/district-domain.service';
+import { CcppHTTPServiceDomain } from '../../_services/ccpp-domain.service';
+import { TypeDocumentHTTPServiceDomain } from '../../_services/typedocument-domain.service';
 
 const EMPTY_INTERNAL_USER: InternalUser ={
     id: undefined,
@@ -42,6 +41,17 @@ const EMPTY_INTERNAL_USER: InternalUser ={
     typePersonCode: '',
     phone1:''
 };
+
+interface Pokemon {
+    value: string;
+    viewValue: string;
+}
+
+interface PokemonGroup {
+    disabled?: boolean;
+    name: string;
+    pokemon: Pokemon[];
+}
 
 @Component({
   selector: 'app-edit-asign-internal-user',
@@ -64,15 +74,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     _typeperson:TypePersonModel[];
     constructor(
         private userService: UserHTTPServiceDomain,
-        private rolesService: RoleRepositoryService,
-        private typesDocumentService: TypeDocumentRepositoryService,
-        private departamentService: DepartamentRepositoryService,
-        private provinceService: ProvinceRepositoryService,
-        private districtService: DistrictRepositoryService,
-        private CcppService: CcppRepositoryService,
         public dialog: MatDialog,
         private fb: FormBuilder,
         private typopersonService: TypePersonRepositoryService,
+        private provinceDomainService: ProvinceHTTPServiceDomain,
+        private departamentDomainService: DepartamentHTTPServiceDomain,
+        private districtDomainService: DistrictHTTPServiceDomain,
+        private ccpDomainService: CcppHTTPServiceDomain,
+        private typeDocumentDomainService: TypeDocumentHTTPServiceDomain,
     ) { }
 
     private utcTimeSubject: Subject<string> = new Subject<string>();
@@ -81,15 +90,34 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void {
         this.loadInternalUser();
-        this.loadRoles();
-        this.loadTypeDocuments();
-        this.loadDepartament();
-       // this.loadPronvince();
-      //  this.loadDistrict();
-        this.loadCcpp();
         this.loadUser();
         this.loadTypeperson()
         this.utcSubscription = interval(1000).subscribe(() => this.getUtcTime());
+        this.provinceDomainService.getAll();
+        this.departamentDomainService.getAll();
+        this.districtDomainService.getAll();
+        this.ccpDomainService.getAll();
+        this.typeDocumentDomainService.getAll();
+    }
+
+    get departaments(){
+        return this.departamentDomainService.departaments;
+    }
+    
+    get provinces(){
+        return this.provinceDomainService.provinces;
+    }
+
+    get districts(){
+        return this.districtDomainService.districts;
+    }
+
+    get ccpps(){
+        return this.ccpDomainService.ccpps;
+    }
+
+    get typeDocuments(){
+        return this.typeDocumentDomainService.typeDocuments;
     }
 
     ngOnDestroy() {
@@ -143,53 +171,48 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         });
     }
 
+    toppings = new FormControl();
+    toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+    pokemonControl = new FormControl();
+    pokemonGroups: PokemonGroup[] = [
+        {
+        name: 'Grass',
+        pokemon: [
+            {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
+            {value: 'oddish-1', viewValue: 'Oddish'},
+            {value: 'bellsprout-2', viewValue: 'Bellsprout'}
+        ]
+        },
+        {
+        name: 'Water',
+        pokemon: [
+            {value: 'squirtle-3', viewValue: 'Squirtle'},
+            {value: 'psyduck-4', viewValue: 'Psyduck'},
+            {value: 'horsea-5', viewValue: 'Horsea'}
+        ]
+        },
+        {
+        name: 'Fire',
+        disabled: true,
+        pokemon: [
+            {value: 'charmander-6', viewValue: 'Charmander'},
+            {value: 'vulpix-7', viewValue: 'Vulpix'},
+            {value: 'flareon-8', viewValue: 'Flareon'}
+        ]
+        },
+        {
+        name: 'Psychic',
+        pokemon: [
+            {value: 'mew-9', viewValue: 'Mew'},
+            {value: 'mewtwo-10', viewValue: 'Mewtwo'},
+        ]
+        }
+    ];
+
+
     save(){
         const formValues = this.formGroup.value;
         this.userService.CreateUser(formValues);
-    }
-    
-    loadDepartament(){
-        const sbDepartament = this.departamentService.getAllDepartament().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_departament) => {
-            this.$_departament = _departament.content;
-        });
-        this.subscriptions.push(sbDepartament);
-    }
-
-   // loadPronvince(){
-  //      const sbProvince = this.provinceService.getAllProvince().pipe(
-   //         catchError((errorMessage) => {
-   //         return of(errorMessage);
-   //         })
-   //     ).subscribe((_pronvince) => {
-    //        this.$_province = _pronvince.content;
-    //    });
-    //    this.subscriptions.push(sbProvince);
-   // }
-
-  //  loadDistrict(){
-  //      const sbDistrict = this.districtService.getAllDistrict().pipe(
-   //         catchError((errorMessage) => {
-  //          return of(errorMessage);
-  //          })
-  //      ).subscribe((_district) => {
-   //         this.$_district = _district.content;
-   //     });
-   //     this.subscriptions.push(sbDistrict);
-  //  }
-
-    loadCcpp(){
-        const sbCcpp = this.CcppService.getAllCcpp().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_sbCcpp) => {
-            this.$_Ccpp= _sbCcpp.content;
-        });
-        this.subscriptions.push(sbCcpp);
     }
 
     loadTypeperson() {
@@ -201,29 +224,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             this._typeperson = _typeperson.content;
         });
         this.subscriptions.push(sbTypeperson);
-    }
-
-    loadTypeDocuments(){
-        const sbTypedocument = this.typesDocumentService.getAllTypedocument().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_typedocument) => {
-            this.$_typesDocument = _typedocument.content;
-           // console.log(this.$_typesDocument)
-        });
-        this.subscriptions.push(sbTypedocument);
-    }
-
-    loadRoles() {
-        const sbRole = this.rolesService.getAllRoles().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_roles) => {
-            this.$_roles = _roles.content;
-        });
-        this.subscriptions.push(sbRole);
     }
 
     isDepartmentValid(controlName: string): boolean {
@@ -271,7 +271,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
            })
        ).subscribe((_user) => {
           this.$_user = _user;
-          console.log(this.$_user);
        });
         this.subscriptions.push(sbUser);
     }

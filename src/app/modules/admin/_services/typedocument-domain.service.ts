@@ -7,6 +7,7 @@ import { ApiResponse } from '../../../_commons/_models/ApiResponse.model';
 import { TypeDocumentModel } from '../_models/TypeDocument.model';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
 import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.service';
+import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +15,15 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 export class TypeDocumentHTTPServiceDomain {
 
     API_URL = `${environment.apiUrlNiel}/element/typedocument`;
+    header = this.buildheader.buildHeader();
+    responseApi: ApiRespuesta;
+    data: Data;
+    _typeDocuments: Content[] = [];
+
+    get typeDocuments(){
+        return [...this._typeDocuments];
+    }
+    
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService
@@ -26,6 +36,14 @@ export class TypeDocumentHTTPServiceDomain {
         })
             .pipe(map(response => response))
             .pipe(catchError(this.handleError));
+    }
+
+    getAll(){
+        return this.http.get<ApiRespuesta>(this.API_URL,{
+            headers: this.header
+        }).subscribe( (resp) => {
+            this._typeDocuments = resp.data.content;
+        })
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {
