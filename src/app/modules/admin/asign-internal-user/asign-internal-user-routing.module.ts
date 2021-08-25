@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes,RouterModule } from '@angular/router';
 import { AsignInternalUserComponent } from './asign-internal-user.component';
 import { EditAsignInternalUserComponent } from './edit-asign-internal-user/edit-asign-internal-user.component';
+import { ListAsignInternalUserComponent } from './list-asign-internal-user/list-asign-internal-user.component';
 
 const routes: Routes = [
     {
@@ -10,6 +11,10 @@ const routes: Routes = [
             children: [
             {
                 path: 'list',
+                component: ListAsignInternalUserComponent,
+            },
+            {
+                path: 'add',
                 component: EditAsignInternalUserComponent,
             },
             { path: '', redirectTo: 'list', pathMatch: 'full' },

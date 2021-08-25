@@ -49,11 +49,13 @@ import { InlineSVGModule } from 'ng-inline-svg';
 import { AsignInternalUserComponent } from './asign-internal-user.component';
 import { AsignInternalUsersRoutingModule } from './asign-internal-user-routing.module';
 import { EditAsignInternalUserComponent } from './edit-asign-internal-user/edit-asign-internal-user.component';
+import { ListAsignInternalUserComponent } from './list-asign-internal-user/list-asign-internal-user.component';
 
 @NgModule({
     declarations: [
         AsignInternalUserComponent,
-        EditAsignInternalUserComponent
+        EditAsignInternalUserComponent,
+        ListAsignInternalUserComponent
     ],
     imports: [
         CommonModule,
