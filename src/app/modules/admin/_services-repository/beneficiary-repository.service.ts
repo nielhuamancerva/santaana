@@ -19,9 +19,12 @@ export class BeneficiaryRepositoryService {
         return this._beneficiaryservicedomain.getAllBeneficiary(varr).pipe(
             map(
                 response => {
-                console.log(response.data.content);
                 return response.data;
             }
         ));    
+    }
+
+    getPrueba(query){
+        this._beneficiaryservicedomain.getPrueba(query);
     }
 }

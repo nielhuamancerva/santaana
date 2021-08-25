@@ -46,4 +46,12 @@ export class BeneficiaryHTTPServiceDomain {
 
         return throwError(errorMessage);
     }
+
+    getPrueba(query): Observable<any>{
+        const header = this.buildheader.buildHeader();
+        return this.http.get(`${environment.apiUrlNiel}/beneficiary?externalCode=${query}`,
+        {
+            headers: header 
+        });
+    }
 }

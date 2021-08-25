@@ -16,7 +16,7 @@ import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
 // #fake-end#
-import { LayoutModule } from './pages/layout.module'
+import { LayoutModule } from './pages/layout.module';
 
 function appInitializer(authService: AuthService) {
   return () => {

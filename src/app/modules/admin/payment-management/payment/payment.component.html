@@ -20,7 +20,7 @@
             <div class="mt-5">
                 <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
                     <div class="form-group row" *ngIf="BENEFICIARIO || !BENEFICIARIO">
-                        <div class="col-lg-4" >
+                        <!-- <div class="col-lg-4" >
                             <label>Codigo de Beneficiario</label>
                             <input 
                                 type="text"
@@ -36,7 +36,7 @@
                                 [(ngModel)]="src"
                                 #hola
                             />
-                            <span class="form-text text-muted" >{{ data$ | async }}{{BENEFICIARIO.tx_document_number}}</span>
+                            <span class="form-text text-muted" *ngIf=" data$ | async">{{BENEFICIARIO.tx_document_number}}</span>
 
                          
                             <div
@@ -45,7 +45,7 @@
                             >
                                 Código de Beneficiario es requerido
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-lg-4">
                             <label>Nombes y Apellidos</label>
                             <input 
@@ -57,6 +57,29 @@
                                 [value]="BENEFICIARIO.tx_names + ' ' + BENEFICIARIO.tx_first_last_name + ' ' + BENEFICIARIO.tx_second_last_name"
                                 formControlName="beneficiaryDni"
                             />
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Codigo de Beneficiario</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Código de Beneficiario"
+                                (ngModelChange)="mostrar($event)"
+                                autocomplete="off"
+                                [(ngModel)]="prueba2"
+                                formControlName="beneficiary_code"
+                            />
+                            <span class="form-text text-muted">{{BENEFICIARIO.tx_document_number}}</span>
+                            <div class="results" *ngIf="isLoading">
+                                <ul>
+                                  <li *ngFor="let item of prueba">
+                                    <a class="name" (click)="selectBeneficiary($event)">
+                                      {{item.tx_names}} {{item.tx_first_last_name}} {{item.tx_second_last_name}}
+                                      <p style="display: none;">{{ item.tx_external_code }}</p>
+                                    </a>
+                                  </li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="col-lg-4">
                             <label>Boleta</label>
@@ -254,8 +277,6 @@
                     </button>
                     </div>
                 </form>
-
-                <a>{{formGroup.value | json}}</a>
             </div>
         </ng-container>
     </div>

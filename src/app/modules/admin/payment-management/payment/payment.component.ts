@@ -140,6 +140,8 @@ export class PaymentComponent implements OnInit,OnDestroy{
     hora_actual: Date;
     hora_imprimir: String = new Date().toISOString();
     id: any;
+    prueba: any;
+    prueba2: any;
   
     constructor(
         private paymnentService: PaymentHTTPServiceDomain,
@@ -202,7 +204,8 @@ export class PaymentComponent implements OnInit,OnDestroy{
         note: [this.payment.note, Validators.compose([Validators.required])],
         amount_received: [this.payment.amount_received, Validators.compose([Validators.required])],
         currency: [this.payment.currency, Validators.compose([Validators.required])],
-        document_code: [this.payment.document_code]
+        document_code: [this.payment.document_code],
+        prueba2: ['']
         });
     }
 
@@ -318,14 +321,27 @@ export class PaymentComponent implements OnInit,OnDestroy{
     }
 
     busqueda(hyhy){
-        this.isLoading=true;
-        this.data$=this.beneficiaryService.getAllBeneficiary(hyhy).pipe(
-            map((_beneficiary)=>
-            this.BENEFICIARIO=_beneficiary.content[0]),
-            distinctUntilChanged(),
-            debounceTime(100000),
-            finalize(()=>this.isLoading=false)
-        )
+        if(hyhy == ''){
+            this.isLoading=false;
+            this.formGroup.patchValue({
+                beneficiaryDni: ''
+            });
+            this.BENEFICIARIO.tx_document_number = '';
+            this.BENEFICIARIO.tx_names = '';
+            return;
+        }else{
+            this.isLoading=true;
+            this.data$=this.beneficiaryService.getAllBeneficiary(hyhy).pipe(
+                map((_beneficiary)=>
+                
+                this.BENEFICIARIO=_beneficiary.content[0],
+                console.log(this._beneficiary)),
+                
+                distinctUntilChanged(),
+                debounceTime(100000),
+                finalize(()=>this.isLoading=false)
+            )
+        }
     }
 
     loadSales(){
@@ -343,5 +359,29 @@ export class PaymentComponent implements OnInit,OnDestroy{
     vueltorecibido(importe){
         console.log(importe.value);
         this.vuelto=this.vuelto-importe.value;
+    }
+
+    mostrar(prueba:string){
+        this.isLoading=true;
+        if(prueba == ''){
+            this.isLoading=false;
+        }else{
+            this.beneficiaryService.getAllBeneficiary(prueba).pipe(
+                catchError((errorMessage) => {
+                    return of(errorMessage);
+                })
+            ).subscribe((response) => {
+                    this.prueba = response.content;
+            });
+        }
+    }
+
+    selectBeneficiary(event){
+        var cod = event.srcElement.firstElementChild.innerHTML;
+        this.formGroup.patchValue({
+            beneficiaryDni: event.target.firstChild.data,
+            beneficiary_code: cod
+        });
+        this.isLoading=false;
     }
 }
