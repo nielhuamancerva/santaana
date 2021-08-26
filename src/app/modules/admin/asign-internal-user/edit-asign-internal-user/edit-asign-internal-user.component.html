@@ -48,8 +48,8 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
-                                    <mat-select [formControl]="toppings" multiple>
-                                      <mat-option *ngFor="let departament of departaments" [value]="departament">{{departament.description}}</mat-option>
+                                    <mat-select multiple (selectionChange)="getSelectedOptions($event)">
+                                        <mat-option *ngFor="let departament of departaments" [id]="departament.code" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -59,11 +59,11 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
-                                    <mat-select [formControl]="pokemonControl" multiple>
-                                      <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name"
+                                    <mat-select multiple >
+                                      <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
-                                        <mat-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
-                                          {{pokemon.viewValue}}
+                                        <mat-option *ngFor="let pokemon of group.provinces" [value]="pokemon.description">
+                                          {{pokemon.code}}
                                         </mat-option>
                                       </mat-optgroup>
                                     </mat-select>
@@ -75,11 +75,11 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Distritos</mat-label>
-                                    <mat-select [formControl]="pokemonControl" multiple>
-                                      <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name"
+                                    <mat-select multiple>
+                                      <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
-                                        <mat-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
-                                          {{pokemon.viewValue}}
+                                        <mat-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.description">
+                                          {{pokemon.code}}
                                         </mat-option>
                                       </mat-optgroup>
                                     </mat-select>
@@ -91,7 +91,7 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Centros poblados:</mat-label>
-                                    <mat-select [formControl]="pokemonControl" multiple>
+                                    <mat-select multiple>
                                         <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
                                                         [disabled]="false">
                                             <mat-option *ngFor="let pokemon of group.provinces" [value]="pokemon.description" (click)="selectProvince($event)">

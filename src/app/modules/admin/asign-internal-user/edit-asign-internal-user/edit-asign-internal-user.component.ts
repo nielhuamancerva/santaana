@@ -85,6 +85,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     $_district: Observable<DistrictModel[]>;
     $_Ccpp: Observable<CcppModel[]>;
     _typeperson:TypePersonModel[];
+    provis: number[] = [13, 14];
     constructor(
         private userService: UserHTTPServiceDomain,
         public dialog: MatDialog,
@@ -115,6 +116,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
 
     get departaments(){
         return this.departamentDomainService.departaments;
+    }
+
+    get departamentByCode(){
+        return this.departamentDomainService.departametByCode;
     }
     
     get provinces(){
@@ -188,43 +193,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         });
     }
 
-    toppings = new FormControl();
-    toppingList: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
-    pokemonControl = new FormControl();
-    pokemonGroups: PokemonGroup[] = [
-        {
-        name: 'Grass',
-        pokemon: [
-            {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
-            {value: 'oddish-1', viewValue: 'Oddish'},
-            {value: 'bellsprout-2', viewValue: 'Bellsprout'}
-        ]
-        },
-        {
-        name: 'Water',
-        pokemon: [
-            {value: 'squirtle-3', viewValue: 'Squirtle'},
-            {value: 'psyduck-4', viewValue: 'Psyduck'},
-            {value: 'horsea-5', viewValue: 'Horsea'}
-        ]
-        },
-        {
-        name: 'Fire',
-        disabled: true,
-        pokemon: [
-            {value: 'charmander-6', viewValue: 'Charmander'},
-            {value: 'vulpix-7', viewValue: 'Vulpix'},
-            {value: 'flareon-8', viewValue: 'Flareon'}
-        ]
-        },
-        {
-        name: 'Psychic',
-        pokemon: [
-            {value: 'mew-9', viewValue: 'Mew'},
-            {value: 'mewtwo-10', viewValue: 'Mewtwo'},
-        ]
-        }
-    ];
+    toppings = [];
 
     provinceControl = new FormControl();
     provinceGroups: ProvinceGroup[] = [
@@ -326,9 +295,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
            catchError((errorMessage) => {
           return of(errorMessage);
            })
-       ).subscribe((_user) => {
+        ).subscribe((_user) => {
           this.$_user = _user;
-       });
+        });
         this.subscriptions.push(sbUser);
     }
 
@@ -336,6 +305,34 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         let patt = /^([0-9])$/;
         let result = patt.test(event.key);
         return result;
+    }
+
+    getSelectedOptions(event){
+        var provinciasEnviadas = event.value;
+        var provincesActual = this.toppings;
+        var y:any;
+        var x:any;
+
+        for (let item of provinciasEnviadas) {
+            x = provincesActual.includes(item);
+            if (!x) {
+                y = item;
+            }
+        }
+        this.toppings = provinciasEnviadas;
+        this.departamentDomainService.getById(y);
+        this.provinceDomainService.getByDepartament(y);
+        console.log(this.provinceDomainService.getByDepartament(y));
+
+        var departamento: ProvinceGroup = {
+            id: 'this.departamentByCode[0].id',
+            code: 'this.departamentByCode[0].code',
+            description: 'this.departamentByCode[0].description',
+            provinces: this.provincesByDepartament
+        }
+        
+        this.provinceGroups.push(departamento);
+        console.log(this.provinceGroups);
     }
 
     selectProvince(event){
@@ -349,5 +346,5 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         }
         this.provinceGroups.push(departamento);
         console.log(this.provinceGroups);
-    }
+    }    
 }

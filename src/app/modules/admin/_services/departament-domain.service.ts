@@ -19,9 +19,14 @@ export class DepartamentHTTPServiceDomain {
     responseApi: ApiRespuesta;
     data: Data;
     _departaments: Content[] = [];
+    _departamentByCode: Content[] = [];
 
     get departaments(){
         return [...this._departaments];
+    }
+    
+    get departametByCode(){
+        return this._departamentByCode;
     }
 
     constructor(
@@ -44,6 +49,17 @@ export class DepartamentHTTPServiceDomain {
         }).subscribe( (resp) => {
             this._departaments = resp.data.content;
         })
+    }
+
+    getById(code){
+        return this.http.get<ApiRespuesta>(this.API_URL + `?code=${code}`,{
+            headers: this.header
+        }).pipe(map(
+            response => {
+                console.log("hola");
+                return response.data;
+            }
+        ));  
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {
