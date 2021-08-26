@@ -66,7 +66,6 @@ export class DepartamentHTTPServiceDomain {
             headers: this.header
         }).pipe(map(
             response => {
-                console.log("hola");
                 return response.data;
             }
         ));  

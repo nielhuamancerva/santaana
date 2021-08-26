@@ -45,6 +45,15 @@ export class DistrictHTTPServiceDomain {
         })
     }
 
+    getByDistrict(code): Observable<ApiResponse<PagedResponse<DistrictModel>>> {
+        const header = this.buildheader.buildHeader();
+        return this.http.get<ApiResponse<PagedResponse<DistrictModel>>>(`${environment.apiUrlNiel}/ubigee/district?code=${code}`,{
+            headers: header
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
     private handleError(err: HttpErrorResponse): Observable<never> {
         let errorMessage = "";
         if (err.error instanceof ErrorEvent) {

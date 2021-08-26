@@ -24,4 +24,14 @@ export class DistrictRepositoryService {
             }
         ));    
     }
+
+    getByDistrict(code): Observable<PagedResponse<DistrictModel>> {
+        return this._districtservicedomain.getByDistrict(code).pipe(
+            map(
+            response => {
+            //    console.log(response.data);
+                return response.data;
+            }
+        ));    
+    }
 }

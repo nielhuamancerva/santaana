@@ -30,9 +30,9 @@ export class CcppHTTPServiceDomain {
         private buildheader:BuildHeaderService
     ) { }
 
-    getAllCcpp(): Observable<ApiResponse<PagedResponse<CcppModel>>> {
+    getAllCcpp(CodeDistrict): Observable<ApiResponse<PagedResponse<CcppModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<CcppModel>>>(this.API_URL,{
+        return this.http.get<ApiResponse<PagedResponse<CcppModel>>>( `${environment.apiUrlNiel}/ubigee/ccpp?code=${CodeDistrict}`,{
             headers: header 
         })
             .pipe(map(response => response))

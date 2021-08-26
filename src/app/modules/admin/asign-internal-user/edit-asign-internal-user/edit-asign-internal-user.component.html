@@ -48,7 +48,7 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
-                                    <mat-select multiple (selectionChange)="getSelectedOptions($event)">
+                                    <mat-select multiple (selectionChange)="checkDepartament($event)">
                                         <mat-option *ngFor="let departament of $_departament" [id]="departament.code" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -59,11 +59,11 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
-                                    <mat-select multiple >
+                                    <mat-select multiple (selectionChange)="checkProvince($event)">
                                       <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
-                                        <mat-option *ngFor="let pokemon of group.provinces" [value]="pokemon.description">
-                                          {{pokemon.code}}
+                                        <mat-option *ngFor="let province of group.provinces" [value]="province.code">
+                                          {{province.description}}
                                         </mat-option>
                                       </mat-optgroup>
                                     </mat-select>
@@ -75,11 +75,11 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Distritos</mat-label>
-                                    <mat-select multiple>
-                                      <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
+                                    <mat-select multiple (selectionChange)="checkDistrict($event)">
+                                      <mat-optgroup *ngFor="let group of districtGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
-                                        <mat-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.description">
-                                          {{pokemon.code}}
+                                        <mat-option *ngFor="let district of group.districts" [value]="district.code">
+                                          {{district.description}}
                                         </mat-option>
                                       </mat-optgroup>
                                     </mat-select>

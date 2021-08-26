@@ -14,8 +14,8 @@ export class CcppRepositoryService {
         private _ccppservicedomain: CcppHTTPServiceDomain
     ) {}
 
-    getAllCcpp(): Observable<PagedResponse<CcppModel>> {
-        return this._ccppservicedomain.getAllCcpp().pipe(
+    getAllCcpp(CodeDistrict): Observable<PagedResponse<CcppModel>> {
+        return this._ccppservicedomain.getAllCcpp(CodeDistrict).pipe(
             map(
             response => {
                 return response.data;

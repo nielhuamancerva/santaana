@@ -23,4 +23,14 @@ export class ProvinceRepositoryService {
             }
         ));    
     }
+
+    getByProvince(code): Observable<PagedResponse<ProvinceModel>> {
+        return this._provinceservicedomain.getByProvince(code).pipe(
+            map(
+            response => {
+            //    console.log(response.data);
+                return response.data;
+            }
+        ));    
+    }
 }

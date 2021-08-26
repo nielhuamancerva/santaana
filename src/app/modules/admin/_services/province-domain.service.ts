@@ -52,12 +52,23 @@ export class ProvinceHTTPServiceDomain {
         })
     }
 
-    getByDepartament(code){
-        return this.http.get<ApiRespuesta>(this.API_URL1 + `?code=${code}`,{
-            headers: this.header
-        }).subscribe( (resp) => {
-            this._provincesByDepartament = resp.data.content;
+    getByProvince(code): Observable<ApiResponse<PagedResponse<ProvinceModel>>> {
+        const header = this.buildheader.buildHeader();
+        return this.http.get<ApiResponse<PagedResponse<ProvinceModel>>>(`${environment.apiUrlNiel}/ubigee/province?code=${code}`,{
+            headers: header
         })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
+    getById(code){
+        return this.http.get<ApiRespuesta>(this.API_URL + `?code=${code}`,{
+            headers: this.header
+        }).pipe(map(
+            response => {
+                return response.data;
+            }
+        ));  
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {
