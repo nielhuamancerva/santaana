@@ -15,6 +15,7 @@ import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 
 export class DepartamentHTTPServiceDomain {
     API_URL = `${environment.apiUrlNiel}/ubigee/department`;
+  
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
     data: Data;
@@ -37,6 +38,15 @@ export class DepartamentHTTPServiceDomain {
     getAllDepartament(): Observable<ApiResponse<PagedResponse<DepartamentModel>>> {
         const header = this.buildheader.buildHeader();
         return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(this.API_URL,{
+            headers: header
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
+    getByDepartament(code): Observable<ApiResponse<PagedResponse<DepartamentModel>>> {
+        const header = this.buildheader.buildHeader();
+        return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(`${environment.apiUrlNiel}/ubigee/department?code=${code}`,{
             headers: header
         })
             .pipe(map(response => response))

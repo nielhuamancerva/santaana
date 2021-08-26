@@ -21,6 +21,8 @@ import { DepartamentHTTPServiceDomain } from '../../_services/departament-domain
 import { DistrictHTTPServiceDomain } from '../../_services/district-domain.service';
 import { CcppHTTPServiceDomain } from '../../_services/ccpp-domain.service';
 import { TypeDocumentHTTPServiceDomain } from '../../_services/typedocument-domain.service';
+import { DepartamentRepositoryService } from '../../_services-repository/departament-repository.service';
+import { ProvinceRepositoryService } from '../../_services-repository/province-repository.service';
 
 const EMPTY_INTERNAL_USER: InternalUser ={
     id: undefined,
@@ -60,10 +62,10 @@ interface Province {
 }
 
 interface ProvinceGroup {
-    id:          string;
+    id?:          string;
     code:        string;
     description: string;
-    provinces: Province[];
+    provinces: Observable<ProvinceModel[]>;
 }
 
 @Component({
@@ -81,12 +83,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     $_roles: Observable<RolesModel[]>;
     $_typesDocument: Observable<TypeDocumentModel[]>;
     $_departament: Observable<DepartamentModel[]>;
+    $_getbydepartament :Observable<DepartamentModel[]>
     $_province: Observable<ProvinceModel[]>;
     $_district: Observable<DistrictModel[]>;
     $_Ccpp: Observable<CcppModel[]>;
     _typeperson:TypePersonModel[];
     provis: number[] = [13, 14];
     constructor(
+        private departamentService: DepartamentRepositoryService,
         private userService: UserHTTPServiceDomain,
         public dialog: MatDialog,
         private fb: FormBuilder,
@@ -96,6 +100,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private districtDomainService: DistrictHTTPServiceDomain,
         private ccpDomainService: CcppHTTPServiceDomain,
         private typeDocumentDomainService: TypeDocumentHTTPServiceDomain,
+        private provinceService: ProvinceRepositoryService,
     ) { }
 
     private utcTimeSubject: Subject<string> = new Subject<string>();
@@ -112,6 +117,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
         this.typeDocumentDomainService.getAll();
+        this.loadDepartament();
     }
 
     get departaments(){
@@ -196,44 +202,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     toppings = [];
 
     provinceControl = new FormControl();
-    provinceGroups: ProvinceGroup[] = [
-        {
-            id: '01',
-            code: 'codigo 01',
-            description: 'description 01',
-            provinces: [
-                {id: '0101', code: 'codigo 0101', description: 'description 0101'},
-                {id: '0102', code: 'codigo 0102', description: 'description 0102'},
-                {id: '0103', code: 'codigo 0103', description: 'description 0103'},
-                {id: '0104', code: 'codigo 0104', description: 'description 0104'},
-                {id: '0105', code: 'codigo 0105', description: 'description 0105'},
-            ]
-        },
-        {
-            id: '02',
-            code: 'codigo 02',
-            description: 'description 02',
-            provinces: [
-                {id: '0201', code: 'codigo 0201', description: 'description 0201'},
-                {id: '0202', code: 'codigo 0202', description: 'description 0202'},
-                {id: '0203', code: 'codigo 0203', description: 'description 0203'},
-                {id: '0204', code: 'codigo 0204', description: 'description 0204'},
-                {id: '0205', code: 'codigo 0205', description: 'description 0205'},
-            ]
-        },
-        {
-            id: '03',
-            code: 'codigo 03',
-            description: 'description 03',
-            provinces: [
-                {id: '0301', code: 'codigo 0301', description: 'description 0301'},
-                {id: '0302', code: 'codigo 0302', description: 'description 0302'},
-                {id: '0303', code: 'codigo 0303', description: 'description 0303'},
-                {id: '0304', code: 'codigo 0304', description: 'description 0304'},
-                {id: '0305', code: 'codigo 0305', description: 'description 0305'},
-            ]
-        },
-    ];
+    provinceGroups: ProvinceGroup[] = []
 
 
     save(){
@@ -322,28 +291,74 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.toppings = provinciasEnviadas;
 
         this.departamentDomainService.getById(y);
+        this.provinceDomainService.getByDepartament(y);
+        this.loadByDepartament(y);
 
-        var departamento: ProvinceGroup = {
-            id: 'this.departamentByCode[0].id',
-            code: 'this.departamentByCode[0].code',
-            description: 'this.departamentByCode[0].description',
-            provinces: this.provincesByDepartament
-        }
-        
-        this.provinceGroups.push(departamento);
-        console.log(this.provinceGroups);
+
+
     }
 
     selectProvince(event){
         //para el click en el check y 
-        this.provinceDomainService.getByDepartament(13);
-        var departamento: ProvinceGroup = {
-            id: event.srcElement.offsetParent.innerText,
-            code: event.srcElement.offsetParent.innerText,
-            description: event.srcElement.offsetParent.innerText,
-            provinces: this.provincesByDepartament
-        }
-        this.provinceGroups.push(departamento);
-        console.log(this.provinceGroups);
+    //    this.provinceDomainService.getByDepartament(13);
+    //    var departamento: ProvinceGroup = {
+   //         id: event.srcElement.offsetParent.innerText,
+   //         code: event.srcElement.offsetParent.innerText,
+   ///         description: event.srcElement.offsetParent.innerText,
+   //         provinces: this.provincesByDepartament
+  //      }
+  //      this.provinceGroups.push(departamento);
+  //      console.log(this.provinceGroups);
     }    
+    loadDepartament(){
+        const sbDepartament = this.departamentService.getAllDepartament().pipe(
+            catchError((errorMessage) => {
+            return of(errorMessage);
+            })
+        ).subscribe((_departament) => {
+            this.$_departament = _departament.content;
+        });
+        this.subscriptions.push(sbDepartament);
+    }
+    loadByDepartament(CodeDepartament){
+        const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament).pipe(
+            catchError((errorMessage) => {
+            return of(errorMessage);
+            })
+        ).subscribe((_departamentbycode) => {
+            this.$_getbydepartament = _departamentbycode.content;
+            this.loadPronvince(CodeDepartament+0);
+   
+         
+        });
+        this.subscriptions.push(sbDepartamentby);
+    }
+
+    loadPronvince(codeprovince){
+        
+        const sbProvinceby = this.provinceService.getAllProvince(codeprovince).pipe(
+            catchError((errorMessage) => {
+            return of(errorMessage);
+            })
+        ).subscribe((_pronvince) => {
+            this.$_province = _pronvince.content;
+
+            console.log(this.$_getbydepartament);
+            var departamento: ProvinceGroup = {
+
+                id: this.$_getbydepartament[0].id,
+                code: this.$_getbydepartament[0].code,
+                description: this.$_getbydepartament[0].description,
+                provinces: this.$_province
+            }
+      
+            this.provinceGroups.push(departamento);
+
+
+            console.log(this.provinceGroups);
+        });
+        this.subscriptions.push(sbProvinceby);
+    }
+
+    
 }

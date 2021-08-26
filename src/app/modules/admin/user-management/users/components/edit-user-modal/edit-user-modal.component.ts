@@ -68,7 +68,7 @@ export class EditUserModalComponent implements OnInit {
     userName: String = '';
     $_roles: Observable<RolesModel[]>;
     $_departament: Observable<DepartamentModel[]>;
-    $_province: Observable<ProvinceModel[]>;
+    $_province: ProvinceModel[];
     $_district: Observable<DistrictModel[]>;
     $_Ccpp: Observable<CcppModel[]>;
     
