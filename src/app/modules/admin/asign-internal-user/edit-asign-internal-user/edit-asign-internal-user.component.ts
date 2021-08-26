@@ -320,9 +320,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
         }
         this.toppings = provinciasEnviadas;
+
         this.departamentDomainService.getById(y);
-        this.provinceDomainService.getByDepartament(y);
-        console.log(this.provinceDomainService.getByDepartament(y));
 
         var departamento: ProvinceGroup = {
             id: 'this.departamentByCode[0].id',
