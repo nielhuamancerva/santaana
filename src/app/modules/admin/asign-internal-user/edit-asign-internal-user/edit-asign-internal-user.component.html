@@ -49,6 +49,21 @@
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
                                     <mat-select multiple (selectionChange)="checkDepartament($event)">
+
+                                        <mat-select-trigger>
+                                            <mat-chip-list>
+                                                <mat-label *ngFor="let provinceGroup of provinceGroups">
+                                                    <mat-label *ngFor="let Departament of idsDepartaments">
+                                                        <mat-chip *ngIf="Departament == provinceGroup.id">
+                                                            {{ provinceGroup.description }}
+                                                            <mat-icon matChipRemove>cancel</mat-icon>
+                                                        </mat-chip>
+                                                    </mat-label>
+                                                </mat-label>   
+                                            </mat-chip-list>
+                                          </mat-select-trigger>
+
+
                                         <mat-option *ngFor="let departament of $_departament" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -60,6 +75,16 @@
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
                                     <mat-select multiple (selectionChange)="checkProvince($event)">
+
+                                        <mat-select-trigger>
+                                            <mat-chip-list>
+                                              <mat-chip *ngFor="let Pronvice of idsProvinces">
+                                                {{ Pronvice }}
+                                                <mat-icon matChipRemove>cancel</mat-icon>
+                                              </mat-chip>
+                                            </mat-chip-list>
+                                          </mat-select-trigger>
+
                                       <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
                                         <mat-option *ngFor="let province of group.provinces" [id]="province.id" [value]="province.code">
@@ -76,6 +101,17 @@
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Distritos</mat-label>
                                     <mat-select multiple (selectionChange)="checkDistrict($event)">
+
+                                        <mat-select-trigger>
+                                            <mat-chip-list>
+                                              <mat-chip *ngFor="let District of idsDistricts"
+                                               >
+                                                {{ District }}
+                                                <mat-icon matChipRemove>cancel</mat-icon>
+                                              </mat-chip>
+                                            </mat-chip-list>
+                                          </mat-select-trigger>
+
                                       <mat-optgroup *ngFor="let group of districtGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
                                         <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
@@ -102,6 +138,7 @@
                             </div>
                         </div>     
                     </div>
+                    
                     
                     <div class="float-right">
                     <a
