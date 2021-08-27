@@ -390,24 +390,19 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             })
         ).subscribe((response) => {
             this.$_getbydistrict = response.content;
-            this.loadCcpp(CodeDistrict+0);
+            this.loadCcpp();
         });
         this.subscriptions.push(sbDistrictby);
     }
 
-    loadCcpp(CodeDistrict){
-        const sbDistrictby = this.ccppService.getAllCcpp(CodeDistrict).pipe(
+    loadCcpp(){
+        const sbDistrictby = this.ccppService.getAllCcpp().pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
         ).subscribe((response) => {
-            this.$_district = response.content;
-            var district: DistrictModel = {
-                id: this.$_getbydistrict[0].id,
-                code: this.$_getbydistrict[0].code,
-                description: this.$_getbydistrict[0].description
-            }
-            this.ccppsGroups.push(district);
+            this.$_Ccpp = response.content;
+            console.log(this.$_Ccpp);
         });
         this.subscriptions.push(sbDistrictby);
         console.log(this.provincesRender);

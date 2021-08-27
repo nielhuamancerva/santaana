@@ -92,9 +92,9 @@
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Centros poblados:</mat-label>
                                     <mat-select multiple>
-                                        <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
+                                        <mat-optgroup *ngFor="let group of $_Ccpp" [label]="group.code"
                                                         [disabled]="false">
-                                            <mat-option *ngFor="let pokemon of group.provinces" [value]="pokemon.description">
+                                            <mat-option *ngFor="let group of $_Ccpp" [value]="group.code">
                                             </mat-option>
                                         </mat-optgroup>
                                     </mat-select>
