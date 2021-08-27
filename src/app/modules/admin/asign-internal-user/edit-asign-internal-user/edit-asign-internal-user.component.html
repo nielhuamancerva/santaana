@@ -49,7 +49,7 @@
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
                                     <mat-select multiple (selectionChange)="checkDepartament($event)">
-                                        <mat-option *ngFor="let departament of $_departament" [id]="departament.code" [value]="departament.code">{{departament.description}}</mat-option>
+                                        <mat-option *ngFor="let departament of $_departament" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -62,7 +62,7 @@
                                     <mat-select multiple (selectionChange)="checkProvince($event)">
                                       <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
-                                        <mat-option *ngFor="let province of group.provinces" [value]="province.code">
+                                        <mat-option *ngFor="let province of group.provinces" [id]="province.id" [value]="province.code">
                                           {{province.description}}
                                         </mat-option>
                                       </mat-optgroup>
@@ -78,7 +78,7 @@
                                     <mat-select multiple (selectionChange)="checkDistrict($event)">
                                       <mat-optgroup *ngFor="let group of districtGroups" [label]="group.description"
                                                     [disabled]="group.disabled">
-                                        <mat-option *ngFor="let district of group.districts" [value]="district.code">
+                                        <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
                                           {{district.description}}
                                         </mat-option>
                                       </mat-optgroup>

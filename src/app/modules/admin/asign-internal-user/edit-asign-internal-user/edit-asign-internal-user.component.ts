@@ -173,7 +173,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     districtGroups: ProvinceModel[] = [];
     ccppsGroups: DistrictModel[] = [];
     
-    arrayGeneral: Departamento[] = [];
+    idsDepartaments: any[] = [];
+    idsProvinces: any[] = [];
+    idsDistricts: any[] = [];
 
     save(){
         const formValues = this.formGroup.value;
@@ -258,6 +260,15 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     checkDepartament(event){
+        for(let item of event.source.selected){
+            
+            var n = this.idsDepartaments.includes(item.id)
+            if(!n){
+                this.idsDepartaments.push(item.id)
+            }
+        }
+
+        console.log(this.idsDepartaments);
         var provinciasEnviadas = event.value;
         var provincesActual = this.provincesRender;
         var y:any;
@@ -298,18 +309,21 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 description: this.$_getbydepartament[0].description,
                 provinces: this.$_province
             }
-            var departamento1: Departamento = {
-                id: departamento.id,
-                code: departamento.code,
-                description: departamento.description,
-            }
-            this.arrayGeneral.push(departamento1);
             this.provinceGroups.push(departamento);
         });
         this.subscriptions.push(sbProvinceby);
     }
 
     checkProvince(event){
+        for(let item of event.source.selected){
+            
+            var n = this.idsProvinces.includes(item.id)
+            if(!n){
+                this.idsProvinces.push(item.id)
+            }
+        }
+
+        console.log(this.idsProvinces);
         var distritosEnviados = event.value;
         var distritosActual = this.districtsRender;
         var y:any;
@@ -369,6 +383,15 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     checkDistrict(event){
+        for(let item of event.source.selected){
+            
+            var n = this.idsDistricts.includes(item.id)
+            if(!n){
+                this.idsDistricts.push(item.id)
+            }
+        }
+
+        console.log(this.idsDistricts);
         var ccppsEnviados = event.value;
         var ccppsActual = this.ccppsRender;
         var y:any;
