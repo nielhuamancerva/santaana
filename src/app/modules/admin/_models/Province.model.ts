@@ -5,5 +5,5 @@ export interface ProvinceModel{
     id:string;
     code:string;
     description:string;
-    districts?: Observable<DistrictModel[]>
+    districts?: DistrictModel[]
 }

@@ -2,6 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {FormControl} from '@angular/forms';
+import { MatSelect } from '@angular/material/select';
 import { catchError } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable } from 'rxjs';
 
@@ -25,9 +26,6 @@ import { DepartamentRepositoryService } from '../../_services-repository/departa
 import { ProvinceRepositoryService } from '../../_services-repository/province-repository.service';
 import { DistrictRepositoryService } from '../../_services-repository/distric-repository.service';
 import { CcppRepositoryService } from '../../_services-repository/ccpp-repository.service';
-import { Key } from 'protractor';
-import { KeyValuePipe } from '@angular/common';
-import { MatSelect } from '@angular/material/select';
 
 const EMPTY_INTERNAL_USER: InternalUser ={
     id: undefined,
@@ -49,7 +47,6 @@ const EMPTY_INTERNAL_USER: InternalUser ={
     phone1:''
 };
 
-
 @Component({
   selector: 'app-edit-asign-internal-user',
   templateUrl: './edit-asign-internal-user.component.html',
@@ -68,7 +65,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     $_departament: Observable<DepartamentModel[]>;
     $_getbydepartament :Observable<DepartamentModel[]>
     $_province: ProvinceModel[];
-    $_district: Observable<DistrictModel[]>;
+    $_district: DistrictModel[];
     $_getbyprovince :Observable<ProvinceModel[]>
     $_getbydistrict :Observable<DistrictModel[]>
     $_Ccpp: Observable<CcppModel[]>;
@@ -173,6 +170,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     idsDepartaments: any[] = [];
     idsProvinces: any[] = [];
     idsDistricts: any[] = [];
+
+    arrayGeneral: DepartamentModel[] = [];
 
     save(){
         const formValues = this.formGroup.value;
@@ -311,10 +310,16 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 id: this.$_getbydepartament[0].id,
                 code: this.$_getbydepartament[0].code,
                 description: this.$_getbydepartament[0].description,
-               provinces: this.$_province
+                provinces: this.$_province
+            }
+            var departamento1: DepartamentModel = {
+                id: this.$_getbydepartament[0].id,
+                code: this.$_getbydepartament[0].code,
+                description: this.$_getbydepartament[0].description,
+                provinces: []
             }
             this.provinceGroups.push(departamento);
-            console.log(this.provinceGroups);
+            this.arrayGeneral.push(departamento1);
         });
         this.subscriptions.push(sbProvinceby);
     }
@@ -370,46 +375,28 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             })
         ).subscribe((response) => {
             this.$_district = response.content;
-            console.log(codeprovince);
-
-
-            for (let item of this.provinceGroups) {
-                console.log(item.provinces);
-
-            for (let nn of item.provinces) {
-
-                if(codeprovince==nn.code){
-                    console.log("valor encontrado"+codeprovince+"="+nn.code)
-                    nn.districts=this.$_district;
-
-              
-                    console.log(this.provinceGroups);
-                }
-                 
-                    }
-            } 
-
-
             var province: ProvinceModel = {
                 id: this.$_getbyprovince[0].id,
                 code: this.$_getbyprovince[0].code,
                 description: this.$_getbyprovince[0].description,
                 districts: this.$_district
             }
-            // var province1: ProvinceModel = {
-            //     id: this.$_getbyprovince[0].id,
-            //     code: this.$_getbyprovince[0].code,
-            //     description: this.$_getbyprovince[0].description
-            // }
-            // var codeDep = province.code.substring(0,2);
-            // var posicionInser: number;
+            var province1: ProvinceModel = {
+                id: this.$_getbyprovince[0].id,
+                code: this.$_getbyprovince[0].code,
+                description: this.$_getbyprovince[0].description,
+                districts: []
+            }
+            var codeDep = province.code.substring(0,2);
+            var posicionInser: number;
            
-            // for (let index = 0; index < this.arrayGeneral.length; index++){
-            //     if(this.arrayGeneral[index].code == codeDep){
-            //         posicionInser = index;
-            //     }
-            // }
-            // this.arrayGeneral[posicionInser].provinces = province1;
+            for (let index = 0; index < this.arrayGeneral.length; index++){
+                if(this.arrayGeneral[index].code == codeDep){
+                    posicionInser = index;
+                }
+            }
+            this.arrayGeneral[posicionInser].provinces.push(province1);
+
             this.districtGroups.push(province);
         });
         this.subscriptions.push(sbDistrictby);
@@ -472,7 +459,29 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 code: this.$_getbydistrict[0].code,
                 description: this.$_getbydistrict[0].description
             }
+            var district1: ProvinceModel = {
+                id: this.$_getbydistrict[0].id,
+                code: this.$_getbydistrict[0].code,
+                description: this.$_getbydistrict[0].description
+            }
+            var codeDep = district.code.substring(0,2);
+            var codeProv = district.code.substring(0,4);
+            var posicionDep: number;
+            var posicionProv: number;
+           
+            for (let index = 0; index < this.arrayGeneral.length; index++){
+                if(this.arrayGeneral[index].code == codeDep){
+                    posicionDep = index;
+                }
+            }
+            for(let index = 0; index < this.arrayGeneral[posicionDep].provinces.length; index++){
+                if(this.arrayGeneral[posicionDep].provinces[index].code == codeProv){
+                    posicionProv = index;
+                }
+            }
+            this.arrayGeneral[posicionDep].provinces[posicionProv].districts.push(district1);
             this.ccppsGroups.push(district);
+            console.log(this.arrayGeneral);
         });
         this.subscriptions.push(sbDistrictby);
     }
@@ -481,6 +490,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         var idDep = this.provinceGroups.find(element => element.id == Departament);
         this.idsDepartaments = this.idsDepartaments.filter(item => item !== Departament);
         this.provinceGroups = this.provinceGroups.filter(item => item.id !== Departament);
+        // this.districtGroups = this.districtGroups.filter(item => item.code.substring(0,2) != idDep.code);
+        // this.districtsRender = this.districtsRender.filter(item => item.substring(0,2) != idDep.code);
+        //falta borrar los ids de las provincias
         const toppings = this.provincesRender as string[];
         this.removeFirst(toppings, idDep.code);
         this.provincesRender = toppings;
@@ -496,7 +508,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     removeDistrict(District) {
-        console.log(District)
         var idsDist = this.ccppsGroups.find(element => element.id == District);
         this.idsDistricts = this.idsDistricts.filter(item => item !== District);
         this.ccppsGroups = this.ccppsGroups.filter(item => item.id !== District);
@@ -511,4 +522,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
           array.splice(index, 1);
         }
     }
+
+    
 }
