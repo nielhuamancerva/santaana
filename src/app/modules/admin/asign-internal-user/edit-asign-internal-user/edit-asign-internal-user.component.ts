@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {FormControl} from '@angular/forms';
 import { catchError } from 'rxjs/operators';
@@ -27,6 +27,7 @@ import { DistrictRepositoryService } from '../../_services-repository/distric-re
 import { CcppRepositoryService } from '../../_services-repository/ccpp-repository.service';
 import { Key } from 'protractor';
 import { KeyValuePipe } from '@angular/common';
+import { MatSelect } from '@angular/material/select';
 
 const EMPTY_INTERNAL_USER: InternalUser ={
     id: undefined,
@@ -62,6 +63,7 @@ interface Departamento {
 })
 
 export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
+    @ViewChild('select') select: MatSelect;
     formGroup: FormGroup;
     internalUser: InternalUser;
     @Input() id: number;
@@ -78,6 +80,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     $_Ccpp: Observable<CcppModel[]>;
     _typeperson:TypePersonModel[];
     provis: number[] = [13, 14];
+    removable: boolean = true;
     constructor(
         private departamentService: DepartamentRepositoryService,
         private userService: UserHTTPServiceDomain,
@@ -261,27 +264,34 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
 
     checkDepartament(event){
         for(let item of event.source.selected){
-            
             var n = this.idsDepartaments.includes(item.id)
             if(!n){
                 this.idsDepartaments.push(item.id)
             }
         }
-
-        console.log(this.idsDepartaments);
         var provinciasEnviadas = event.value;
         var provincesActual = this.provincesRender;
         var y:any;
         var x:any;
-
-        for (let item of provinciasEnviadas) {
-            x = provincesActual.includes(item);
-            if (!x) {
-                y = item;
+        if( event.source.selected.length > provincesActual.length){
+            for (let item of provinciasEnviadas) {
+                x = provincesActual.includes(item);
+                if (!x) {
+                    y = item;
+                }
             }
+            this.provincesRender = provinciasEnviadas;
+            this.loadByDepartament(y);
+        }else if( event.source.selected.length < provincesActual.length){
+            for (let item of provincesActual) {
+                x = provinciasEnviadas.includes(item);
+                if (!x) {
+                    y = item;
+                }
+            }
+            this.provincesRender = provinciasEnviadas;
+            this.provinceGroups = this.provinceGroups.filter(item => item.code !== y);
         }
-        this.provincesRender = provinciasEnviadas;
-        this.loadByDepartament(y);
     }
 
     loadByDepartament(CodeDepartament){
@@ -316,26 +326,34 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
 
     checkProvince(event){
         for(let item of event.source.selected){
-            
             var n = this.idsProvinces.includes(item.id)
             if(!n){
                 this.idsProvinces.push(item.id)
             }
         }
-
-        console.log(this.idsProvinces);
         var distritosEnviados = event.value;
         var distritosActual = this.districtsRender;
         var y:any;
         var x:any;
-        for (let item of distritosEnviados) {
-            x = distritosActual.includes(item);
-            if (!x) {
-                y = item;
+        if(event.source.selected.length > distritosActual.length){
+            for (let item of distritosEnviados) {
+                x = distritosActual.includes(item);
+                if (!x) {
+                    y = item;
+                }
             }
+            this.districtsRender = distritosEnviados;
+            this.loadByProvince(y);
+        }else if(event.source.selected.length < distritosActual.length){
+            for (let item of distritosActual) {
+                x = distritosEnviados.includes(item);
+                if (!x) {
+                    y = item;
+                }
+            }
+            this.districtsRender = distritosEnviados;
+            this.districtGroups = this.districtGroups.filter(item => item.code !== y);
         }
-        this.districtsRender = distritosEnviados;
-        this.loadByProvince(y);
     }
 
     loadByProvince(CodeProvince){
@@ -390,20 +408,29 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 this.idsDistricts.push(item.id)
             }
         }
-
-        console.log(this.idsDistricts);
         var ccppsEnviados = event.value;
         var ccppsActual = this.ccppsRender;
         var y:any;
         var x:any;
-        for (let item of ccppsEnviados) {
-            x = ccppsActual.includes(item);
-            if (!x) {
-                y = item;
+        if(event.source.selected.length > ccppsActual.length){
+            for (let item of ccppsEnviados) {
+                x = ccppsActual.includes(item);
+                if (!x) {
+                    y = item;
+                }
             }
+            this.ccppsRender = ccppsEnviados;
+            this.loadByDistrict(y);
+        }else if(event.source.selected.length < ccppsActual.length){
+            for (let item of ccppsActual) {
+                x = ccppsEnviados.includes(item);
+                if (!x) {
+                    y = item;
+                }
+            }
+            this.ccppsRender = ccppsEnviados;
+            this.ccppsGroups = this.ccppsGroups.filter(item => item.code !== y);
         }
-        this.ccppsRender = ccppsEnviados;
-        this.loadByDistrict(y);
     }
 
     loadByDistrict(CodeDistrict){
@@ -425,11 +452,48 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             })
         ).subscribe((response) => {
             this.$_Ccpp = response.content;
-            console.log(this.$_Ccpp);
+            var district: ProvinceModel = {
+                id: this.$_getbydistrict[0].id,
+                code: this.$_getbydistrict[0].code,
+                description: this.$_getbydistrict[0].description
+            }
+            this.ccppsGroups.push(district);
         });
         this.subscriptions.push(sbDistrictby);
-        console.log(this.provincesRender);
-        console.log(this.districtsRender);
-        console.log(this.ccppsRender);
+    }
+
+    removeDepartament(Departament) {
+        var idDep = this.provinceGroups.find(element => element.id == Departament);
+        this.idsDepartaments = this.idsDepartaments.filter(item => item !== Departament);
+        this.provinceGroups = this.provinceGroups.filter(item => item.id !== Departament);
+        const toppings = this.provincesRender as string[];
+        this.removeFirst(toppings, idDep.code);
+        this.provincesRender = toppings;
+    }
+
+    removeProvince(Province) {
+        var idProv = this.districtGroups.find(element => element.id == Province);
+        this.idsProvinces = this.idsProvinces.filter(item => item !== Province);
+        this.districtGroups = this.districtGroups.filter(item => item.id !== Province);
+        const toppings = this.districtsRender as string[];
+        this.removeFirst(toppings, idProv.code);
+        this.districtsRender = toppings;
+    }
+
+    removeDistrict(District) {
+        console.log(District)
+        var idsDist = this.ccppsGroups.find(element => element.id == District);
+        this.idsDistricts = this.idsDistricts.filter(item => item !== District);
+        this.ccppsGroups = this.ccppsGroups.filter(item => item.id !== District);
+        const toppings = this.ccppsRender as string[];
+        this.removeFirst(toppings, idsDist.code);
+        this.ccppsRender = toppings;
+    }
+
+    removeFirst<T>(array: T[], toRemove: T): void {
+        const index = array.indexOf(toRemove);
+        if (index !== -1) {
+          array.splice(index, 1);
+        }
     }
 }
