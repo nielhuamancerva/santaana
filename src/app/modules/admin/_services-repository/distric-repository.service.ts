@@ -19,7 +19,7 @@ export class DistrictRepositoryService {
         return this._districtservicedomain.getAllDistrict(codedistrict).pipe(
             map(
             response => {
-                console.log(response)
+               // console.log(response)
                 return response.data;
             }
         ));    

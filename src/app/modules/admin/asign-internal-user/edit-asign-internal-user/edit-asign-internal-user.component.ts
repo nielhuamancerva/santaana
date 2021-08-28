@@ -49,12 +49,6 @@ const EMPTY_INTERNAL_USER: InternalUser ={
     phone1:''
 };
 
-interface Departamento {
-    id?:          string;
-    code:        string;
-    description: string;
-    provinces?: Observable<ProvinceModel[]>;
-}
 
 @Component({
   selector: 'app-edit-asign-internal-user',
@@ -73,7 +67,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     $_typesDocument: Observable<TypeDocumentModel[]>;
     $_departament: Observable<DepartamentModel[]>;
     $_getbydepartament :Observable<DepartamentModel[]>
-    $_province: Observable<ProvinceModel[]>;
+    $_province: ProvinceModel[];
     $_district: Observable<DistrictModel[]>;
     $_getbyprovince :Observable<ProvinceModel[]>
     $_getbydistrict :Observable<DistrictModel[]>
@@ -172,7 +166,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     ccppsRender = [];
 
     provinceControl = new FormControl();
-    provinceGroups: Departamento[] = [];
+    provinceGroups: DepartamentModel[] = [];
     districtGroups: ProvinceModel[] = [];
     ccppsGroups: DistrictModel[] = [];
     
@@ -301,25 +295,26 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             })
         ).subscribe((_departamentbycode) => {
             this.$_getbydepartament = _departamentbycode.content;
-            this.loadPronvince(CodeDepartament+0);
+            this.loadPronvince(CodeDepartament);
         });
         this.subscriptions.push(sbDepartamentby);
     }
 
-    loadPronvince(codeprovince){
-        const sbProvinceby = this.provinceService.getAllProvince(codeprovince).pipe(
+    loadPronvince(CodeDepartament){
+        const sbProvinceby = this.provinceService.getAllProvince(CodeDepartament+0).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
         ).subscribe((_pronvince) => {
             this.$_province = _pronvince.content;
-            var departamento: Departamento = {
+            var departamento: DepartamentModel = {
                 id: this.$_getbydepartament[0].id,
                 code: this.$_getbydepartament[0].code,
                 description: this.$_getbydepartament[0].description,
-                provinces: this.$_province
+               provinces: this.$_province
             }
             this.provinceGroups.push(departamento);
+            console.log(this.provinceGroups);
         });
         this.subscriptions.push(sbProvinceby);
     }
@@ -363,18 +358,38 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             })
         ).subscribe((response) => {
             this.$_getbyprovince = response.content;
-            this.loadDistrict(CodeProvince+0);
+            this.loadDistrict(CodeProvince);
         });
         this.subscriptions.push(sbProvinceby);
     }
 
     loadDistrict(codeprovince){
-        const sbDistrictby = this.districtService.getAllDistrict(codeprovince).pipe(
+        const sbDistrictby = this.districtService.getAllDistrict(codeprovince+0).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
         ).subscribe((response) => {
             this.$_district = response.content;
+            console.log(codeprovince);
+
+
+            for (let item of this.provinceGroups) {
+                console.log(item.provinces);
+
+            for (let nn of item.provinces) {
+
+                if(codeprovince==nn.code){
+                    console.log("valor encontrado"+codeprovince+"="+nn.code)
+                    nn.districts=this.$_district;
+
+              
+                    console.log(this.provinceGroups);
+                }
+                 
+                    }
+            } 
+
+
             var province: ProvinceModel = {
                 id: this.$_getbyprovince[0].id,
                 code: this.$_getbyprovince[0].code,
