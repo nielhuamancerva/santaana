@@ -52,7 +52,7 @@
 
                                         <mat-select-trigger>
                                             <mat-chip-list>
-                                                <mat-label *ngFor="let provinceGroup of provinceGroups">
+                                                <mat-label *ngFor="let provinceGroup of departamentos">
                                                     <mat-label *ngFor="let Departament of idsDepartaments">
                                                         <mat-chip *ngIf="Departament == provinceGroup.id" [removable]="removable" (removed)="removeDepartament(Departament)">
                                                             {{ provinceGroup.description }}
@@ -75,7 +75,7 @@
                                     <mat-select multiple (selectionChange)="checkProvince($event)">
                                         <mat-select-trigger>
                                             <mat-chip-list>
-                                                <mat-label *ngFor="let districtGroup of districtGroups">
+                                                <mat-label *ngFor="let districtGroup of provincias">
                                                     <mat-label *ngFor="let Province of idsProvinces">
                                                         <mat-chip *ngIf="Province == districtGroup.id" [removable]="removable" (removed)="removeProvince(Province)">
                                                             {{ districtGroup.description }}
@@ -85,7 +85,7 @@
                                                 </mat-label>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-optgroup *ngFor="let group of provinceGroups" [label]="group.description" [disabled]="group.disabled">
+                                        <mat-optgroup *ngFor="let group of departamentos" [label]="group.description" [disabled]="group.disabled">
                                             <mat-option *ngFor="let province of group.provinces" [id]="province.id" [value]="province.code">
                                             {{province.description}}
                                             </mat-option>
@@ -102,7 +102,7 @@
                                     <mat-select multiple (selectionChange)="checkDistrict($event)">
                                         <mat-select-trigger>
                                             <mat-chip-list>
-                                                <mat-label *ngFor="let ccppGroup of ccppsGroups">
+                                                <mat-label *ngFor="let ccppGroup of distritos">
                                                     <mat-label *ngFor="let District of idsDistricts">
                                                         <mat-chip *ngIf="District == ccppGroup.id" [removable]="removable" (removed)="removeDistrict(District)">
                                                             {{ ccppGroup.description }}
@@ -112,7 +112,7 @@
                                                 </mat-label>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-optgroup *ngFor="let group of districtGroups" [label]="group.description" [disabled]="group.disabled">
+                                        <mat-optgroup *ngFor="let group of provincias" [label]="group.description" [disabled]="group.disabled">
                                             <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
                                             {{district.description}}
                                             </mat-option>

@@ -158,21 +158,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         });
     }
 
-    provincesRender = [];
-    districtsRender = [];
-    ccppsRender = [];
-
-    provinceControl = new FormControl();
-    provinceGroups: DepartamentModel[] = [];
-    districtGroups: ProvinceModel[] = [];
-    ccppsGroups: DistrictModel[] = [];
-    
-    idsDepartaments: any[] = [];
-    idsProvinces: any[] = [];
-    idsDistricts: any[] = [];
-
-    arrayGeneral: DepartamentModel[] = [];
-
     save(){
         const formValues = this.formGroup.value;
         this.userService.CreateUser(formValues);
@@ -255,6 +240,21 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.subscriptions.push(sbDepartament);
     }
 
+    //es el actual selected del <select> de (departament.code)
+    departActual = [];
+    proviActual = [];
+    distriActual = [];
+
+    departamentos: DepartamentModel[] = [];
+    provincias: ProvinceModel[] = [];
+    distritos: DistrictModel[] = [];
+    
+    idsDepartaments: any[] = [];
+    idsProvinces: any[] = [];
+    idsDistricts: any[] = [];
+
+    arrayGeneral: DepartamentModel[] = [];
+
     checkDepartament(event){
         for(let item of event.source.selected){
             var n = this.idsDepartaments.includes(item.id)
@@ -263,7 +263,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
         }
         var provinciasEnviadas = event.value;
-        var provincesActual = this.provincesRender;
+        var provincesActual = this.departActual;
         var y:any;
         var x:any;
         if( event.source.selected.length > provincesActual.length){
@@ -273,7 +273,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                     y = item;
                 }
             }
-            this.provincesRender = provinciasEnviadas;
+            this.departActual = provinciasEnviadas;
             this.loadByDepartament(y);
         }else if( event.source.selected.length < provincesActual.length){
             for (let item of provincesActual) {
@@ -282,9 +282,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                     y = item;
                 }
             }
-            this.provincesRender = provinciasEnviadas;
-            this.provinceGroups = this.provinceGroups.filter(item => item.code !== y);
+            this.departActual = provinciasEnviadas;
+            this.departamentos = this.departamentos.filter(item => item.code !== y);
         }
+        console.log(this.departActual)
     }
 
     loadByDepartament(CodeDepartament){
@@ -318,7 +319,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 description: this.$_getbydepartament[0].description,
                 provinces: []
             }
-            this.provinceGroups.push(departamento);
+            this.departamentos.push(departamento);
             this.arrayGeneral.push(departamento1);
         });
         this.subscriptions.push(sbProvinceby);
@@ -332,7 +333,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
         }
         var distritosEnviados = event.value;
-        var distritosActual = this.districtsRender;
+        var distritosActual = this.proviActual;
         var y:any;
         var x:any;
         if(event.source.selected.length > distritosActual.length){
@@ -342,7 +343,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                     y = item;
                 }
             }
-            this.districtsRender = distritosEnviados;
+            this.proviActual = distritosEnviados;
             this.loadByProvince(y);
         }else if(event.source.selected.length < distritosActual.length){
             for (let item of distritosActual) {
@@ -351,8 +352,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                     y = item;
                 }
             }
-            this.districtsRender = distritosEnviados;
-            this.districtGroups = this.districtGroups.filter(item => item.code !== y);
+            this.proviActual = distritosEnviados;
+            this.provincias = this.provincias.filter(item => item.code !== y);
         }
     }
 
@@ -397,7 +398,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
             this.arrayGeneral[posicionInser].provinces.push(province1);
 
-            this.districtGroups.push(province);
+            this.provincias.push(province);
         });
         this.subscriptions.push(sbDistrictby);
     }
@@ -411,7 +412,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
         }
         var ccppsEnviados = event.value;
-        var ccppsActual = this.ccppsRender;
+        var ccppsActual = this.distriActual;
         var y:any;
         var x:any;
         if(event.source.selected.length > ccppsActual.length){
@@ -421,7 +422,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                     y = item;
                 }
             }
-            this.ccppsRender = ccppsEnviados;
+            this.distriActual = ccppsEnviados;
             this.loadByDistrict(y);
         }else if(event.source.selected.length < ccppsActual.length){
             for (let item of ccppsActual) {
@@ -430,8 +431,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                     y = item;
                 }
             }
-            this.ccppsRender = ccppsEnviados;
-            this.ccppsGroups = this.ccppsGroups.filter(item => item.code !== y);
+            this.distriActual = ccppsEnviados;
+            this.distritos = this.distritos.filter(item => item.code !== y);
         }
     }
 
@@ -480,40 +481,39 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 }
             }
             this.arrayGeneral[posicionDep].provinces[posicionProv].districts.push(district1);
-            this.ccppsGroups.push(district);
-            console.log(this.arrayGeneral);
+            this.distritos.push(district);
         });
         this.subscriptions.push(sbDistrictby);
     }
 
     removeDepartament(Departament) {
-        var idDep = this.provinceGroups.find(element => element.id == Departament);
+        var idDep = this.departamentos.find(element => element.id == Departament);
         this.idsDepartaments = this.idsDepartaments.filter(item => item !== Departament);
-        this.provinceGroups = this.provinceGroups.filter(item => item.id !== Departament);
-        // this.districtGroups = this.districtGroups.filter(item => item.code.substring(0,2) != idDep.code);
-        // this.districtsRender = this.districtsRender.filter(item => item.substring(0,2) != idDep.code);
+        this.departamentos = this.departamentos.filter(item => item.id !== Departament);
+        // this.provincias = this.provincias.filter(item => item.code.substring(0,2) != idDep.code);
+        // this.proviActual = this.proviActual.filter(item => item.substring(0,2) != idDep.code);
         //falta borrar los ids de las provincias
-        const toppings = this.provincesRender as string[];
+        const toppings = this.departActual as string[];
         this.removeFirst(toppings, idDep.code);
-        this.provincesRender = toppings;
+        this.departActual = toppings;
     }
 
     removeProvince(Province) {
-        var idProv = this.districtGroups.find(element => element.id == Province);
+        var idProv = this.provincias.find(element => element.id == Province);
         this.idsProvinces = this.idsProvinces.filter(item => item !== Province);
-        this.districtGroups = this.districtGroups.filter(item => item.id !== Province);
-        const toppings = this.districtsRender as string[];
+        this.provincias = this.provincias.filter(item => item.id !== Province);
+        const toppings = this.proviActual as string[];
         this.removeFirst(toppings, idProv.code);
-        this.districtsRender = toppings;
+        this.proviActual = toppings;
     }
 
     removeDistrict(District) {
-        var idsDist = this.ccppsGroups.find(element => element.id == District);
+        var idsDist = this.distritos.find(element => element.id == District);
         this.idsDistricts = this.idsDistricts.filter(item => item !== District);
-        this.ccppsGroups = this.ccppsGroups.filter(item => item.id !== District);
-        const toppings = this.ccppsRender as string[];
+        this.distritos = this.distritos.filter(item => item.id !== District);
+        const toppings = this.distriActual as string[];
         this.removeFirst(toppings, idsDist.code);
-        this.ccppsRender = toppings;
+        this.distriActual = toppings;
     }
 
     removeFirst<T>(array: T[], toRemove: T): void {
