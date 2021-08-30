@@ -26,6 +26,7 @@ import { DepartamentRepositoryService } from '../../_services-repository/departa
 import { ProvinceRepositoryService } from '../../_services-repository/province-repository.service';
 import { DistrictRepositoryService } from '../../_services-repository/distric-repository.service';
 import { CcppRepositoryService } from '../../_services-repository/ccpp-repository.service';
+import { MatOption } from '@angular/material/core';
 
 const EMPTY_INTERNAL_USER: InternalUser ={
     id: undefined,
@@ -54,7 +55,9 @@ const EMPTY_INTERNAL_USER: InternalUser ={
 })
 
 export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
-    @ViewChild('select') select: MatSelect;
+    @ViewChild('MatDepartamento') MatDepartamento: MatSelect;
+    @ViewChild('MatProvincia') MatProvincia: MatSelect;
+    @ViewChild('MatDistrito') MatDistrito: MatSelect;
     formGroup: FormGroup;
     internalUser: InternalUser;
     @Input() id: number;
@@ -256,51 +259,43 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     arrayGeneral: DepartamentModel[] = [];
 
     checkDepartament(event){
-        for(let item of event.source.selected){
-            var n = this.idsDepartaments.includes(item.id)
-            if(!n){
-                this.idsDepartaments.push(item.id)
-            }
-        }
-        var provinciasEnviadas = event.value;
-        var provincesActual = this.departActual;
-        var y:any;
-        var x:any;
-        if( event.source.selected.length > provincesActual.length){
-            for (let item of provinciasEnviadas) {
-                x = provincesActual.includes(item);
-                if (!x) {
-                    y = item;
+        var departamentosEnviados = event.value;
+        var CodeDepartament: any;
+        var existencia: boolean;
+        if( event.source.selected.length > this.departActual.length){
+            for (let item of departamentosEnviados) {
+                existencia = this.departActual.includes(item);
+                if (!existencia) {
+                    CodeDepartament = item;
                 }
             }
-            this.departActual = provinciasEnviadas;
-            this.loadByDepartament(y);
-        }else if( event.source.selected.length < provincesActual.length){
-            for (let item of provincesActual) {
-                x = provinciasEnviadas.includes(item);
-                if (!x) {
-                    y = item;
+            this.departActual = departamentosEnviados;
+            this.searchDepartament(CodeDepartament);
+        }else if( event.source.selected.length < this.departActual.length){
+            for (let item of this.departActual) {
+                existencia = departamentosEnviados.includes(item);
+                if (!existencia) {
+                    CodeDepartament = item;
                 }
             }
-            this.departActual = provinciasEnviadas;
-            this.departamentos = this.departamentos.filter(item => item.code !== y);
+            this.departActual = departamentosEnviados;
+            this.removeDepartament(CodeDepartament);
         }
-        console.log(this.departActual)
     }
 
-    loadByDepartament(CodeDepartament){
+    searchDepartament(CodeDepartament){
         const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
-        ).subscribe((_departamentbycode) => {
-            this.$_getbydepartament = _departamentbycode.content;
-            this.loadPronvince(CodeDepartament);
+        ).subscribe((response) => {
+            this.$_getbydepartament = response.content;
+            this.getProvincesByDepartament(CodeDepartament);
         });
         this.subscriptions.push(sbDepartamentby);
     }
 
-    loadPronvince(CodeDepartament){
+    getProvincesByDepartament(CodeDepartament){
         const sbProvinceby = this.provinceService.getAllProvince(CodeDepartament+0).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
@@ -326,50 +321,57 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     checkProvince(event){
-        for(let item of event.source.selected){
-            var n = this.idsProvinces.includes(item.id)
-            if(!n){
-                this.idsProvinces.push(item.id)
-            }
-        }
-        var distritosEnviados = event.value;
-        var distritosActual = this.proviActual;
-        var y:any;
-        var x:any;
-        if(event.source.selected.length > distritosActual.length){
-            for (let item of distritosEnviados) {
-                x = distritosActual.includes(item);
-                if (!x) {
-                    y = item;
+        var provinciasEnviados = event.value;
+        var CodeProvince: any;
+        var existencia: boolean;
+        if( event.source.selected.length > this.proviActual.length){
+            for (let item of provinciasEnviados) {
+                existencia = this.proviActual.includes(item);
+                if (!existencia) {
+                    CodeProvince = item;
                 }
             }
-            this.proviActual = distritosEnviados;
-            this.loadByProvince(y);
-        }else if(event.source.selected.length < distritosActual.length){
-            for (let item of distritosActual) {
-                x = distritosEnviados.includes(item);
-                if (!x) {
-                    y = item;
+            this.proviActual = provinciasEnviados;
+            this.searchProvince(CodeProvince);
+        }else if( event.source.selected.length < this.proviActual.length){
+            for (let item of this.proviActual) {
+                existencia = provinciasEnviados.includes(item);
+                if (!existencia) {
+                    CodeProvince = item;
                 }
             }
-            this.proviActual = distritosEnviados;
-            this.provincias = this.provincias.filter(item => item.code !== y);
+            this.proviActual = provinciasEnviados;
+            this.removeProvince(CodeProvince);
+            // var codeDep = CodeProvince.substring(0,2);
+            // var posicionInser: number;
+           
+            // for (let index = 0; index < this.arrayGeneral.length; index++){
+            //     if(this.arrayGeneral[index].code == codeDep){
+            //         posicionInser = index;
+            //     }
+            // }
+            // this.provincias = this.provincias.filter(item => item.code !== CodeProvince);
+            // this.distritos = this.distritos.filter(item => item.code.substring(0,4) !== CodeProvince);
+            // this.distriActual = this.distriActual.filter(item => item.substring(0,4) !== CodeProvince);
+            // this.arrayGeneral[posicionInser].provinces = this.arrayGeneral[posicionInser].provinces.filter(item => item.code !== CodeProvince);
+            // this.MatProvincia.options.forEach((data: MatOption) => {if(data.value == CodeProvince){data.deselect()}});
+            // this.MatDistrito.options.forEach((data: MatOption) => {if(data.value.substring(0,4)==CodeProvince){data.deselect()}});
         }
     }
 
-    loadByProvince(CodeProvince){
+    searchProvince(CodeProvince){
         const sbProvinceby = this.provinceService.getByProvince(CodeProvince).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
         ).subscribe((response) => {
             this.$_getbyprovince = response.content;
-            this.loadDistrict(CodeProvince);
+            this.getDistrictsByProvince(CodeProvince);
         });
         this.subscriptions.push(sbProvinceby);
     }
 
-    loadDistrict(codeprovince){
+    getDistrictsByProvince(codeprovince){
         const sbDistrictby = this.districtService.getAllDistrict(codeprovince+0).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
@@ -397,58 +399,69 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 }
             }
             this.arrayGeneral[posicionInser].provinces.push(province1);
-
             this.provincias.push(province);
         });
         this.subscriptions.push(sbDistrictby);
     }
 
     checkDistrict(event){
-        for(let item of event.source.selected){
+        var distritosEnviados = event.value;
+        var CodeDistrict: any;
+        var existencia: boolean;
+        if( event.source.selected.length > this.distriActual.length){
+            for (let item of distritosEnviados) {
+                existencia = this.distriActual.includes(item);
+                if (!existencia) {
+                    CodeDistrict = item;
+                }
+            }
+            this.distriActual = distritosEnviados;
+            this.searchDistrict(CodeDistrict);
+        }else if( event.source.selected.length < this.distriActual.length){
+            for (let item of this.distriActual) {
+                existencia = distritosEnviados.includes(item);
+                if (!existencia) {
+                    CodeDistrict = item;
+                }
+            }
+            this.distriActual = distritosEnviados;
+            this.removeDistrict(CodeDistrict);
+            console.log(this.arrayGeneral)
+            // var codeDep = CodeDistrict.substring(0,2);
+            // var codeProv = CodeDistrict.substring(0,4);
+            // var indexDep: number;
+            // var indexProv: number;
+           
+            // for (let index = 0; index < this.arrayGeneral.length; index++){
+            //     if(this.arrayGeneral[index].code == codeDep){
+            //         indexDep = index;
+            //     }
+            // }
+            // for(let index = 0; index < this.arrayGeneral[indexDep].provinces.length; index++){
+            //     if(this.arrayGeneral[indexDep].provinces[index].code == codeProv){
+            //         indexProv = index;
+            //     }
+            // }
             
-            var n = this.idsDistricts.includes(item.id)
-            if(!n){
-                this.idsDistricts.push(item.id)
-            }
-        }
-        var ccppsEnviados = event.value;
-        var ccppsActual = this.distriActual;
-        var y:any;
-        var x:any;
-        if(event.source.selected.length > ccppsActual.length){
-            for (let item of ccppsEnviados) {
-                x = ccppsActual.includes(item);
-                if (!x) {
-                    y = item;
-                }
-            }
-            this.distriActual = ccppsEnviados;
-            this.loadByDistrict(y);
-        }else if(event.source.selected.length < ccppsActual.length){
-            for (let item of ccppsActual) {
-                x = ccppsEnviados.includes(item);
-                if (!x) {
-                    y = item;
-                }
-            }
-            this.distriActual = ccppsEnviados;
-            this.distritos = this.distritos.filter(item => item.code !== y);
+            // this.distritos = this.distritos.filter(item => item.code !== CodeDistrict);
+            // this.arrayGeneral[indexDep].provinces[indexProv].districts = this.arrayGeneral[indexDep].provinces[indexProv].districts.filter(item => item.code !== CodeDistrict);
+            // this.MatDistrito.options.forEach((data: MatOption) => {if(data.value == CodeDistrict){data.deselect()}});
         }
     }
 
-    loadByDistrict(CodeDistrict){
+    searchDistrict(CodeDistrict){
         const sbDistrictby = this.districtService.getByDistrict(CodeDistrict).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
         ).subscribe((response) => {
             this.$_getbydistrict = response.content;
-            this.loadCcpp();
+            this.getCcppByDistrict();
         });
         this.subscriptions.push(sbDistrictby);
     }
 
-    loadCcpp(){
+    getCcppByDistrict(){
         const sbDistrictby = this.ccppService.getAllCcpp().pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
@@ -487,41 +500,49 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     removeDepartament(Departament) {
-        var idDep = this.departamentos.find(element => element.id == Departament);
-        this.idsDepartaments = this.idsDepartaments.filter(item => item !== Departament);
-        this.departamentos = this.departamentos.filter(item => item.id !== Departament);
-        // this.provincias = this.provincias.filter(item => item.code.substring(0,2) != idDep.code);
-        // this.proviActual = this.proviActual.filter(item => item.substring(0,2) != idDep.code);
-        //falta borrar los ids de las provincias
-        const toppings = this.departActual as string[];
-        this.removeFirst(toppings, idDep.code);
-        this.departActual = toppings;
+        this.departamentos = this.departamentos.filter(item => item.code !== Departament);
+        this.provincias = this.provincias.filter(item => item.code.substring(0,2) !== Departament);
+        this.arrayGeneral = this.arrayGeneral.filter(item => item.code !== Departament);
+        this.MatDepartamento.options.forEach((data: MatOption) => {if(data.value == Departament){data.deselect()}});
+        this.MatProvincia.options.forEach((data: MatOption) => {if(data.value.substring(0,2)==Departament){data.deselect()}});
+        this.MatDistrito.options.forEach((data: MatOption) => {if(data.value.substring(0,2)==Departament){data.deselect()}});
     }
 
     removeProvince(Province) {
-        var idProv = this.provincias.find(element => element.id == Province);
-        this.idsProvinces = this.idsProvinces.filter(item => item !== Province);
-        this.provincias = this.provincias.filter(item => item.id !== Province);
-        const toppings = this.proviActual as string[];
-        this.removeFirst(toppings, idProv.code);
-        this.proviActual = toppings;
+        var codeDep = Province.substring(0,2);
+        var posicionInser: number;
+        
+        for (let index = 0; index < this.arrayGeneral.length; index++){
+            if(this.arrayGeneral[index].code == codeDep){
+                posicionInser = index;
+            }
+        }
+        this.provincias = this.provincias.filter(item => item.code !== Province);
+        this.distritos = this.distritos.filter(item => item.code.substring(0,4) !== Province);
+        this.distriActual = this.distriActual.filter(item => item.substring(0,4) !== Province);
+        this.arrayGeneral[posicionInser].provinces = this.arrayGeneral[posicionInser].provinces.filter(item => item.code !== Province);
+        this.MatProvincia.options.forEach((data: MatOption) => {if(data.value == Province){data.deselect()}});
+        this.MatDistrito.options.forEach((data: MatOption) => {if(data.value.substring(0,4)==Province){data.deselect()}});
     }
 
     removeDistrict(District) {
-        var idsDist = this.distritos.find(element => element.id == District);
-        this.idsDistricts = this.idsDistricts.filter(item => item !== District);
-        this.distritos = this.distritos.filter(item => item.id !== District);
-        const toppings = this.distriActual as string[];
-        this.removeFirst(toppings, idsDist.code);
-        this.distriActual = toppings;
-    }
-
-    removeFirst<T>(array: T[], toRemove: T): void {
-        const index = array.indexOf(toRemove);
-        if (index !== -1) {
-          array.splice(index, 1);
+        var codeDep = District.substring(0,2);
+        var codeProv = District.substring(0,4);
+        var indexDep: number;
+        var indexProv: number;
+        
+        for (let index = 0; index < this.arrayGeneral.length; index++){
+            if(this.arrayGeneral[index].code == codeDep){
+                indexDep = index;
+            }
         }
+        for(let index = 0; index < this.arrayGeneral[indexDep].provinces.length; index++){
+            if(this.arrayGeneral[indexDep].provinces[index].code == codeProv){
+                indexProv = index;
+            }
+        }
+        this.distritos = this.distritos.filter(item => item.code !== District);
+        this.arrayGeneral[indexDep].provinces[indexProv].districts = this.arrayGeneral[indexDep].provinces[indexProv].districts.filter(item => item.code !== District);
+        this.MatDistrito.options.forEach((data: MatOption) => {if(data.value == District){data.deselect()}});
     }
-
-    
 }
