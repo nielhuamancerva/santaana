@@ -53,6 +53,13 @@ const routes: Routes = [
             ),
       },
       {
+        path: 'tasks',
+        loadChildren: () =>
+        import('../modules/admin/task/task.module').then(
+            (m) => m.TaskModule
+            ),
+      },
+      {
           path: 'payment-management',
           loadChildren: () =>
           import('../modules/admin/payment-management/payment-management.module').then(
