@@ -1,4 +1,4 @@
-<form action="#" class="form form-label-right">
+<form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
     <div class="form-group row">
         <div class="col-lg-4">
             <label for="roles">Usuario</label>
@@ -6,7 +6,7 @@
                 type="text" 
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Escriba el dni del usuario"
-                formControlName="secondName"
+                formControlName="userName"
             />
         </div>
         <div class="col-lg-4">
@@ -15,7 +15,7 @@
                 type="text" 
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Nombre de la tarea"
-                formControlName="secondName"
+                formControlName="title"
             />
         </div>
         <div class="col-lg-4">
@@ -24,7 +24,7 @@
                 type="date" 
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Apellido paterno"
-                formControlName="lastName"
+                formControlName="createdAt"
             />
         </div>
     </div>
@@ -35,12 +35,12 @@
                 type="date" 
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Apellido paterno"
-                formControlName="lastName"
+                formControlName="caducedAt"
             />
         </div>
         <div class="col-lg-8">
             <label>Descripcion de la tarea</label>
-            <textarea name="" id="" cols="100" rows="5" class="form-control form-control-lg form-control-solid"></textarea>
+            <textarea name="" id="" cols="100" rows="5" class="form-control form-control-lg form-control-solid" formControlName="description"></textarea>
         </div>
     </div>
     <div class="float-right">
