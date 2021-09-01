@@ -1,32 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { ModalTaskComponent } from './modal-task/modal-task.component'
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html'
 })
 export class TasksComponent implements OnInit {
-    formGroup: FormGroup;
+    
     constructor(
-        private fb: FormBuilder,
+        private modalService: NgbModal
     ) { }
 
     ngOnInit(): void {
-        this.loadForm();
+        
     }
 
-    loadForm() {
-        this.formGroup = this.fb.group({
-            userName: ['', Validators.compose([Validators.required])],
-            title: ['', Validators.compose([Validators.required])],
-            createdAt: ['', Validators.compose([Validators.required])],
-            caducedAt: ['', Validators.compose([Validators.required])],
-            description: ['', Validators.compose([Validators.required])]
-        });
+    openModal() {
+        this.modalService.open(ModalTaskComponent, { size: 'lg' });
     }
-
-    save(){
-        this.formGroup.reset();
-    }
-
 }
