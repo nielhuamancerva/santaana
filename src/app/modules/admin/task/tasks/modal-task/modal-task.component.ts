@@ -3,8 +3,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { TareaModel } from '../../../_models/Tarea.model';
 import { UserRepositoryService } from '../../../_services-repository/user-repository.service';
 import { TaskHTTPServiceDomain } from '../../../_services/task-domain.service';
+
+const EMPTY_TASK: TareaModel = {
+    id: undefined,
+    user_created: '',
+    user_asigned: '',
+    title: '',
+    description: '',
+    expiration: '',
+    completed: 0,
+    fl_enabled: 1,
+    fl_deleted: 0
+};
 
 @Component({
     selector: 'app-modal-task',
@@ -12,6 +25,8 @@ import { TaskHTTPServiceDomain } from '../../../_services/task-domain.service';
 })
 
 export class ModalTaskComponent implements OnInit {
+    
+    passedData: TareaModel;
     public isLoadingSearchDni=false;
     public SearchDni: number;
     formGroup: FormGroup;
@@ -19,11 +34,15 @@ export class ModalTaskComponent implements OnInit {
         private fb: FormBuilder,
         public modal: NgbActiveModal,
         private taskService: TaskHTTPServiceDomain,
-        private userService: UserRepositoryService
+        private userService: UserRepositoryService,
     ) { }
 
     ngOnInit(): void {
-        this.loadForm();
+        if(this.passedData == undefined){
+            this.passedData = EMPTY_TASK;
+        }else{
+            this.loadForm();
+        }
     }
 
     save(){
@@ -32,14 +51,18 @@ export class ModalTaskComponent implements OnInit {
         console.log("enviando");
         this.formGroup.reset();
     }
+
+    buildMyForm() {
+        
+    }
     
     loadForm() {
         this.formGroup = this.fb.group({
             user_created: ['', Validators.compose([Validators.required])],
-            user_asigned: ['753a9458-2e42-4877-9f99-ce79b9dce992', Validators.compose([Validators.required])],
-            title: ['', Validators.compose([Validators.required])],
-            description: ['', Validators.compose([Validators.required])],
-            expiration: ['20210915', Validators.compose([Validators.required])],
+            user_asigned: [this.passedData.user_asigned, Validators.compose([Validators.required])],
+            title: [this.passedData.title, Validators.compose([Validators.required])],
+            description: [this.passedData.description, Validators.compose([Validators.required])],
+            expiration: [this.passedData.expiration, Validators.compose([Validators.required])],
             completed: [0, Validators.compose([Validators.required])],
             fl_enabled: [1, Validators.compose([Validators.required])],
             fl_deleted: [0, Validators.compose([Validators.required])],

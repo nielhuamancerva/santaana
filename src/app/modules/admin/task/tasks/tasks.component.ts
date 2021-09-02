@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { of } from 'rxjs';
@@ -12,7 +12,7 @@ import { ModalTaskComponent } from './modal-task/modal-task.component'
     templateUrl: './tasks.component.html'
 })
 export class TasksComponent implements OnInit {
-    $_task:TareaModel;
+    $_task: TareaModel[] = [];
     private subscriptions: Subscription[] = [];
     constructor(
         private modalService: NgbModal,
@@ -22,20 +22,24 @@ export class TasksComponent implements OnInit {
     ngOnInit(): void {
         this.loadTasks();
     }
+
     loadTasks(){
         const sbTaks = this.tasksService.getAllTasks().pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
         ).subscribe((_task) => {
-    
             this.$_task = _task.content;
-            console.log(this.$_task);
         });
         this.subscriptions.push(sbTaks);
     }
 
     openModal() {
         this.modalService.open(ModalTaskComponent, { size: 'xl' });
+    }
+
+    editTask(task: TareaModel){
+        const modalRef = this.modalService.open(ModalTaskComponent, { size: 'xl' }).componentInstance;
+        modalRef.passedData = task;
     }
 }
