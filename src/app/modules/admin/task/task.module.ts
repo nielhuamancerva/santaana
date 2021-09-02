@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { InlineSVGModule } from 'ng-inline-svg';
 import {
   MatRippleModule,
   MatNativeDateModule
@@ -33,6 +34,7 @@ import { ModalNoteComponent } from './notes/modal-note/modal-note.component';
     MatNativeDateModule,
     MatInputModule,
     MatDatepickerModule,
+    InlineSVGModule,
     TasksRoutingModule
   ]
 })
