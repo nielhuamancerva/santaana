@@ -8,8 +8,8 @@ import { TaskRepositoryService } from '../../_services-repository/task-repositor
 import { ModalTaskComponent } from './modal-task/modal-task.component'
 
 @Component({
-  selector: 'app-tasks',
-  templateUrl: './tasks.component.html'
+    selector: 'app-tasks',
+    templateUrl: './tasks.component.html'
 })
 export class TasksComponent implements OnInit {
     $_task:TareaModel;
@@ -29,11 +29,11 @@ export class TasksComponent implements OnInit {
             })
         ).subscribe((_task) => {
     
-            this.$_task = _task;
+            this.$_task = _task.content;
             console.log(this.$_task);
         });
         this.subscriptions.push(sbTaks);
-  }
+    }
 
     openModal() {
         this.modalService.open(ModalTaskComponent, { size: 'xl' });

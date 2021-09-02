@@ -8,8 +8,7 @@ import { TaskHTTPServiceDomain } from '../../../_services/task-domain.service';
 
 @Component({
     selector: 'app-modal-task',
-    templateUrl: './modal-task.component.html',
-    styleUrls: ['./modal-task.component.scss'],
+    templateUrl: './modal-task.component.html'
 })
 
 export class ModalTaskComponent implements OnInit {
@@ -72,5 +71,4 @@ export class ModalTaskComponent implements OnInit {
         });
         this.isLoadingSearchDni=false;
     }
-
 }
