@@ -9,12 +9,23 @@
         <div class="modal-body">
             <div class="form-group row">
                 <div class="col-lg-4">
-                    <label for="roles">Usuario</label>
+                    <label>Usuario</label>
                     <input 
                         type="text" 
                         class="form-control form-control-lg form-control-solid"
                         placeholder="Escriba el dni del usuario"
+                        (ngModelChange)="mostrar($event)"
+                        formControlName="fullname"
                     />
+                    <div class="results" *ngIf="isLoadingSearchDni">
+                        <ul>
+                          <li *ngFor="let item of SearchDni">
+                            <a class="name" (click)="selectBeneficiary(item)">
+                              {{item.name}} {{item.secondName}} {{item.lastName}} {{item.secondLastName}}
+                            </a>
+                          </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="col-lg-4">
                     <label>Título de la tarea</label>
@@ -51,6 +62,8 @@
             </div>
             
         </div>
+        
+<div>{{ formGroup.value | json }}</div>
         <div class="modal-footer">
             <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Cancelar</button>
             <button type="button" class="btn btn-primary" (click)="save()">Guardar</button>

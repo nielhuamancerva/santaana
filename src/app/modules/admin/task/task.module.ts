@@ -36,6 +36,9 @@ import { ModalNoteComponent } from './notes/modal-note/modal-note.component';
     MatDatepickerModule,
     InlineSVGModule,
     TasksRoutingModule
-  ]
+  ],
+    entryComponents: [
+      ModalTaskComponent
+    ]
 })
 export class TaskModule { }

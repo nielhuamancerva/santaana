@@ -9,6 +9,8 @@ import { AuthService } from '../../auth/_services/auth.service';
 import { TypePersonModel } from '../_models/TypePerson.model';
 import { UserModel } from '../_models/user.model';
 import { couldStartTrivia } from 'typescript';
+import { PagedResponse } from 'src/app/_commons/_models/PagedResponse';
+import { BuildHeaderService } from 'src/app/_commons/_services/Header-Builder.service';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +18,9 @@ import { couldStartTrivia } from 'typescript';
 export class UserHTTPServiceDomain {
     API_URL = `${environment.apiUrlNiel}/user`;
     API_URL1 = `${environment.apiUrlNiel}/users`;
+    API_URL_Local = `http://localhost:8880/api/user`;
   constructor(private http: HttpClient,
+    private buildheader:BuildHeaderService,
     private auth: AuthService) { }
 
     CreateUser($user: UserModel): Observable<UserModel> {
@@ -33,7 +37,7 @@ export class UserHTTPServiceDomain {
         formData.append('reverseDocument', f2, 'name1');
         formData.append('lastPage', f3, 'name1');
         formData.append('evidence', f4, 'name1');
-        const header = this.buildHeader();
+        const header = this.buildheader.buildHeaderPost();
         this.http.post(this.API_URL, formData,{headers: header})
         .subscribe(
             data => {
@@ -48,8 +52,33 @@ export class UserHTTPServiceDomain {
     }
 
     getAllUser(): Observable<ApiResponse<any>> {
-        const header = this.buildHeader();
+        const header = this.buildheader.buildHeader();
         return this.http.get<ApiResponse<any[]>>(this.API_URL1,{
+            headers: header 
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
+    getByDocumentUser(InputSearchDni): Observable<ApiResponse<PagedResponse<UserModel>>> {
+        const header = this.buildheader.buildHeader();
+        return this.http.get<ApiResponse<PagedResponse<UserModel>>>(this.API_URL_Local+ `?documentNumber=${InputSearchDni}`,{
+            headers: header 
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
+    postAsingUser(InputDni,body): Observable<ApiResponse<PagedResponse<UserModel>>> {
+        const header = this.buildheader.buildHeader();
+        this.http.post(this.API_URL_Local+ `/ubigee/${InputDni}`,body,{headers: header})
+        .subscribe(
+            data => {
+                console.log(data);
+            }
+          );
+
+        return this.http.post<ApiResponse<PagedResponse<UserModel>>>(this.API_URL_Local+ `/ubigee/${InputDni}`,body,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -67,29 +96,6 @@ export class UserHTTPServiceDomain {
 
         return throwError(errorMessage);
     }
-
-  buildHeader(): HttpHeaders {
-
-    let headers: HttpHeaders = new HttpHeaders()
-        .set("Authorization", "Bearer " + this.getAuthFromLocalStorage() )
-        //.set("Connection", retrieveStringFromStorage("ConnectionCompany") ) 99dedcc7-ffbc-41e0-8494-73cfae25dffe
-        .set("payload", "company" )
-        .set("Company", "ac3e02e6-69b2-4e36-bda6-de98673fc74b" )
-        .set("Access-Control-Allow-Origin", "*")
-        return headers;
-    }
-
-    
-    getAuthFromLocalStorage(): AuthModel {
-        try {
-            const authData = JSON.parse(localStorage.getItem(this.auth.authLocalStorageToken));
-            return authData.authToken;
-        } catch (error) {
-            console.error(error);
-            return undefined;
-        }
-    }
-
     setuser(result){
         let user:UserModel={
         roleCode:result.roleCode,//set

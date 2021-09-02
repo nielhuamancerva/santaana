@@ -17,8 +17,8 @@ const routes: Routes = [
                 path: 'notes',
                 component: NotesComponent,
             },
-            { path: '', redirectTo: 'notes', pathMatch: 'full' },
-            { path: '**', redirectTo: 'notes', pathMatch: 'full' },
+            { path: '', redirectTo: 'tasks', pathMatch: 'full' },
+            { path: '**', redirectTo: 'tasks', pathMatch: 'full' },
         ],
     },
 ];

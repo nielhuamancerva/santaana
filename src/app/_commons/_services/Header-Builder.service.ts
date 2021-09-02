@@ -29,4 +29,14 @@ export class BuildHeaderService {
             return undefined;
         }
     }
+
+    buildHeaderPost(): HttpHeaders {
+        let headers: HttpHeaders = new HttpHeaders()
+        .set("Authorization", "Bearer " + this.getAuthFromLocalStorage() )
+        //.set("Connection", retrieveStringFromStorage("ConnectionCompany") ) 99dedcc7-ffbc-41e0-8494-73cfae25dffe
+        .set("payload", "company" )
+        .set("Company", "ac3e02e6-69b2-4e36-bda6-de98673fc74b" )
+        .set("Access-Control-Allow-Origin", "*")
+        return headers;
+    }
 }

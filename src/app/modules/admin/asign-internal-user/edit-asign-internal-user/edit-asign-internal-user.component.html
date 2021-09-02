@@ -21,7 +21,18 @@
                                 autocomplete="off"
                                 placeholder="DNI"
                                 formControlName="dni"
+                                (ngModelChange)="mostrar($event)"
+                                
                             />
+                            <div class="results" *ngIf="isLoadingSearchDni">
+                                <ul>
+                                  <li *ngFor="let item of SearchDni">
+                                    <a class="name" (click)="selectBeneficiary(item)">
+                                      {{item.name}} {{item.secondName}} {{item.lastName}} {{item.secondLastName}}
+                                    </a>
+                                  </li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="col-lg-4">
                             <label>Nombre Completo</label>

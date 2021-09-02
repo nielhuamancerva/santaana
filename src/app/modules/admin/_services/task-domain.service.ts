@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../_commons/_models/ApiResponse.model';
-import { TareaModel } from '../_models/Tarea.interface';
+import { TareaModel } from '../_models/Tarea.model';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
 import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.service';
 import { AuthModel } from '../../auth/_models/auth.model';
@@ -16,24 +16,22 @@ import { AuthService } from '../../auth/_services/auth.service';
 
 export class TaskHTTPServiceDomain {
     API_URL = `${environment.apiUrlNiel}/tasks`;
+    API_URL_Local = `http://localhost:8880/api/tasks`;
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService,
         private auth: AuthService
     ){ }
 
-    CreateTask(task: any): Observable<TareaModel> {
-        console.log(task)
-        const fileJson = JSON.stringify(task);
-
-        const header = this.buildHeader();
-        this.http.post(this.API_URL, fileJson,{headers: header})
+    CreateTask(body): Observable<TareaModel> {
+        const header = this.buildheader.buildHeaderPost();
+        this.http.post(this.API_URL_Local, body,{headers: header})
             .subscribe(
                 data => {
                     console.log(data);
                 }
             );
-            return this.http.post<TareaModel>(this.API_URL, fileJson,{
+            return this.http.post<TareaModel>(this.API_URL_Local, body,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -42,7 +40,7 @@ export class TaskHTTPServiceDomain {
 
     getAllTasks(): Observable<ApiResponse<PagedResponse<TareaModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL,{
+        return this.http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL_Local+`?code=753a9458-2e42-4877-9f99-ce79b9dce992`,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -61,22 +59,4 @@ export class TaskHTTPServiceDomain {
         return throwError(errorMessage);
     }
 
-    buildHeader(): HttpHeaders {
-        let headers: HttpHeaders = new HttpHeaders()
-            .set("Authorization", "Bearer " + this.getAuthFromLocalStorage() )
-            .set("payload", "company" )
-            .set("Access-Control-Allow-Origin", "*")
-
-        return headers;
-    }
-
-    getAuthFromLocalStorage(): AuthModel {
-        try {
-            const authData = JSON.parse(localStorage.getItem(this.auth.authLocalStorageToken));
-            return authData.authToken;
-        } catch (error) {
-            console.error(error);
-            return undefined;
-        }
-    }
 }
