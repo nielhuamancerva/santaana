@@ -1,6 +1,11 @@
 export interface TareaModel{
-    titulo: string;
-    descripcion: string;
-    fecha_creacion: string;
-    fecha_actualizacion: string
+    id: string;
+    user_created: string;
+    user_asigned: string;
+    title: string;
+    description: string;
+    expiration: string;
+    completed: number;
+    fl_enabled: number;
+    fl_deleted: number;
 }

@@ -14,7 +14,6 @@
                         type="text" 
                         class="form-control form-control-lg form-control-solid"
                         placeholder="Escriba el dni del usuario"
-                        formControlName="userName"
                     />
                 </div>
                 <div class="col-lg-4">
@@ -32,7 +31,6 @@
                         type="date" 
                         class="form-control form-control-lg form-control-solid"
                         placeholder="Apellido paterno"
-                        formControlName="createdAt"
                     />
                 </div>
             </div>
@@ -43,7 +41,7 @@
                         type="date" 
                         class="form-control form-control-lg form-control-solid"
                         placeholder="Apellido paterno"
-                        formControlName="caducedAt"
+                        formControlName="expiration"
                     />
                 </div>
                 <div class="col-lg-8">
@@ -55,7 +53,8 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Cancelar</button>
-            <button type="button" class="btn btn-primary" (click)="modal.close('Close click')">Guardar</button>
+            <button type="button" class="btn btn-primary" (click)="save()">Guardar</button>
         </div>
     </form>
+    <pre> {{ formGroup.value | json}}</pre>
 </div>
