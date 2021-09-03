@@ -18,7 +18,7 @@ export class TaskRepositoryService {
         return this._taskservicedomain.getAllTasks().pipe(
             map(
             response => {
-                console.log(response);
+              //  console.log(response);
                 return response.data;
             }
         ));    

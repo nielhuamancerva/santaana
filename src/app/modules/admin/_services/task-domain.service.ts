@@ -38,6 +38,21 @@ export class TaskHTTPServiceDomain {
             .pipe(catchError(this.handleError));
     }
 
+    UpdateTask(body): Observable<TareaModel> {
+        const header = this.buildheader.buildHeaderPost();
+        this.http.patch(this.API_URL_Local, body,{headers: header})
+            .subscribe(
+                data => {
+                    console.log(data);
+                }
+            );
+            return this.http.patch<TareaModel>(this.API_URL_Local, body,{
+            headers: header 
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
     getAllTasks(): Observable<ApiResponse<PagedResponse<TareaModel>>> {
         const header = this.buildheader.buildHeader();
         return this.http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL_Local+`?code=753a9458-2e42-4877-9f99-ce79b9dce992`,{

@@ -8,7 +8,7 @@ import { UserRepositoryService } from '../../../_services-repository/user-reposi
 import { TaskHTTPServiceDomain } from '../../../_services/task-domain.service';
 
 const EMPTY_TASK: TareaModel = {
-    id: undefined,
+    id:undefined,
     user_created: '',
     user_asigned: '',
     title: '',
@@ -38,17 +38,39 @@ export class ModalTaskComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        if(this.passedData == undefined){
+        this.loadTaks();
+    
+    }
+
+    loadTaks() {
+        if(this.passedData.id==''){
             this.passedData = EMPTY_TASK;
+            this.loadForm();
         }else{
+            console.log(this.passedData);
             this.loadForm();
         }
-    }
+      }
 
     save(){
         const formValues = this.formGroup.value;
-        this.taskService.CreateTask(formValues);
-        console.log("enviando");
+    
+        console.log(this.passedData.id);
+       if (this.passedData.id!=undefined) {
+        console.log("actualizar");
+        const formValues = this.formGroup.value;
+        this.taskService.UpdateTask(formValues);
+
+     
+          } else {
+
+            
+            console.log("create");
+            const formValues = this.formGroup.value;
+            this.taskService.CreateTask(formValues);
+     
+          }
+           
         this.formGroup.reset();
     }
 
@@ -67,6 +89,7 @@ export class ModalTaskComponent implements OnInit {
             fl_enabled: [1, Validators.compose([Validators.required])],
             fl_deleted: [0, Validators.compose([Validators.required])],
             fullname: [''],
+            id: [this.passedData.id],
         });
     }
 

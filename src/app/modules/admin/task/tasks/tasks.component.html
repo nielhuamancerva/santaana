@@ -45,7 +45,7 @@
             <th>OPCIONES</th>
         </thead>
         <tbody>
-            <tr *ngFor="let task of $_task">
+            <tr *ngFor="let task of $_task | async">
                 <td> {{ task.user_asigned }} </td>
                 <td> {{ task.title }} </td>
                 <td> {{ task.expiration }} </td>

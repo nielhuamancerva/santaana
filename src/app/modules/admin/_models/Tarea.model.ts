@@ -1,5 +1,5 @@
 export interface TareaModel{
-    id: string;
+    id?: string;
     user_created: string;
     user_asigned: string;
     title: string;

@@ -1,8 +1,8 @@
 import { Component, Injector, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize, map } from 'rxjs/operators';
 import { TareaModel } from '../../_models/Tarea.model';
 import { TaskRepositoryService } from '../../_services-repository/task-repository.service';
 import { ModalTaskComponent } from './modal-task/modal-task.component'
@@ -12,7 +12,8 @@ import { ModalTaskComponent } from './modal-task/modal-task.component'
     templateUrl: './tasks.component.html'
 })
 export class TasksComponent implements OnInit {
-    $_task: TareaModel[] = [];
+    isLoading:boolean;
+    $_task: Observable<TareaModel[]>;
     private subscriptions: Subscription[] = [];
     constructor(
         private modalService: NgbModal,
@@ -24,14 +25,11 @@ export class TasksComponent implements OnInit {
     }
 
     loadTasks(){
-        const sbTaks = this.tasksService.getAllTasks().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_task) => {
-            this.$_task = _task.content;
-        });
-        this.subscriptions.push(sbTaks);
+        this.$_task=this.tasksService.getAllTasks().pipe(
+            map((_beneficiary)=>_beneficiary.content,
+            finalize(()=>this.isLoading=false)
+            )
+        )
     }
 
     openModal() {
