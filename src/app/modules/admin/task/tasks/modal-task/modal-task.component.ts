@@ -25,7 +25,6 @@ const EMPTY_TASK: TareaModel = {
 })
 
 export class ModalTaskComponent implements OnInit {
-    
     passedData: TareaModel;
     public isLoadingSearchDni=false;
     public SearchDni: number;
@@ -38,10 +37,10 @@ export class ModalTaskComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.loadTaks();
+        this.loadTask();
     }
 
-    loadTaks() {
+    loadTask() {
         if(this.passedData == undefined){
             this.passedData = EMPTY_TASK;
             this.loadForm();
@@ -49,32 +48,23 @@ export class ModalTaskComponent implements OnInit {
             console.log(this.passedData);
             this.loadForm();
         }
-      }
+    }
 
     save(){
         const formValues = this.formGroup.value;
     
         console.log(this.passedData.id);
-       if (this.passedData.id!=undefined) {
+        if (this.passedData.id!=undefined) {
         console.log("actualizar");
         const formValues = this.formGroup.value;
         this.taskService.UpdateTask(formValues);
-
-     
-          } else {
-
-            
+        } else {
             console.log("create");
             const formValues = this.formGroup.value;
             this.taskService.CreateTask(formValues);
-     
-          }
-           
+        }
         this.formGroup.reset();
-    }
-
-    buildMyForm() {
-        
+        this.modal.close();
     }
     
     loadForm() {

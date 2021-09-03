@@ -1,8 +1,7 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subscription } from 'rxjs';
-import { of } from 'rxjs';
-import { catchError, finalize, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
 import { TareaModel } from '../../_models/Tarea.model';
 import { TaskRepositoryService } from '../../_services-repository/task-repository.service';
 import { ModalTaskComponent } from './modal-task/modal-task.component'
@@ -14,7 +13,6 @@ import { ModalTaskComponent } from './modal-task/modal-task.component'
 export class TasksComponent implements OnInit {
     isLoading:boolean;
     $_task: Observable<TareaModel[]>;
-    private subscriptions: Subscription[] = [];
     constructor(
         private modalService: NgbModal,
         private tasksService: TaskRepositoryService,
