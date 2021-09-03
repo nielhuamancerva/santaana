@@ -3,7 +3,7 @@
         <div class="col-lg-3">
             <mat-form-field class="example-full-width" appearance="fill">
                 <mat-label>Nombre</mat-label>
-                <input matInput placeholder="Codigo" >
+                <input matInput placeholder="Codigo" autocomplete="off">
                 <mat-hint>Buscar por Nombre</mat-hint>
             </mat-form-field>
         </div>
@@ -52,16 +52,16 @@
                 <td> {{ task.description }} </td>
                 <td>
                     <a
-                      title="Edit product"
-                      class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-                      (click)="editTask(task)"
+                        title="Edit product"
+                        class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                        (click)="editTask(task)"
                     >
-                      <span
-                        [inlineSVG]="'./assets/media/svg/view.svg'"
+                        <span
+                        [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                         cacheSVG="true"
                         class="svg-icon svg-icon-md svg-icon-primary"
-                      >
-                      </span>
+                        >
+                        </span>
                     </a>
                     <a
                       title="Delete product"
@@ -69,17 +69,6 @@
                     >
                       <span
                         [inlineSVG]="'./assets/media/svg/do-not-disturb.svg'"
-                        cacheSVG="true"
-                        class="svg-icon svg-icon-md svg-icon-danger"
-                      >
-                      </span>
-                    </a>
-                    <a
-                      title="Delete product"
-                      class="btn btn-icon btn-light btn-hover-danger btn-sm mx-3"
-                    >
-                      <span
-                        [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
                         cacheSVG="true"
                         class="svg-icon svg-icon-md svg-icon-danger"
                       >

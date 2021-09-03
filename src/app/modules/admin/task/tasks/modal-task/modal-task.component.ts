@@ -39,11 +39,10 @@ export class ModalTaskComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadTaks();
-    
     }
 
     loadTaks() {
-        if(this.passedData.id==''){
+        if(this.passedData == undefined){
             this.passedData = EMPTY_TASK;
             this.loadForm();
         }else{
