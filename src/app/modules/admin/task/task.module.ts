@@ -16,6 +16,7 @@ import { TasksComponent } from './tasks/tasks.component';
 import { NotesComponent } from './notes/notes.component';
 import { TaskComponent } from './task.component';
 import { ModalNoteComponent } from './notes/modal-note/modal-note.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -35,7 +36,8 @@ import { ModalNoteComponent } from './notes/modal-note/modal-note.component';
     MatInputModule,
     MatDatepickerModule,
     InlineSVGModule,
-    TasksRoutingModule
+    TasksRoutingModule,
+    RouterModule
   ],
     entryComponents: [
       ModalTaskComponent
