@@ -44,8 +44,8 @@
             <th>RESUMEN TAREA</th>
             <th>OPCIONES</th>
         </thead>
-        <tbody>
-            <tr *ngFor="let task of $_task | async">
+        <tbody> 
+            <tr *ngFor="let task of tasksServiceDomain.items$ | async">
                 <td> {{ task.user_asigned }} </td>
                 <td> {{ task.title }} </td>
                 <td> {{ task.expiration }} </td>

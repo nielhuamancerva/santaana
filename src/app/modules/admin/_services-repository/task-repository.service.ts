@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
 import { TareaModel } from '../_models/Tarea.model';
@@ -9,6 +10,17 @@ import { TaskHTTPServiceDomain } from '../_services/task-domain.service';
     providedIn: 'root',
 })
 export class TaskRepositoryService {
+    public _items$ = new BehaviorSubject<TareaModel[]>([]);
+    private _isLoading$ = new BehaviorSubject<boolean>(false);
+    //private _subscriptions: Subscription[] = [];
+     // Getters
+     get items$() {
+        return this._items$.asObservable();
+      }
+      get isLoading$() {
+        return this._isLoading$.asObservable();
+      }
+
 
     constructor(
         private _taskservicedomain: TaskHTTPServiceDomain
