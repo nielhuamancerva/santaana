@@ -44,7 +44,7 @@
             <th>OPCIONES</th>
         </thead>
         <tbody>
-            <tr *ngFor="let note of $_note | async">
+            <tr *ngFor="let note of notesServiceDomain.items$ | async">
                 <td> {{ note.user }} </td>
                 <td> {{ note.title }} </td>
                 <td> {{ note.description }} </td>

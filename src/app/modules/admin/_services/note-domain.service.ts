@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
+import { map, catchError, tap, finalize } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../_commons/_models/ApiResponse.model';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
@@ -13,8 +13,19 @@ import { NotaModel } from '../_models/Nota.interface';
 })
 
 export class NoteHTTPServiceDomain {
+    public _items$ = new BehaviorSubject<NotaModel[]>([]);
+    private _isLoading$ = new BehaviorSubject<boolean>(false);
+    private _subscriptions: Subscription[] = [];
     API_URL = `${environment.apiUrlNiel}/notes`;
     API_URL_Local = `http://localhost:8880/api/notes`;
+
+    get items$() {
+        return this._items$.asObservable();
+    }
+    get isLoading$() {
+        return this._isLoading$.asObservable();
+    }
+
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService
@@ -22,13 +33,14 @@ export class NoteHTTPServiceDomain {
 
     CreateNote(body): Observable<NotaModel> {
         const header = this.buildheader.buildHeaderPost();
-        this.http.post(this.API_URL_Local, body,{headers: header})
+        const request = this.http.post(this.API_URL_Local, body,{headers: header})
             .subscribe(
                 data => {
                     console.log(data);
                 }
             );
-            return this.http.post<NotaModel>(this.API_URL_Local, body,{
+        this._subscriptions.push(request);
+        return this.http.post<NotaModel>(this.API_URL_Local, body,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -37,12 +49,13 @@ export class NoteHTTPServiceDomain {
 
     UpdateNote(body): Observable<NotaModel> {
         const header = this.buildheader.buildHeaderPost();
-        this.http.patch(this.API_URL_Local, body,{headers: header})
+        const request = this.http.patch(this.API_URL_Local, body,{headers: header})
             .subscribe(
                 data => {
                     console.log(data);
                 }
             );
+        this._subscriptions.push(request);
             return this.http.patch<NotaModel>(this.API_URL_Local, body,{
             headers: header 
         })
@@ -69,5 +82,20 @@ export class NoteHTTPServiceDomain {
         console.error(errorMessage);
 
         return throwError(errorMessage);
+    }
+
+    fetch() {
+        this._isLoading$.next(true);
+        const request = this.getAllNotes()
+        .pipe(
+            tap((response) => {
+                this._items$.next(response.data.content);
+            }),
+            finalize(() => {
+                this._isLoading$.next(false);
+            })
+        )
+        .subscribe();
+        this._subscriptions.push(request);
     }
 }
