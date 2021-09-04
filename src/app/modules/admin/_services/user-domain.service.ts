@@ -110,6 +110,7 @@ export class UserHTTPServiceDomain {
 
         return throwError(errorMessage);
     }
+    
     setuser(result){
         let user:UserModel={
         roleCode:result.roleCode,//set

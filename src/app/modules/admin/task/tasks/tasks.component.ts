@@ -18,7 +18,7 @@ export class TasksComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     constructor(
         private modalService: NgbModal,
-        private tasksService: TaskRepositoryService,
+        public tasksService: TaskRepositoryService,
         public tasksServiceDomain: TaskHTTPServiceDomain,
         
     ) { }
@@ -28,6 +28,12 @@ export class TasksComponent implements OnInit {
         const sb = this.tasksServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
         this.subscriptions.push(sb);
         this.tasksServiceDomain.fetch();
+
+
+        const sbtask = this.tasksService.isLoading$.subscribe(res => this.isLoading = res);
+        this.subscriptions.push(sbtask);
+        this.tasksService.AllTaks();
+ 
     }
 
     loadTasks(){
@@ -43,7 +49,8 @@ export class TasksComponent implements OnInit {
     openModal() {
         const modalRef = this.modalService.open(ModalTaskComponent, { size: 'xl' });
         modalRef.result.then(() =>
-        this.tasksServiceDomain.fetch(),
+      //this.tasksService.getAllTasks(),
+    this.tasksServiceDomain.fetch(),
         () => { }
       );
 
@@ -54,7 +61,8 @@ export class TasksComponent implements OnInit {
         const modalRef = this.modalService.open(ModalTaskComponent, { size: 'xl' })
         modalRef.componentInstance.passedData = task;
         modalRef.result.then(() =>
-        this.tasksServiceDomain.fetch(),
+    //this.tasksService.getAllTasks(),
+    this.tasksServiceDomain.fetch(),
     () => { }
   );
     }
