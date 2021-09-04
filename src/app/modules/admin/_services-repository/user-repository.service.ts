@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { PagedResponse } from 'src/app/_commons/_models/PagedResponse';
+import { DepartamentModel } from '../_models/Departament.model';
 import { UserModel } from '../_models/user.model';
 import { UserHTTPServiceDomain } from '../_services/user-domain.service';
 @Injectable({
@@ -22,12 +23,23 @@ export class UserRepositoryService {
             }
         ));    
     }
+
     getByDocumentUser(InputSearchDni): Observable<PagedResponse<UserModel>> {
         return this._userservicedomain.getByDocumentUser(InputSearchDni).pipe(
             map(
             response => {
                 console.log(response);
                 return response.data;
+            }
+        ));    
+    }
+
+    getAllAsignInternalUser(): Observable<any>{
+        return this._userservicedomain.getAllAsignInternalUser().pipe(
+            map(
+            response => {
+                //console.log(response);
+                return response;
             }
         ));    
     }

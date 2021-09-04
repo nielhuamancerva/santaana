@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subscription, throwError } from 'rxjs';
+import { map, catchError, tap, finalize } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { ApiResponse } from '../../../_commons/_models/ApiResponse.model';
 import { AuthModel } from '../../auth/_models/auth.model';
@@ -11,17 +11,31 @@ import { UserModel } from '../_models/user.model';
 import { couldStartTrivia } from 'typescript';
 import { PagedResponse } from 'src/app/_commons/_models/PagedResponse';
 import { BuildHeaderService } from 'src/app/_commons/_services/Header-Builder.service';
+import { DepartamentModel } from '../_models/Departament.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserHTTPServiceDomain {
+    public _itemsUbigee$ = new BehaviorSubject<DepartamentModel[]>([]);
+    private _isLoading$ = new BehaviorSubject<boolean>(false);
+    private _subscriptions: Subscription[] = [];
     API_URL = `${environment.apiUrlNiel}/user`;
     API_URL1 = `${environment.apiUrlNiel}/users`;
     API_URL_Local = `http://localhost:8880/api/user`;
-  constructor(private http: HttpClient,
-    private buildheader:BuildHeaderService,
-    private auth: AuthService) { }
+
+    get itemsUbigee$() {
+        return this._itemsUbigee$.asObservable();
+    }
+    get isLoading$() {
+        return this._isLoading$.asObservable();
+    }
+
+    constructor(
+        private http: HttpClient,
+        private buildheader:BuildHeaderService,
+        private auth: AuthService
+    ) { }
 
     CreateUser($user: UserModel): Observable<UserModel> {
         console.log($user);
@@ -125,5 +139,31 @@ export class UserHTTPServiceDomain {
         enable:true,
         };
         return user;
+    }
+
+    getAllAsignInternalUser(): Observable<any> {
+        console.log("me ejecuté aquí")
+        const header = this.buildheader.buildHeader();
+        return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(this.API_URL_Local + `/ubigee/753a9458-2e42-4877-9f99-ce79b9dce992`,{
+            headers: header 
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
+    fetch() {
+        this._isLoading$.next(true);
+        const request = this.getAllAsignInternalUser()
+        .pipe(
+            tap((response) => {
+                this._itemsUbigee$.next(response.data);
+                console.log(response)
+            }),
+            finalize(() => {
+                this._isLoading$.next(false);
+            })
+        )
+        .subscribe();
+        this._subscriptions.push(request);
     }
 }
