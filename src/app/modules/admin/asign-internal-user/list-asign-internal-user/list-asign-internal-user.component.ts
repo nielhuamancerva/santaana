@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { of, Subscription } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import {
     GroupingState,
     PaginatorState,
@@ -14,8 +14,10 @@ import { DeleteProductModalComponent } from '../../../e-commerce/products/compon
 import { DeleteProductsModalComponent } from '../../../e-commerce/products/components/delete-products-modal/delete-products-modal.component';
 import { UpdateProductsStatusModalComponent } from '../../../e-commerce/products/components/update-products-status-modal/update-products-status-modal.component';
 import { FetchProductsModalComponent } from '../../../e-commerce/products/components/fetch-products-modal/fetch-products-modal.component';
-import { UserRepositoryService } from '../../_services-repository/user-repository.service';
 import { UserModel } from '../../../auth';
+import { AsignRepositoryService } from '../../_services-repository/asign-repository.service';
+import { UserAsignHTTPServiceDomain } from '../../_services/asign-domain.service';
+
 
 @Component({
     selector: 'list-asign-internal-user',
@@ -23,7 +25,7 @@ import { UserModel } from '../../../auth';
 })
 
 export class ListAsignInternalUserComponent implements OnInit {
-    $_user:UserModel;
+    $_user:any;
     paginator: PaginatorState;
     sorting: SortState;
     grouping: GroupingState;
@@ -32,19 +34,19 @@ export class ListAsignInternalUserComponent implements OnInit {
     searchGroup: FormGroup;
     private subscriptions: Subscription[] = [];
     constructor(    
-        private userService: UserRepositoryService,
         private fb: FormBuilder,
         private modalService: NgbModal,
-        public productsService: ProductsService
+        private productsService: ProductsService,
+        private asignUserService:AsignRepositoryService,
+        private asignUserServiceDomain:UserAsignHTTPServiceDomain,
     ) { }
   
     ngOnInit(): void {
         this.loadUser();
         this.filterForm();
         this.searchForm();
-        this.productsService.fetch();
-        const sb = this.productsService.isLoading$.subscribe(res => this.isLoading = res);
-        this.subscriptions.push(sb);
+
+ 
         this.grouping = this.productsService.grouping;
         this.paginator = this.productsService.paginator;
         this.sorting = this.productsService.sorting;
@@ -155,15 +157,23 @@ export class ListAsignInternalUserComponent implements OnInit {
     }
 
     loadUser(){
-        const sbUser = this.userService.getAllUser().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_user) => {
-    
-            this.$_user = _user;
-            console.log(this.$_user);
-        });
-        this.subscriptions.push(sbUser);
+            this.isLoading=true;
+            this.$_user=this.asignUserServiceDomain.getAllUserAsign().pipe(
+            map((_beneficiary)=>_beneficiary.data,
+            finalize(()=>this.isLoading=false)
+            )
+        )
+
+        // const sbDepartament = this.asignUserServiceDomain.getAllUserAsign().pipe(
+        //     catchError((errorMessage) => {
+        //     return of(errorMessage);
+        //     })
+        // ).subscribe((_asignacion) => {
+        //     this.$_user = _asignacion;
+       
+        //     console.log(this.$_user);
+        // });
+        // this.subscriptions.push(sbDepartament);
+
   }
 }  

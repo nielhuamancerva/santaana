@@ -17,6 +17,10 @@ const routes: Routes = [
                 path: 'add',
                 component: EditAsignInternalUserComponent,
             },
+            {
+                path: 'add/:id',
+                component: EditAsignInternalUserComponent,
+            },
             { path: '', redirectTo: 'list', pathMatch: 'full' },
             { path: '**', redirectTo: 'list', pathMatch: 'full' },
         ],

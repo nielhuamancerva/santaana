@@ -28,6 +28,7 @@ import { DistrictRepositoryService } from '../../_services-repository/distric-re
 import { CcppRepositoryService } from '../../_services-repository/ccpp-repository.service';
 import { MatOption } from '@angular/material/core';
 import { UserRepositoryService } from '../../_services-repository/user-repository.service';
+import { UserAsignHTTPServiceDomain } from '../../_services/asign-domain.service';
 
 const EMPTY_INTERNAL_USER: InternalUser ={
     id: undefined,
@@ -94,7 +95,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private provinceService: ProvinceRepositoryService,
         private districtService: DistrictRepositoryService,
         private ccppService: CcppRepositoryService,
-
+        private asignUserService:UserAsignHTTPServiceDomain
     ) { }
 
     private utcTimeSubject: Subject<string> = new Subject<string>();
@@ -141,7 +142,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     save(){
         console.log(this._user_dni);
         console.log(this.arrayGeneral);
-        this.userServiceDomain.postAsingUser(this._user_dni,this.arrayGeneral);
+        this.asignUserService.postAsingUser(this._user_dni,this.arrayGeneral);
     }
 
     loadTypeperson() {
@@ -193,8 +194,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         return control.dirty || control.touched;
     }
     
-
-
     numericOnly(event): boolean {    
         let patt = /^([0-9])$/;
         let result = patt.test(event.key);

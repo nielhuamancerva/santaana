@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 import { PagedResponse } from '../../../_commons/_models/PagedResponse';
 import { TareaModel } from '../_models/Tarea.model';
 import { TaskHTTPServiceDomain } from '../_services/task-domain.service';
@@ -12,7 +12,7 @@ import { TaskHTTPServiceDomain } from '../_services/task-domain.service';
 export class TaskRepositoryService {
     public _items$ = new BehaviorSubject<TareaModel[]>([]);
     private _isLoading$ = new BehaviorSubject<boolean>(false);
-    //private _subscriptions: Subscription[] = [];
+    private _subscriptions: Subscription[] = [];
      // Getters
      get items$() {
         return this._items$.asObservable();
@@ -35,4 +35,22 @@ export class TaskRepositoryService {
             }
         ));    
     }
+
+    AllTaks() {
+      //  this._isLoading$.next(true);
+      //  this._errorMessage.next('');
+      this._isLoading$.next(true);
+
+      const request = this.getAllTasks()
+      .pipe(
+        tap((response) => {
+        this._items$.next(response.content);
+        }),
+        finalize(() => {
+          this._isLoading$.next(false);
+        })
+      )
+      .subscribe();
+    this._subscriptions.push(request);
+      }
 }
