@@ -3,7 +3,7 @@ import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild
 import { MatDialog } from '@angular/material/dialog';
 import {FormControl} from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable } from 'rxjs';
 
 import { RolesModel } from '../../_models/Roles.model';
@@ -29,6 +29,7 @@ import { CcppRepositoryService } from '../../_services-repository/ccpp-repositor
 import { MatOption } from '@angular/material/core';
 import { UserRepositoryService } from '../../_services-repository/user-repository.service';
 import { UserAsignHTTPServiceDomain } from '../../_services/asign-domain.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 const EMPTY_INTERNAL_USER: InternalUser ={
     id: undefined,
@@ -64,7 +65,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     formGroup: FormGroup;
     internalUser: InternalUser;
     _user_dni:string;
-    @Input() id: number;
+    id: string;
     private subscriptions: Subscription[] = [];
     public SearchDni: number;
     $_user:UserModel;
@@ -79,7 +80,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     $_Ccpp: Observable<CcppModel[]>;
     _typeperson:TypePersonModel[];
     removable: boolean = true;
+    errorMessage = '';
     public isLoadingSearchDni=false;
+    ubigeo: DepartamentModel;
+    previous: DepartamentModel;
     constructor(
         private departamentService: DepartamentRepositoryService,
         private userService: UserRepositoryService,
@@ -95,7 +99,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private provinceService: ProvinceRepositoryService,
         private districtService: DistrictRepositoryService,
         private ccppService: CcppRepositoryService,
-        private asignUserService:UserAsignHTTPServiceDomain
+        private asignUserService:UserAsignHTTPServiceDomain,
+        private route: ActivatedRoute,
+        private router: Router,
     ) { }
 
     private utcTimeSubject: Subject<string> = new Subject<string>();
@@ -125,10 +131,28 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     loadInternalUser() {
-        if (!this.id) {
-          this.internalUser = EMPTY_INTERNAL_USER;
-          this.loadForm();
-        }  
+        const sb = this.route.paramMap.pipe(
+            switchMap(params => {
+                this.id = params.get('id');
+                if (this.id) {
+                    console.log(this.id)
+                    return this.asignUserService.getItemById(this.id);
+                }
+                return of(EMPTY_INTERNAL_USER);
+            }),
+            catchError((errorMessage) => {
+                this.errorMessage = errorMessage;
+                return of(undefined);
+            }),
+        ).subscribe((res) => {
+            if (!res) {
+                this.router.navigate(['/products'], { relativeTo: this.route });
+            }
+            this.arrayGeneral = res.data;
+            this.previous = Object.assign({}, res);
+            this.loadForm();
+        });
+        this.subscriptions.push(sb);
     }
 
     loadForm() {
