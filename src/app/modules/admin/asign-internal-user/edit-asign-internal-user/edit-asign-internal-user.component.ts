@@ -81,6 +81,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     errorMessage = '';
     public isLoadingSearchDni=false;
     previous: DepartamentModel;
+    ubigeo: UserAsingModel<DepartamentModel>;
 
     constructor(
         private departamentService: DepartamentRepositoryService,
@@ -107,7 +108,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.provinceDomainService.getAll();
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
-        
     }
 
     ngOnDestroy() {
@@ -120,6 +120,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 if (this.id) {
                     return this.asignUserService.getItemById(this.id);
                 }
+                this.ubigeo = EMPTY_ASIGN_INTERNAL_USER;
                 return of(EMPTY_ASIGN_INTERNAL_USER);
             }),
             catchError((errorMessage) => {
@@ -127,11 +128,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 return of(undefined);
             }),
         ).subscribe((res) => {
-            console.log(res);
-            if (!res) {
-                this.router.navigate(['/products'], { relativeTo: this.route });
+            if(res.data.id){
+                this.arrayGeneral = res.data.data;
+                this.ubigeo = res.data;
             }
-            this.arrayGeneral = res.data.data
             this.previous = Object.assign({}, res);
             this.loadForm();
         });
@@ -140,9 +140,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
 
     loadForm() {
         this.formGroup = this.fb.group({
-            dni: [''],
-            fullName: ['royer ibarra'],
-            email: ['royer@gmail.com', Validators.compose([Validators.required])]
+            dni: [this.ubigeo.documentNumber],
+            fullName: [this.ubigeo.name],
+            email: [this.ubigeo.email, Validators.compose([Validators.required])]
         });
         this.formDniChange()
     }
