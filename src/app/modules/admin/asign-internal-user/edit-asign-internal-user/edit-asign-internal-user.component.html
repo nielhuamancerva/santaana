@@ -73,7 +73,7 @@
                                                 </mat-label>   
                                             </mat-chip-list>
                                           </mat-select-trigger>
-                                        <mat-option *ngFor="let departament of $_departament | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
+                                        <mat-option *ngFor="let departament of departamentDomainService.departaments" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -165,8 +165,6 @@
                     </button>
                     </div>
                 </form>
-                <div style="display: none;"> {{ utcTime$ | async }}</div>
-                
             </div>
         </ng-container>
     </div>

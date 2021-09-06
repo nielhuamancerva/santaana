@@ -1,27 +1,18 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {FormControl} from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable } from 'rxjs';
-
-import { RolesModel } from '../../_models/Roles.model';
-import { TypeDocumentModel } from '../..//_models/TypeDocument.model';
 import { InternalUser } from '../../internal-users/models/internal-user.model';
 import { DepartamentModel } from '../../_models/Departament.model';
 import { ProvinceModel } from '../..//_models/Province.model';
 import { DistrictModel } from '../../_models/District.model';
 import { CcppModel } from '../../_models/Ccpp.model';
-import { UserModel } from '../../_models/user.model';
-import { UserHTTPServiceDomain } from '../../_services/user-domain.service';
-import { TypePersonModel } from '../../_models/TypePerson.model';
-import { TypePersonRepositoryService } from '../../_services-repository/typeperson-repository.service';
 import { ProvinceHTTPServiceDomain } from '../../_services/province-domain.service';
 import { DepartamentHTTPServiceDomain } from '../../_services/departament-domain.service';
 import { DistrictHTTPServiceDomain } from '../../_services/district-domain.service';
 import { CcppHTTPServiceDomain } from '../../_services/ccpp-domain.service';
-import { TypeDocumentHTTPServiceDomain } from '../../_services/typedocument-domain.service';
 import { DepartamentRepositoryService } from '../../_services-repository/departament-repository.service';
 import { ProvinceRepositoryService } from '../../_services-repository/province-repository.service';
 import { DistrictRepositoryService } from '../../_services-repository/distric-repository.service';
@@ -52,10 +43,10 @@ const EMPTY_INTERNAL_USER: InternalUser ={
 };
 
 @Component({
-  selector: 'app-edit-asign-internal-user',
-  templateUrl: './edit-asign-internal-user.component.html',
-  styleUrls: ['./edit-asign-internal-user.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-edit-asign-internal-user',
+    templateUrl: './edit-asign-internal-user.component.html',
+    styleUrls: ['./edit-asign-internal-user.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
@@ -64,14 +55,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     @ViewChild('MatDistrito') MatDistrito: MatSelect;
     isLoading:boolean;
     formGroup: FormGroup;
-    internalUser: InternalUser;
     _user_dni:string;
     id: string;
     private subscriptions: Subscription[] = [];
     public SearchDni: number;
-    $_user:UserModel;
-    $_roles: Observable<RolesModel[]>;
-    $_typesDocument: Observable<TypeDocumentModel[]>;
     $_departament: Observable<DepartamentModel[]>;
     $_getbydepartament :Observable<DepartamentModel[]>
     $_province: ProvinceModel[];
@@ -79,24 +66,20 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     $_getbyprovince :Observable<ProvinceModel[]>
     $_getbydistrict :Observable<DistrictModel[]>
     $_Ccpp: Observable<CcppModel[]>;
-    _typeperson:TypePersonModel[];
     removable: boolean = true;
     errorMessage = '';
     public isLoadingSearchDni=false;
-    ubigeo: DepartamentModel;
     previous: DepartamentModel;
+
     constructor(
         private departamentService: DepartamentRepositoryService,
         private userService: UserRepositoryService,
-        private userServiceDomain: UserHTTPServiceDomain,
         public dialog: MatDialog,
         private fb: FormBuilder,
-        private typopersonService: TypePersonRepositoryService,
         private provinceDomainService: ProvinceHTTPServiceDomain,
         public departamentDomainService: DepartamentHTTPServiceDomain,
         private districtDomainService: DistrictHTTPServiceDomain,
         private ccpDomainService: CcppHTTPServiceDomain,
-        private typeDocumentDomainService: TypeDocumentHTTPServiceDomain,
         private provinceService: ProvinceRepositoryService,
         private districtService: DistrictRepositoryService,
         private ccppService: CcppRepositoryService,
@@ -105,32 +88,18 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private router: Router,
     ) { }
 
-    private utcTimeSubject: Subject<string> = new Subject<string>();
-    utcTime$ = this.utcTimeSubject.asObservable();
-    private utcSubscription: Subscription;
 
     ngOnInit(): void {
-        this.departamentDomainService.getAll();
         this.loadDepartament();
         this.loadInternalUser();
-        this.loadTypeperson();
-        this.utcSubscription = interval(1000).subscribe(() => this.getUtcTime());
+        this.departamentDomainService.getAll();
         this.provinceDomainService.getAll();
-      
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
-        this.typeDocumentDomainService.getAll();
         this.formDniChange()
     }
 
     ngOnDestroy() {
-       this.utcSubscription.unsubscribe();
-       this.utcTimeSubject.complete();
-    }
-
-    getUtcTime() {
-        const time = new Date().toISOString().slice(11, 19);
-       this.utcTimeSubject.next(time);
     }
 
     loadInternalUser() {
@@ -138,7 +107,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             switchMap(params => {
                 this.id = params.get('id');
                 if (this.id) {
-                    console.log(this.id)
                     return this.asignUserService.getItemById(this.id);
                 }
                 return of(EMPTY_INTERNAL_USER);
@@ -152,6 +120,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             if (!res) {
                 this.router.navigate(['/products'], { relativeTo: this.route });
             }
+            this.arrayGeneral = res.data.data
             this.previous = Object.assign({}, res);
             this.loadForm();
         });
@@ -159,9 +128,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     loadForm() {
-        console.log("hola");
         this.formGroup = this.fb.group({
-            dni: ['70019408'],
+            dni: [''],
             fullName: ['royer ibarra'],
             email: ['royer@gmail.com', Validators.compose([Validators.required])]
         });
@@ -174,7 +142,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 this.isLoadingSearchDni=false;
             }else{
                 this.userService.getByDocumentUser(selectedValue).pipe(
-            
                     catchError((errorMessage) => {
                         return of(errorMessage);
                     })
@@ -189,17 +156,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         console.log(this._user_dni);
         console.log(this.arrayGeneral);
         this.asignUserService.postAsingUser(this._user_dni,this.arrayGeneral);
-    }
-
-    loadTypeperson() {
-        const sbTypeperson = this.typopersonService.getAllTypeperson().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_typeperson) => {
-            this._typeperson = _typeperson.content;
-        });
-        this.subscriptions.push(sbTypeperson);
     }
 
     isDepartmentValid(controlName: string): boolean {
