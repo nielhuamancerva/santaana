@@ -65,7 +65,7 @@
                     <th>OPCIONES</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let departament of asignInternalUserServiceDomain.itemsUbigee$ | async">
+                    <tr *ngFor="let departament of asignInternalServiceDomain.itemsUbigee$ | async">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"
                             ><input
@@ -74,8 +74,8 @@
                             <span></span>
                             </label>
                         </td>
-                        <td>{{ departament.description }}</td>
-                        <td *ngFor="let province of departament.provinces">{{ province.description }}</td>
+                        <td>{{ departament.id}}</td>
+                        <td>{{  departament.id}}</td>
                         <td>
                             <a
                             title="Edit product"

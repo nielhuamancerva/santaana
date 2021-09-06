@@ -12,7 +12,7 @@
               <i class="fa fa-arrow-left"></i>Back
             </a>
         </div>
-        <p *ngFor="let dep of ubigeo">{{ dep.description}}</p>
+        <!-- <p *ngFor="let dep of ubigeo">{{ dep.description}}</p> -->
     </div>
     <div class="card-body">
         <ng-container >
@@ -76,7 +76,7 @@
                                                 </mat-label>   
                                             </mat-chip-list>
                                           </mat-select-trigger>
-                                        <mat-option *ngFor="let departament of $_departament" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
+                                        <mat-option *ngFor="let departament of $_departament | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>

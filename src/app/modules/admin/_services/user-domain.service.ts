@@ -142,7 +142,7 @@ export class UserHTTPServiceDomain {
         return user;
     }
 
-    getAllAsignInternalUser(): Observable<any> {
+    getAllAsignInternalUser(): Observable<ApiResponse<PagedResponse<DepartamentModel>>> {
         console.log("me ejecuté aquí")
         const header = this.buildheader.buildHeader();
         return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(this.API_URL_Local + `/ubigee/753a9458-2e42-4877-9f99-ce79b9dce992`,{
@@ -157,7 +157,7 @@ export class UserHTTPServiceDomain {
         const request = this.getAllAsignInternalUser()
         .pipe(
             tap((response) => {
-                this._itemsUbigee$.next(response.data);
+                this._itemsUbigee$.next(response.data.content);
                 console.log(response)
             }),
             finalize(() => {

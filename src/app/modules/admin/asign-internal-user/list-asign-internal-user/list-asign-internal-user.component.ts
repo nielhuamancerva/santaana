@@ -3,9 +3,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize, map } from 'rxjs/operators';
 import { Observable, of, Subscription } from 'rxjs';
 
-import { UserRepositoryService } from '../../_services-repository/user-repository.service';
-import { UserHTTPServiceDomain } from '../../_services/user-domain.service';
 import { DepartamentModel } from '../../_models/Departament.model';
+import { AsignRepositoryService } from '../../_services-repository/asign-repository.service';
+import { UserAsignHTTPServiceDomain } from '../../_services/asign-domain.service';
 
 @Component({
     selector: 'list-asign-internal-user',
@@ -18,19 +18,22 @@ export class ListAsignInternalUserComponent implements OnInit {
     private subscriptions: Subscription[] = [];
     constructor(
         private modalService: NgbModal,
-        public asignInternalUserServiceDomain: UserHTTPServiceDomain,
-        public userService: UserRepositoryService
+        public asignInternalServiceDomain: UserAsignHTTPServiceDomain,
+        public asignInternalUserService: AsignRepositoryService,
+
     ) { }
   
     ngOnInit(): void {
-        const sb = this.asignInternalUserServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
+        this.loadAsignInternalUser()
+        this.asignInternalServiceDomain.fetch();
+        const sb = this.asignInternalServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
         this.subscriptions.push(sb);
-        this.asignInternalUserServiceDomain.fetch();
+        this.asignInternalServiceDomain.fetch();
     }
   
     loadAsignInternalUser(){
         this.isLoading = true;
-        this.$_ubigee = this.userService.getAllAsignInternalUser().pipe(
+        this.$_ubigee = this.asignInternalUserService.getAllUserAsign().pipe(
             map((_asign)=>_asign.content,
             finalize(()=>this.isLoading=false)
             )

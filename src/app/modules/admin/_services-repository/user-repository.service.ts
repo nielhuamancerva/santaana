@@ -38,7 +38,7 @@ export class UserRepositoryService {
         return this._userservicedomain.getAllAsignInternalUser().pipe(
             map(
             response => {
-                //console.log(response);
+                console.log(response);
                 return response;
             }
         ));    

@@ -3,7 +3,7 @@ import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild
 import { MatDialog } from '@angular/material/dialog';
 import {FormControl} from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable } from 'rxjs';
 
 import { RolesModel } from '../../_models/Roles.model';
@@ -62,6 +62,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     @ViewChild('MatDepartamento') MatDepartamento: MatSelect;
     @ViewChild('MatProvincia') MatProvincia: MatSelect;
     @ViewChild('MatDistrito') MatDistrito: MatSelect;
+    isLoading:boolean;
     formGroup: FormGroup;
     internalUser: InternalUser;
     _user_dni:string;
@@ -92,7 +93,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private fb: FormBuilder,
         private typopersonService: TypePersonRepositoryService,
         private provinceDomainService: ProvinceHTTPServiceDomain,
-        private departamentDomainService: DepartamentHTTPServiceDomain,
+        public departamentDomainService: DepartamentHTTPServiceDomain,
         private districtDomainService: DistrictHTTPServiceDomain,
         private ccpDomainService: CcppHTTPServiceDomain,
         private typeDocumentDomainService: TypeDocumentHTTPServiceDomain,
@@ -109,15 +110,17 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     private utcSubscription: Subscription;
 
     ngOnInit(): void {
+        this.departamentDomainService.getAll();
+        this.loadDepartament();
         this.loadInternalUser();
         this.loadTypeperson();
         this.utcSubscription = interval(1000).subscribe(() => this.getUtcTime());
         this.provinceDomainService.getAll();
-        this.departamentDomainService.getAll();
+      
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
         this.typeDocumentDomainService.getAll();
-        this.loadDepartament();
+      
     }
 
     ngOnDestroy() {
@@ -149,6 +152,19 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 this.router.navigate(['/products'], { relativeTo: this.route });
             }
             this.arrayGeneral = res.data;
+var niel;
+console.log( this.MatDepartamento.options.first);
+
+console.log(niel);
+            for( let depa of this.arrayGeneral)
+{
+
+  this.MatDepartamento.options.forEach((data: MatOption) => {if(data.value == depa.code){data.select()}});
+  console.log( this.MatDepartamento.options);
+
+}   
+          
+            
             this.previous = Object.assign({}, res);
             this.loadForm();
         });
@@ -225,14 +241,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     loadDepartament(){
-        const sbDepartament = this.departamentService.getAllDepartament().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_departament) => {
-            this.$_departament = _departament.content;
-        });
-        this.subscriptions.push(sbDepartament);
+        this.isLoading=true;
+        
+        this.$_departament=this.departamentService.getAllDepartament().pipe(
+            map((_beneficiary)=>_beneficiary.content,
+            finalize(()=>this.isLoading=false)
+            )
+        )
+
     }
 
     //es el actual selected del <select> de (departament.code)
