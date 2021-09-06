@@ -12,7 +12,6 @@
               <i class="fa fa-arrow-left"></i>Back
             </a>
         </div>
-        <!-- <p *ngFor="let dep of ubigeo">{{ dep.description}}</p> -->
     </div>
     <div class="card-body">
         <ng-container >
@@ -27,8 +26,6 @@
                                 autocomplete="off"
                                 placeholder="DNI"
                                 formControlName="dni"
-                                (ngModelChange)="mostrar($event)"
-                                
                             />
                             <div class="results" *ngIf="isLoadingSearchDni">
                                 <ul>

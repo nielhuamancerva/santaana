@@ -120,7 +120,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
         this.typeDocumentDomainService.getAll();
-      
+        this.formDniChange()
     }
 
     ngOnDestroy() {
@@ -152,19 +152,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             if (!res) {
                 this.router.navigate(['/products'], { relativeTo: this.route });
             }
-            this.arrayGeneral = res.data.data;
-console.log( this.MatDepartamento.options.first);
-
-
-            for( let depa of this.arrayGeneral)
-{
-
-  this.MatDepartamento.options.forEach((data: MatOption) => {if(data.value == depa.code){data.select()}});
-  console.log( this.MatDepartamento.options);
-
-}   
-          
-            
             this.previous = Object.assign({}, res);
             this.loadForm();
         });
@@ -172,11 +159,30 @@ console.log( this.MatDepartamento.options.first);
     }
 
     loadForm() {
+        console.log("hola");
         this.formGroup = this.fb.group({
-            dni: [''],
-            fullName: [''],
-            email: [this.internalUser.email, Validators.compose([Validators.required])]
+            dni: ['70019408'],
+            fullName: ['royer ibarra'],
+            email: ['royer@gmail.com', Validators.compose([Validators.required])]
         });
+    }
+
+    formDniChange(){
+        this.formGroup.get("dni").valueChanges.subscribe(selectedValue => {
+            this.isLoadingSearchDni=true;
+            if(selectedValue == ''){
+                this.isLoadingSearchDni=false;
+            }else{
+                this.userService.getByDocumentUser(selectedValue).pipe(
+            
+                    catchError((errorMessage) => {
+                        return of(errorMessage);
+                    })
+                ).subscribe((response) => {
+                        this.SearchDni = response.content;
+                });
+            }
+        })
     }
 
     save(){
@@ -521,22 +527,7 @@ console.log( this.MatDepartamento.options.first);
         this.arrayGeneral[indexDep].provinces[indexProv].districts = this.arrayGeneral[indexDep].provinces[indexProv].districts.filter(item => item.code !== District);
         this.MatDistrito.options.forEach((data: MatOption) => {if(data.value == District){data.deselect()}});
     }
-    
-    mostrar(InputSearchDni){
-        this.isLoadingSearchDni=true;
-        if(InputSearchDni == ''){
-            this.isLoadingSearchDni=false;
-        }else{
-            this.userService.getByDocumentUser(InputSearchDni).pipe(
-         
-                catchError((errorMessage) => {
-                    return of(errorMessage);
-                })
-            ).subscribe((response) => {
-                    this.SearchDni = response.content;
-            });
-        }
-    }
+
     selectBeneficiary(item){
         this._user_dni=item.id;
         this.formGroup.patchValue({
