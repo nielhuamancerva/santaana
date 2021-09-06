@@ -148,14 +148,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 return of(undefined);
             }),
         ).subscribe((res) => {
+            console.log(res);
             if (!res) {
                 this.router.navigate(['/products'], { relativeTo: this.route });
             }
-            this.arrayGeneral = res.data;
-var niel;
+            this.arrayGeneral = res.data.data;
 console.log( this.MatDepartamento.options.first);
 
-console.log(niel);
+
             for( let depa of this.arrayGeneral)
 {
 
