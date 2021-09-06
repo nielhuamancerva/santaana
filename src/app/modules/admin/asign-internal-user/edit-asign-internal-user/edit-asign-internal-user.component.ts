@@ -21,25 +21,36 @@ import { MatOption } from '@angular/material/core';
 import { UserRepositoryService } from '../../_services-repository/user-repository.service';
 import { UserAsignHTTPServiceDomain } from '../../_services/asign-domain.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserAsingModel } from '../../_models/UserAsign.model';
 
-const EMPTY_INTERNAL_USER: InternalUser ={
+const EMPTY_ASIGN_INTERNAL_USER: UserAsingModel<DepartamentModel> ={
     id: undefined,
+    roleCode: '',
+    roleDescription: '',
+    typePersonCode: '',
+    typePersonDescription: '',
+    typeDocumentCode: '',
+    typeDocumentDescription: '',
+    districtCode: '',
+    populatedCenterCode: '',
+    documentNumber: 0,
     name: '',
     secondName: '',
     lastName: '',
     secondLastName: '',
-    documentType: '',
-    documentNumber: '',
-    roleCode: '',
+    phone1: 0,
+    phone2: 0,
+    referentialAddress: '',
+    latitude: '',
+    longitude: '',
+    frontDocument: '',
+    reverseDocument: '',
+    lastPage: '',
+    evidence: '',
     userName: '',
-    password: '',
-    department: '',
-    province: '',
-    district: '',
-    ccpp: '',
     email: '',
-    typePersonCode: '',
-    phone1:''
+    enable: true,
+    data: []
 };
 
 @Component({
@@ -96,7 +107,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.provinceDomainService.getAll();
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
-        this.formDniChange()
+        
     }
 
     ngOnDestroy() {
@@ -109,7 +120,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 if (this.id) {
                     return this.asignUserService.getItemById(this.id);
                 }
-                return of(EMPTY_INTERNAL_USER);
+                return of(EMPTY_ASIGN_INTERNAL_USER);
             }),
             catchError((errorMessage) => {
                 this.errorMessage = errorMessage;
@@ -133,6 +144,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             fullName: ['royer ibarra'],
             email: ['royer@gmail.com', Validators.compose([Validators.required])]
         });
+        this.formDniChange()
     }
 
     formDniChange(){

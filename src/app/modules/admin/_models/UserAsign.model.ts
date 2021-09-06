@@ -26,9 +26,4 @@ export interface UserAsingModel<T> {
     email: string;
     enable: boolean;
     data:T[]
-    }
-    
-    
-    
-    
-    
+}
