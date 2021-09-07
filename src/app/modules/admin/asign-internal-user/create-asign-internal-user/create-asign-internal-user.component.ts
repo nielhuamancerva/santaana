@@ -107,6 +107,7 @@ export class CreateAsignInternalUserComponent implements OnInit, OnDestroy{
         this.provinceDomainService.getAll();
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
+        this.loadForm();
     }
 
     ngOnDestroy() {
@@ -115,9 +116,9 @@ export class CreateAsignInternalUserComponent implements OnInit, OnDestroy{
 
     loadForm() {
         this.formGroup = this.fb.group({
-            dni: [this.ubigeo.documentNumber],
-            fullName: [this.ubigeo.name],
-            email: [this.ubigeo.email, Validators.compose([Validators.required])]
+            dni: [''],
+            fullName: [''],
+            email: ['', Validators.compose([Validators.required])]
         });
         this.formDniChange()
     }

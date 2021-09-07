@@ -22,6 +22,7 @@ import { UserRepositoryService } from '../../_services-repository/user-repositor
 import { UserAsignHTTPServiceDomain } from '../../_services/asign-domain.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserAsingModel } from '../../_models/UserAsign.model';
+import * as moment from 'moment'
 
 const EMPTY_ASIGN_INTERNAL_USER: UserAsingModel<DepartamentModel> ={
     id: undefined,
@@ -83,6 +84,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     public isLoadingSearchDni=false;
     previous: DepartamentModel;
     ubigeo: UserAsingModel<DepartamentModel>;
+    private utcSubscription: Subscription;
+    fecha_actual: String;
+    selectedObjects = []; 
 
     constructor(
         private departamentService: DepartamentRepositoryService,
@@ -101,13 +105,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private router: Router,
         public UserAsignServiceDomain: UserAsignHTTPServiceDomain,
     ) { }
-
+    private utcTimeSubject: Subject<string> = new Subject<string>();
+    utcTime$ = this.utcTimeSubject.asObservable();
 
     ngOnInit(): void {
         this.loadDepartament();
         this.UserAsignServiceDomain.fetch();
     
-       
+        this.fecha_actual = moment(new Date()).format('YYYY-MM-DD');
         this.departamentDomainService.getAll();
         this.provinceDomainService.getAll();
         this.districtDomainService.getAll();
@@ -115,11 +120,23 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.loadInternalUser();
         const sb = this.UserAsignServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
         this.subscriptions.push(sb);
-        
-
+        this.utcSubscription = interval(1000).subscribe(() => this.getUtcTime());
     }
 
     ngOnDestroy() {
+        this.utcSubscription.unsubscribe();
+        this.utcTimeSubject.complete();
+    }
+
+    comparer(o1: any, o2: any): boolean {
+        // if possible compare by object's name, and not by reference.
+        console.log("estoy comparando")
+        return o1 && o2 ? o1.label === o2.label : o2 === o2;
+    }
+
+    getUtcTime() {
+        const time = new Date().toISOString().slice(11, 19);
+        this.utcTimeSubject.next(time);
     }
 
     loadInternalUser() {
@@ -138,12 +155,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }),
         ).subscribe((res) => {
             if(res.data.id){
-
-                    
-
                 this.arrayGeneral = res.data.data;
                 this.ubigeo = res.data;
-
+                this.selectedObjects = res.data.data
                 this.isLoading=true;
         
                 this.appleStreamMapped$=this.asignUserService.getAllAsignInternalUser().pipe(

@@ -16,7 +16,7 @@
     <div class="card-body">
         <ng-container >
             <div class="mt-5">
-                <form action="#" class="form form-label-right" (ngSubmit)="save()">
+                <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
                     <div class="form-group row">
                         <div class="col-lg-4">
                             <label>DNI</label>
@@ -25,6 +25,7 @@
                                 class="form-control form-control-lg form-control-solid"
                                 autocomplete="off"
                                 placeholder="DNI"
+                                formControlName="dni"
                             />
                             <div class="results" *ngIf="isLoadingSearchDni">
                                 <ul>
@@ -151,7 +152,7 @@
                     
                     <div class="float-right">
                     <a
-                        class="btn btn-default font-weight-bold mr-2"
+                        class="btn btn-default font-weight-bold mr-2" routerLink="/asign-internal-user/list"
                         >Cancelar</a
                     >
                     <button

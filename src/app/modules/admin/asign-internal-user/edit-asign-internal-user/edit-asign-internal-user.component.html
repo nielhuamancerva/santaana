@@ -59,7 +59,7 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
-                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento>
+                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento [(ngModel)]="selectedObjects" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
                                         <mat-select-trigger>
                                             <mat-chip-list>
                                                 <mat-label *ngFor="let departamento of UserAsignServiceDomain.itemsUbigee$ | async">
@@ -151,7 +151,7 @@
                     
                     <div class="float-right">
                     <a
-                        class="btn btn-default font-weight-bold mr-2"
+                        class="btn btn-default font-weight-bold mr-2" routerLink="/asign-internal-user/list"
                         >Cancelar</a
                     >
                     <button
