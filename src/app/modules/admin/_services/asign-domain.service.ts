@@ -22,6 +22,7 @@ export class UserAsignHTTPServiceDomain {
     private _errorMessage = new BehaviorSubject<string>('');
 
     public _itemsUbigee$ = new BehaviorSubject<DepartamentModel[]>([]);
+    public _itemsAsignUbigee$ = new BehaviorSubject<DepartamentModel[]>([]);
     private _subscriptions: Subscription[] = [];
 
     get itemsUbigee$() {

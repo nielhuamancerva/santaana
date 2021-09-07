@@ -2,7 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
-import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import { catchError, finalize, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable } from 'rxjs';
 import { InternalUser } from '../../internal-users/models/internal-user.model';
 import { DepartamentModel } from '../../_models/Departament.model';
@@ -71,7 +71,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     private subscriptions: Subscription[] = [];
     public SearchDni: number;
     $_departament: Observable<DepartamentModel[]>;
-    $_getbydepartament :Observable<DepartamentModel[]>
+    $_getbydepartament :Observable<DepartamentModel[]>;
+    appleStreamMapped$ :Observable<DepartamentModel[]>;
     $_province: ProvinceModel[];
     $_district: DistrictModel[];
     $_getbyprovince :Observable<ProvinceModel[]>
@@ -98,16 +99,24 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private asignUserService:UserAsignHTTPServiceDomain,
         private route: ActivatedRoute,
         private router: Router,
+        public UserAsignServiceDomain: UserAsignHTTPServiceDomain,
     ) { }
 
 
     ngOnInit(): void {
         this.loadDepartament();
-        this.loadInternalUser();
+        this.UserAsignServiceDomain.fetch();
+    
+       
         this.departamentDomainService.getAll();
         this.provinceDomainService.getAll();
         this.districtDomainService.getAll();
         this.ccpDomainService.getAll();
+        this.loadInternalUser();
+        const sb = this.UserAsignServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
+        this.subscriptions.push(sb);
+        
+
     }
 
     ngOnDestroy() {
@@ -129,14 +138,29 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }),
         ).subscribe((res) => {
             if(res.data.id){
+
+                    
+
                 this.arrayGeneral = res.data.data;
                 this.ubigeo = res.data;
+
+                this.isLoading=true;
+        
+                this.appleStreamMapped$=this.asignUserService.getAllAsignInternalUser().pipe(
+                    map((_beneficiary)=>_beneficiary.data.data,
+                    finalize(()=>this.isLoading=false)
+                    )
+                )
+                
+           
             }
+            console.log(this.MatDepartamento.options);
             this.previous = Object.assign({}, res);
             this.loadForm();
         });
         this.subscriptions.push(sb);
     }
+
 
     loadForm() {
         this.formGroup = this.fb.group({
@@ -235,8 +259,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     distritos: DistrictModel[] = [];
 
     arrayGeneral: DepartamentModel[] = [];
-
+ 
     checkDepartament(event){
+        this.MatDepartamento.options.forEach((data: MatOption) => {console.log(data)});
         var departamentosEnviados = event.value;
         var CodeDepartament: any;
         var existencia: boolean;
@@ -258,6 +283,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
             this.departActual = departamentosEnviados;
             this.removeDepartament(CodeDepartament);
+           
         }
     }
 

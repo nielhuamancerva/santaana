@@ -56,6 +56,7 @@ const EMPTY_ASIGN_INTERNAL_USER: UserAsingModel<DepartamentModel> ={
 @Component({
     selector: 'app-create-asign-internal-user',
     templateUrl: './create-asign-internal-user.component.html',
+    styleUrls: ['./create-asign-internal-user.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -102,7 +103,6 @@ export class CreateAsignInternalUserComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void {
         this.loadDepartament();
-        this.loadInternalUser();
         this.departamentDomainService.getAll();
         this.provinceDomainService.getAll();
         this.districtDomainService.getAll();
@@ -112,30 +112,6 @@ export class CreateAsignInternalUserComponent implements OnInit, OnDestroy{
     ngOnDestroy() {
     }
 
-    loadInternalUser() {
-        const sb = this.route.paramMap.pipe(
-            switchMap(params => {
-                this.id = params.get('id');
-                if (this.id) {
-                    return this.asignUserService.getItemById(this.id);
-                }
-                this.ubigeo = EMPTY_ASIGN_INTERNAL_USER;
-                return of(EMPTY_ASIGN_INTERNAL_USER);
-            }),
-            catchError((errorMessage) => {
-                this.errorMessage = errorMessage;
-                return of(undefined);
-            }),
-        ).subscribe((res) => {
-            if(res.data.id){
-                this.arrayGeneral = res.data.data;
-                this.ubigeo = res.data;
-            }
-            this.previous = Object.assign({}, res);
-            this.loadForm();
-        });
-        this.subscriptions.push(sb);
-    }
 
     loadForm() {
         this.formGroup = this.fb.group({
