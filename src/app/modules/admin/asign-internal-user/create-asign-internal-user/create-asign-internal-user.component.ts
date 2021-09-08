@@ -22,6 +22,8 @@ import { UserRepositoryService } from '../../_services-repository/user-repositor
 import { UserAsignHTTPServiceDomain } from '../../_services/asign-domain.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserAsingModel } from '../../_models/UserAsign.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalUploadFileComponent } from '../modal-upload-file/modal-upload-file.component';
 
 const EMPTY_ASIGN_INTERNAL_USER: UserAsingModel<DepartamentModel> ={
     id: undefined,
@@ -98,6 +100,7 @@ export class CreateAsignInternalUserComponent implements OnInit, OnDestroy{
         private asignUserService:UserAsignHTTPServiceDomain,
         private route: ActivatedRoute,
         private router: Router,
+        private modalService: NgbModal,
     ) { }
 
 
@@ -480,5 +483,9 @@ export class CreateAsignInternalUserComponent implements OnInit, OnDestroy{
            
         });
         this.isLoadingSearchDni=false;
+    }
+
+    uploadFile(){
+        const modalRef = this.modalService.open(ModalUploadFileComponent, { size: 'lg' });
     }
 }

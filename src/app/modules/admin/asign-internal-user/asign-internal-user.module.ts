@@ -51,13 +51,15 @@ import { AsignInternalUsersRoutingModule } from './asign-internal-user-routing.m
 import { EditAsignInternalUserComponent } from './edit-asign-internal-user/edit-asign-internal-user.component';
 import { ListAsignInternalUserComponent } from './list-asign-internal-user/list-asign-internal-user.component';
 import { CreateAsignInternalUserComponent } from './create-asign-internal-user/create-asign-internal-user.component';
+import { ModalUploadFileComponent } from './modal-upload-file/modal-upload-file.component';
 
 @NgModule({
     declarations: [
         AsignInternalUserComponent,
         EditAsignInternalUserComponent,
         ListAsignInternalUserComponent,
-        CreateAsignInternalUserComponent
+        CreateAsignInternalUserComponent,
+        ModalUploadFileComponent
     ],
     imports: [
         CommonModule,
