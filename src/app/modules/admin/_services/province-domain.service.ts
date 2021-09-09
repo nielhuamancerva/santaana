@@ -82,4 +82,14 @@ export class ProvinceHTTPServiceDomain {
 
         return throwError(errorMessage);
     }
+
+    getAllProvincesByDepartament(departamentCode): Observable<any>{
+        console.log(departamentCode)
+        const header = this.buildheader.buildHeader();
+        return this.http.get<any>(`${environment.apiUrlNiel}/ubigee/province?code=13`,{
+            headers: header
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
 }

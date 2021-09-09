@@ -62,6 +62,22 @@ export class UserAsignHTTPServiceDomain {
             .pipe(catchError(this.handleError));
     }
 
+    postEditAsingUser(InputDni,body): Observable<ApiResponse<PagedResponse<UserModel>>> {
+        const header = this.buildheader.buildHeader();
+        this.http.patch(this.API_URL_Local+ `/ubigee/753a9458-2e42-4877-9f99-ce79b9dce992`,body,{headers: header})
+        .subscribe(
+            data => {
+                console.log(data);
+            }
+          );
+
+        return this.http.post<ApiResponse<PagedResponse<UserModel>>>(this.API_URL_Local+ `/ubigee/${InputDni}`,body,{
+            headers: header 
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
     private handleError(err: HttpErrorResponse): Observable<never> {
         let errorMessage = "";
         if (err.error instanceof ErrorEvent) {
@@ -94,7 +110,6 @@ export class UserAsignHTTPServiceDomain {
 
     
     getAllAsignInternalUser(): Observable<ApiResponse<UserAsingModel<DepartamentModel>>> {
-        console.log("me ejecuté aquí")
         const header = this.buildheader.buildHeader();
         return this.http.get<ApiResponse<UserAsingModel<DepartamentModel>>>(this.API_URL_Local + `/ubigee/753a9458-2e42-4877-9f99-ce79b9dce992`,{
             headers: header 
@@ -109,7 +124,6 @@ export class UserAsignHTTPServiceDomain {
         .pipe(
             tap((response) => {
                 this._itemsUbigee$.next(response.data.data);
-                console.log(response)
             }),
             finalize(() => {
                 this._isLoading$.next(false);

@@ -18,7 +18,7 @@ export class ProvinceRepositoryService {
         return this._provinceservicedomain.getAllProvince(code).pipe(
             map(
             response => {
-            //    console.log(response)
+                //console.log(response)
                 return response.data;
             }
         ));    
