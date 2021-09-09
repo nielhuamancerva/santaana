@@ -84,9 +84,11 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     public isLoadingSearchDni=false;
     previous: DepartamentModel;
     ubigeo: UserAsingModel<DepartamentModel>;
-    private utcSubscription: Subscription;
     fecha_actual: String;
-    selectedObjects = []; 
+    selectedDepartaments = [];
+    selectedProvinces = [];
+    selectedDistricts = [];
+    departamentosObs: Observable<any>;
 
     constructor(
         private departamentService: DepartamentRepositoryService,
@@ -105,8 +107,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private router: Router,
         public UserAsignServiceDomain: UserAsignHTTPServiceDomain,
     ) { }
-    private utcTimeSubject: Subject<string> = new Subject<string>();
-    utcTime$ = this.utcTimeSubject.asObservable();
 
     ngOnInit(): void {
         this.loadDepartament();
@@ -120,23 +120,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         this.loadInternalUser();
         const sb = this.UserAsignServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
         this.subscriptions.push(sb);
-        this.utcSubscription = interval(1000).subscribe(() => this.getUtcTime());
+        this.loadApiDepartamentos();
     }
 
     ngOnDestroy() {
-        this.utcSubscription.unsubscribe();
-        this.utcTimeSubject.complete();
     }
 
     comparer(o1: any, o2: any): boolean {
-        // if possible compare by object's name, and not by reference.
-        console.log("estoy comparando")
-        return o1 && o2 ? o1.label === o2.label : o2 === o2;
-    }
-
-    getUtcTime() {
-        const time = new Date().toISOString().slice(11, 19);
-        this.utcTimeSubject.next(time);
+        return o1 && o2 ? o1 == o2.code : o2 === o2;
     }
 
     loadInternalUser() {
@@ -157,24 +148,30 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             if(res.data.id){
                 this.arrayGeneral = res.data.data;
                 this.ubigeo = res.data;
-                this.selectedObjects = res.data.data
+                this.selectedDepartaments = res.data.data
+                for(let dep of res.data.data){
+                    this.searchDepartament(dep.code);
+                    for(let prov of dep.provinces){
+                        this.selectedProvinces.push(prov)
+                        this.searchProvince(prov.code);
+                        for(let distri of prov.districts){
+                            this.selectedDistricts.push(distri)
+                            this.searchDistrict(distri.code);
+                        }
+                    }
+                }
+                console.log(this.selectedDepartaments);
                 this.isLoading=true;
-        
-                this.appleStreamMapped$=this.asignUserService.getAllAsignInternalUser().pipe(
-                    map((_beneficiary)=>_beneficiary.data.data,
-                    finalize(()=>this.isLoading=false)
-                    )
-                )
                 
-           
+               
+
+
             }
-            console.log(this.MatDepartamento.options);
             this.previous = Object.assign({}, res);
             this.loadForm();
         });
         this.subscriptions.push(sb);
     }
-
 
     loadForm() {
         this.formGroup = this.fb.group({
@@ -260,7 +257,11 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             finalize(()=>this.isLoading=false)
             )
         )
+    }
 
+    ApiDepartamentos: Observable<DepartamentModel[]>;
+    loadApiDepartamentos(){
+        this.ApiDepartamentos = this.departamentDomainService.getAll();
     }
 
     //es el actual selected del <select> de (departament.code)
@@ -275,7 +276,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     arrayGeneral: DepartamentModel[] = [];
  
     checkDepartament(event){
-        this.MatDepartamento.options.forEach((data: MatOption) => {console.log(data)});
         var departamentosEnviados = event.value;
         var CodeDepartament: any;
         var existencia: boolean;
@@ -332,9 +332,21 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 description: this.$_getbydepartament[0].description,
                 provinces: []
             }
-            this.departamentos.push(departamento);
-            this.arrayGeneral.push(departamento1);
-            console.log(this.arrayGeneral);
+            
+            
+            if(this.departamentos.findIndex(x => x.code == departamento.code) === -1){
+                this.departamentos.push(departamento);
+                this.departamentosObs = of(this.departamentos)
+                .pipe(
+                  map(item => item.map(a => {
+                      a;
+                      console.log(a)
+                    }))
+                );
+            };
+            if(this.arrayGeneral.findIndex(x => x.code == departamento1.code) === -1){
+                this.arrayGeneral.push(departamento1)
+            };
         });
         this.subscriptions.push(sbProvinceby);
     }

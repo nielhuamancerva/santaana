@@ -59,10 +59,10 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
-                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento [(ngModel)]="selectedObjects" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
+                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento [(ngModel)]="selectedDepartaments" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
                                         <mat-select-trigger>
                                             <mat-chip-list>
-                                                <mat-label *ngFor="let departamento of UserAsignServiceDomain.itemsUbigee$ | async">
+                                                <mat-label *ngFor="let departamento of arrayGeneral">
                                                     <mat-chip [removable]="removable" (removed)="removeDepartament(departamento.code)">
                                                         {{ departamento.description }}
                                                         <mat-icon matChipRemove>cancel</mat-icon>
@@ -70,7 +70,7 @@
                                                 </mat-label>   
                                             </mat-chip-list>
                                           </mat-select-trigger>
-                                        <mat-option *ngFor="let departament of $_departament | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
+                                        <mat-option *ngFor="let departament of ApiDepartamentos | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -80,7 +80,7 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
-                                    <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia>
+                                    <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia [(ngModel)]="selectedProvinces" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
                                         <mat-select-trigger>
                                             <mat-chip-list>
                                                 <mat-label *ngFor="let departamento of arrayGeneral">
@@ -107,7 +107,7 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Distritos</mat-label>
-                                    <mat-select multiple (selectionChange)="checkDistrict($event)" #MatDistrito>
+                                    <mat-select multiple (selectionChange)="checkDistrict($event)" #MatDistrito [(ngModel)]="selectedDistricts" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
                                         <mat-select-trigger>
                                             <mat-chip-list>
                                                 <mat-label *ngFor="let departamento of arrayGeneral">

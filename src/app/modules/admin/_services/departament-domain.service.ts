@@ -59,12 +59,11 @@ export class DepartamentHTTPServiceDomain {
             .pipe(catchError(this.handleError));
     }
     
-    getAll(){
+    getAll(): Observable<DepartamentModel[]>{
         return this.http.get<ApiRespuesta>(this.API_URL,{
             headers: this.header
-        }).subscribe( (resp) => {
-            this._departaments = resp.data.content;
-        })
+        }).pipe(map(response => response.data.content))
+        .pipe(catchError(this.handleError));
     }
 
     getById(code){
