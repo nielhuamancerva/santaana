@@ -72,7 +72,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     private subscriptions: Subscription[] = [];
     public SearchDni: number;
     $_departament: Observable<DepartamentModel[]>;
-    $_getbydepartament : Observable<DepartamentModel[]>;
+    $_getbydepartament :Observable<DepartamentModel[]>;
     appleStreamMapped$ :Observable<DepartamentModel[]>;
     $_province: ProvinceModel[];
     $_district: DistrictModel[];
@@ -89,16 +89,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     selectedProvinces = [];
     selectedDistricts = [];
     departamentosObs: Observable<any>;
-    //es el actual selected del <select> de (departament.code)
-    departActual = [];
-    proviActual = [];
-    distriActual = [];
-
-    departamentos: DepartamentModel[] = [];
-    provincias: ProvinceModel[] = [];
-    distritos: DistrictModel[] = [];
-
-    arrayGeneral: DepartamentModel[] = [];
 
     constructor(
         private departamentService: DepartamentRepositoryService,
@@ -119,7 +109,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     ) { }
 
     ngOnInit(): void {
+        this.loadDepartament();
         this.UserAsignServiceDomain.fetch();
+    
         this.fecha_actual = moment(new Date()).format('YYYY-MM-DD');
         this.departamentDomainService.getAll();
         this.provinceDomainService.getAll();
@@ -134,7 +126,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     ngOnDestroy() {
     }
 
-    
+    comparer(o1: any, o2: any): boolean {
+        return o1 && o2 ? o1 == o2.code : o2 === o2;
+    }
 
     loadInternalUser() {
         const sb = this.route.paramMap.pipe(
@@ -153,33 +147,27 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         ).subscribe((res) => {
             if(res.data.id){
                 this.arrayGeneral = res.data.data;
-                
                 this.ubigeo = res.data;
-                
+                this.selectedDepartaments = res.data.data
                 for(let dep of res.data.data){
-                    this.selectedDepartaments.push(dep);
                     this.searchDepartament(dep.code);
-                    this.departActual.push(dep.code);
-
                     for(let prov of dep.provinces){
-                        this.selectedProvinces.push(prov);
+                        this.selectedProvinces.push(prov)
                         this.searchProvince(prov.code);
-                        this.proviActual.push(prov.code);
-
                         for(let distri of prov.districts){
                             this.selectedDistricts.push(distri)
                             this.searchDistrict(distri.code);
-                            this.distriActual.push(prov.code);
                         }
                     }
                 }
+                console.log(this.selectedDepartaments);
                 this.isLoading=true;
+                
             }
             this.previous = Object.assign({}, res);
             this.loadForm();
         });
         this.subscriptions.push(sb);
-        
     }
 
     loadForm() {
@@ -209,14 +197,80 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     save(){
-        var x= "royer";
-        this.asignUserService.postEditAsingUser(x,this.arrayGeneral);
+        console.log(this._user_dni);
+        console.log(this.arrayGeneral);
+        this.asignUserService.postAsingUser(this._user_dni,this.arrayGeneral);
+    }
+
+    isDepartmentValid(controlName: string): boolean {
+        let control = this.formGroup.controls[controlName];
+        if(control.value == "NODATA"){
+            return true;
+        }else{
+            return null;
+        }
+    }
+
+    isProvinceValid(controlName: string): boolean {
+        let control = this.formGroup.controls[controlName];
+        if(control.value == ""){
+            return true;
+        }else{
+            return null;
+        }
+    }
+
+    isControlValid(controlName: string): boolean {
+        const control = this.formGroup.controls[controlName];
+        return control.valid && (control.dirty || control.touched);
+    }
+
+    isControlInvalid(controlName: string): boolean {
+        const control = this.formGroup.controls[controlName];
+        return control.invalid && (control.dirty || control.touched);
+    }
+
+    controlHasError(validation, controlName): boolean {
+        const control = this.formGroup.controls[controlName];
+        return control.hasError(validation) && (control.dirty || control.touched);
+    }
+
+    isControlTouched(controlName): boolean {
+        const control = this.formGroup.controls[controlName];
+        return control.dirty || control.touched;
+    }
+    
+    numericOnly(event): boolean {    
+        let patt = /^([0-9])$/;
+        let result = patt.test(event.key);
+        return result;
+    }
+
+    loadDepartament(){
+        this.isLoading=true;
+        
+        this.$_departament=this.departamentService.getAllDepartament().pipe(
+            map((_beneficiary)=>_beneficiary.content,
+            finalize(()=>this.isLoading=false)
+            )
+        )
     }
 
     ApiDepartamentos: Observable<DepartamentModel[]>;
     loadApiDepartamentos(){
         this.ApiDepartamentos = this.departamentDomainService.getAll();
     }
+
+    //es el actual selected del <select> de (departament.code)
+    departActual = [];
+    proviActual = [];
+    distriActual = [];
+
+    departamentos: DepartamentModel[] = [];
+    provincias: ProvinceModel[] = [];
+    distritos: DistrictModel[] = [];
+
+    arrayGeneral: DepartamentModel[] = [];
  
     checkDepartament(event){
         var departamentosEnviados = event.value;
@@ -245,13 +299,11 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     searchDepartament(CodeDepartament){
-        const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament)
-        .pipe(
+        const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament).pipe(
             catchError((errorMessage) => {
-                return of(errorMessage);
+            return of(errorMessage);
             })
         ).subscribe((response) => {
-            console.log(CodeDepartament);
             this.$_getbydepartament = response.content;
             this.getProvincesByDepartament(CodeDepartament);
         });
@@ -272,17 +324,22 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 provinces: this.$_province
             }
             var departamento1: DepartamentModel = {
-                id: departamento.id,
-                code: departamento.code,
-                description: departamento.description,
+                id: this.$_getbydepartament[0].id,
+                code: this.$_getbydepartament[0].code,
+                description: this.$_getbydepartament[0].description,
                 provinces: []
             }
-            console.log(this.departamentos.length);
-            console.log(departamento);
+            
+            
             if(this.departamentos.findIndex(x => x.code == departamento.code) === -1){
-                console.log("agregando al array")
-                
                 this.departamentos.push(departamento);
+                this.departamentosObs = of(this.departamentos)
+                .pipe(
+                  map(item => item.map(a => {
+                      a;
+                      console.log(a)
+                    }))
+                );
             };
             if(this.arrayGeneral.findIndex(x => x.code == departamento1.code) === -1){
                 this.arrayGeneral.push(departamento1)
@@ -348,13 +405,17 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 districts: []
             }
             var codeDep = province.code.substring(0,2);
-            var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
-            if(this.arrayGeneral[indexDep].provinces.findIndex(x => x.code == province.code) === -1){
-                this.arrayGeneral[indexDep].provinces.push(province1);
+            var posicionInser: number;
+           
+            for (let index = 0; index < this.arrayGeneral.length; index++){
+                if(this.arrayGeneral[index].code == codeDep){
+                    posicionInser = index;
+                }
             }
-            if(this.provincias.findIndex(x => x.code == province.code) === -1){
-                this.provincias.push(province);
-            };
+            this.arrayGeneral[posicionInser].provinces.push(province1);
+            
+            this.provincias.push(province);
+            console.log(this.arrayGeneral);
         });
         this.subscriptions.push(sbDistrictby);
     }
@@ -381,6 +442,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
             this.distriActual = distritosEnviados;
             this.removeDistrict(CodeDistrict);
+            console.log(this.arrayGeneral)
         }
     }
 
@@ -415,15 +477,23 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             }
             var codeDep = district.code.substring(0,2);
             var codeProv = district.code.substring(0,4);
-            var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
-            var indexProv = this.arrayGeneral[indexDep].provinces.findIndex(x => x.code == codeProv);
-
-            if(this.arrayGeneral[indexDep].provinces[indexProv].districts.findIndex(x => x.code == district.code) === -1){
-                this.arrayGeneral[indexDep].provinces[indexProv].districts.push(district1);
+            var posicionDep: number;
+            var posicionProv: number;
+           
+            for (let index = 0; index < this.arrayGeneral.length; index++){
+                if(this.arrayGeneral[index].code == codeDep){
+                    posicionDep = index;
+                }
             }
-            if(this.distritos.findIndex(x => x.code == district.code) === -1){
-                this.distritos.push(district);
-            };
+            for(let index = 0; index < this.arrayGeneral[posicionDep].provinces.length; index++){
+                if(this.arrayGeneral[posicionDep].provinces[index].code == codeProv){
+                    posicionProv = index;
+                }
+            }
+            this.arrayGeneral[posicionDep].provinces[posicionProv].districts.push(district1);
+
+            this.distritos.push(district);
+            console.log(this.arrayGeneral);
         });
         this.subscriptions.push(sbDistrictby);
     }
@@ -438,13 +508,18 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     removeProvince(Province) {
-        
         var codeDep = Province.substring(0,2);
-        var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
+        var posicionInser: number;
+        
+        for (let index = 0; index < this.arrayGeneral.length; index++){
+            if(this.arrayGeneral[index].code == codeDep){
+                posicionInser = index;
+            }
+        }
         this.provincias = this.provincias.filter(item => item.code !== Province);
         this.distritos = this.distritos.filter(item => item.code.substring(0,4) !== Province);
         this.distriActual = this.distriActual.filter(item => item.substring(0,4) !== Province);
-        this.arrayGeneral[indexDep].provinces = this.arrayGeneral[indexDep].provinces.filter(item => item.code !== Province);
+        this.arrayGeneral[posicionInser].provinces = this.arrayGeneral[posicionInser].provinces.filter(item => item.code !== Province);
         this.MatProvincia.options.forEach((data: MatOption) => {if(data.value == Province){data.deselect()}});
         this.MatDistrito.options.forEach((data: MatOption) => {if(data.value.substring(0,4)==Province){data.deselect()}});
     }
@@ -452,8 +527,19 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     removeDistrict(District) {
         var codeDep = District.substring(0,2);
         var codeProv = District.substring(0,4);
-        var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
-        var indexProv = this.arrayGeneral[indexDep].provinces.findIndex(x => x.code == codeProv);
+        var indexDep: number;
+        var indexProv: number;
+        
+        for (let index = 0; index < this.arrayGeneral.length; index++){
+            if(this.arrayGeneral[index].code == codeDep){
+                indexDep = index;
+            }
+        }
+        for(let index = 0; index < this.arrayGeneral[indexDep].provinces.length; index++){
+            if(this.arrayGeneral[indexDep].provinces[index].code == codeProv){
+                indexProv = index;
+            }
+        }
         this.distritos = this.distritos.filter(item => item.code !== District);
         this.arrayGeneral[indexDep].provinces[indexProv].districts = this.arrayGeneral[indexDep].provinces[indexProv].districts.filter(item => item.code !== District);
         this.MatDistrito.options.forEach((data: MatOption) => {if(data.value == District){data.deselect()}});
@@ -462,57 +548,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     selectBeneficiary(item){
         this._user_dni=item.id;
         this.formGroup.patchValue({
-            fullName: item.name+item.secondName+item.lastName+item.secondLastName,
-            dni: item.documentNumber
+        fullName: item.name+item.secondName+item.lastName+item.secondLastName,
+        dni: item.documentNumber,
+           
         });
         this.isLoadingSearchDni=false;
-    }
-
-    comparer(o1: any, o2: any): boolean {
-        return o1 && o2 ? o1 == o2.code : o2 === o2;
-    }
-
-    numericOnly(event): boolean {    
-        let patt = /^([0-9])$/;
-        let result = patt.test(event.key);
-        return result;
-    }
-
-    isDepartmentValid(controlName: string): boolean {
-        let control = this.formGroup.controls[controlName];
-        if(control.value == "NODATA"){
-            return true;
-        }else{
-            return null;
-        }
-    }
-
-    isProvinceValid(controlName: string): boolean {
-        let control = this.formGroup.controls[controlName];
-        if(control.value == ""){
-            return true;
-        }else{
-            return null;
-        }
-    }
-
-    isControlValid(controlName: string): boolean {
-        const control = this.formGroup.controls[controlName];
-        return control.valid && (control.dirty || control.touched);
-    }
-
-    isControlInvalid(controlName: string): boolean {
-        const control = this.formGroup.controls[controlName];
-        return control.invalid && (control.dirty || control.touched);
-    }
-
-    controlHasError(validation, controlName): boolean {
-        const control = this.formGroup.controls[controlName];
-        return control.hasError(validation) && (control.dirty || control.touched);
-    }
-
-    isControlTouched(controlName): boolean {
-        const control = this.formGroup.controls[controlName];
-        return control.dirty || control.touched;
     }
 }

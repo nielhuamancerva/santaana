@@ -65,7 +65,7 @@
                     <th>OPCIONES</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let departament of asignInternalServiceDomain.itemsUbigee$ | async">
+                    <tr *ngFor="let departament of $_ubigee | async">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"
                             ><input
@@ -74,13 +74,15 @@
                             <span></span>
                             </label>
                         </td>
-                        <td>{{ departament.id}}</td>
-                        <td>{{  departament.id}}</td>
+                        <td>{{ departament.user_name}}</td>
+                        <td>{{  departament.department.description}}</td>
+                        <td>{{ departament.province.description}}</td>
+                        <td>{{  departament.district.description}}</td>
                         <td>
                             <a
                             title="Edit product"
                             class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-                            [routerLink]="'/asign-internal-user/edit/' + departament.id"
+                            [routerLink]="'/asign-internal-user/edit/' + departament.user_id"
                             >
                             <span
                                 [inlineSVG]="'./assets/media/svg/view.svg'"

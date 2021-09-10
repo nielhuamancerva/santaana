@@ -39,7 +39,7 @@ export class UserAsignHTTPServiceDomain {
 
     getAllUserAsign(): Observable<ApiResponse<any>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<any>>(this.API_URL_Local+ `/ubigee/753a9458-2e42-4877-9f99-ce79b9dce992`,{
+        return this.http.get<ApiResponse<any>>(this.API_URL_Local+ `/ubigee`,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -94,7 +94,7 @@ export class UserAsignHTTPServiceDomain {
         this._isLoading$.next(true);
         this._errorMessage.next('');
         const header = this.buildheader.buildHeader();
-        const url = this.API_URL_Local+ `/ubigee/753a9458-2e42-4877-9f99-ce79b9dce992`;
+        const url = this.API_URL_Local+ `/ubigee/${id}`;
         return this.http.get<any>(url,{
             headers: header 
         }).pipe(
