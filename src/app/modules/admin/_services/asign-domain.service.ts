@@ -123,6 +123,7 @@ export class UserAsignHTTPServiceDomain {
         const request = this.getAllAsignInternalUser()
         .pipe(
             tap((response) => {
+                console.log(response)
                 this._itemsUbigee$.next(response.data.data);
             }),
             finalize(() => {

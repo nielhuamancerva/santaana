@@ -72,7 +72,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     private subscriptions: Subscription[] = [];
     public SearchDni: number;
     $_departament: Observable<DepartamentModel[]>;
-    $_getbydepartament : DepartamentModel[];
+    $_getbydepartament : Observable<DepartamentModel[]>;
     appleStreamMapped$ :Observable<DepartamentModel[]>;
     $_province: ProvinceModel[];
     $_district: DistrictModel[];
@@ -119,9 +119,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     ) { }
 
     ngOnInit(): void {
-        this.loadDepartament();
         this.UserAsignServiceDomain.fetch();
-    
         this.fecha_actual = moment(new Date()).format('YYYY-MM-DD');
         this.departamentDomainService.getAll();
         this.provinceDomainService.getAll();
@@ -155,16 +153,19 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         ).subscribe((res) => {
             if(res.data.id){
                 this.arrayGeneral = res.data.data;
+                
                 this.ubigeo = res.data;
-                this.selectedDepartaments = res.data.data;
                 
                 for(let dep of res.data.data){
+                    this.selectedDepartaments.push(dep);
                     this.searchDepartament(dep.code);
                     this.departActual.push(dep.code);
+
                     for(let prov of dep.provinces){
                         this.selectedProvinces.push(prov);
                         this.searchProvince(prov.code);
                         this.proviActual.push(prov.code);
+
                         for(let distri of prov.districts){
                             this.selectedDistricts.push(distri)
                             this.searchDistrict(distri.code);
@@ -178,6 +179,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             this.loadForm();
         });
         this.subscriptions.push(sb);
+        
     }
 
     loadForm() {
@@ -209,18 +211,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     save(){
         var x= "royer";
         this.asignUserService.postEditAsingUser(x,this.arrayGeneral);
-    }
-
-    
-
-    loadDepartament(){
-        this.isLoading=true;
-        
-        this.$_departament=this.departamentService.getAllDepartament().pipe(
-            map((_beneficiary)=>_beneficiary.content,
-            finalize(()=>this.isLoading=false)
-            )
-        )
     }
 
     ApiDepartamentos: Observable<DepartamentModel[]>;
@@ -261,6 +251,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 return of(errorMessage);
             })
         ).subscribe((response) => {
+            console.log(CodeDepartament);
             this.$_getbydepartament = response.content;
             this.getProvincesByDepartament(CodeDepartament);
         });
@@ -286,7 +277,11 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 description: departamento.description,
                 provinces: []
             }
+            console.log(this.departamentos.length);
+            console.log(departamento);
             if(this.departamentos.findIndex(x => x.code == departamento.code) === -1){
+                console.log("agregando al array")
+                
                 this.departamentos.push(departamento);
             };
             if(this.arrayGeneral.findIndex(x => x.code == departamento1.code) === -1){
@@ -443,6 +438,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     removeProvince(Province) {
+        
         var codeDep = Province.substring(0,2);
         var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
         this.provincias = this.provincias.filter(item => item.code !== Province);
