@@ -25,6 +25,9 @@
                                 class="form-control form-control-lg form-control-solid"
                                 autocomplete="off"
                                 placeholder="DNI"
+                                name="dni"
+                                [ngModel]="ubigeo.documentNumber"
+                                (ngModelChange)="mostrar($event)"
                             />
                             <div class="results" *ngIf="isLoadingSearchDni">
                                 <ul>
@@ -42,6 +45,8 @@
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Nombre completo"
+                                [ngModel]="ubigeo.name"
+                                name="fullname"
                             />
                         </div>
                         <div class="col-lg-4">
@@ -50,6 +55,8 @@
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Correo"
+                                [ngModel]="ubigeo.email"
+                                name="email"
                             />
                         </div>
                     </div>

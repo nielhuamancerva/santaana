@@ -17,6 +17,7 @@ export class DepartamentHTTPServiceDomain {
     public _items$ = new BehaviorSubject<DepartamentModel[]>([]);
     private _subscriptions: Subscription[] = [];
     API_URL = `${environment.apiUrlNiel}/ubigee/department`;
+    API_URL_Local = `http://localhost:8880/api/ubigee/department`;
     private _isLoading$ = new BehaviorSubject<boolean>(false);
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
@@ -60,7 +61,7 @@ export class DepartamentHTTPServiceDomain {
     }
     
     getAll(): Observable<DepartamentModel[]>{
-        return this.http.get<ApiRespuesta>(this.API_URL,{
+        return this.http.get<ApiRespuesta>(this.API_URL_Local,{
             headers: this.header
         }).pipe(map(response => response.data.content))
         .pipe(catchError(this.handleError));
