@@ -13,7 +13,7 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 })
 
 export class RoleHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/roles`;
+    API_URL = `${environment.apiUrl}/roles`;
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService

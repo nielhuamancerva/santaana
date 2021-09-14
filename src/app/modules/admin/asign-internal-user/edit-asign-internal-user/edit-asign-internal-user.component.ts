@@ -123,7 +123,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         ).subscribe((res) => {
             console.log(res)
             if(res.data.id){
-                this.arrayGeneral = res.data.data;
+                
                 this.ubigeo = res.data;
                 for(let dep of res.data.data){
                     this.selectedDepartaments.push(dep);
@@ -136,7 +136,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                         for(let distri of prov.districts){
                             this.selectedDistricts.push(distri)
                             this.searchDistrict(distri.code);
-                            this.distriActual.push(prov.code);
+                            this.distriActual.push(distri.code);
                         }
                     }
                 }
@@ -169,7 +169,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     save(){
-        this.UserAsignServiceDomain.postAsingUser(this._user_dni,this.arrayGeneral);
+        console.log(this.arrayGeneral)
+        this.UserAsignServiceDomain.postEditAsingUser(this.ubigeo.id,this.arrayGeneral);
     }
 
     isDepartmentValid(controlName: string): boolean {
@@ -230,14 +231,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     provincias: ProvinceModel[] = [];
     distritos: DistrictModel[] = [];
 
-    arrayGeneral: DepartamentModel[];
+    arrayGeneral: DepartamentModel[] = [];
  
     checkDepartament(event){
         let departamentosEnviados = event.value;
         let CodeDepartament: any;
         let existencia: boolean;
         if( event.source.selected.length > this.departActual.length){
-            console.log("soy mayor que");
+            console.log("agregar departamento");
             for (let item of departamentosEnviados) {
                 existencia = this.departActual.includes(item);
                 if (!existencia) {
@@ -247,7 +248,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             this.departActual = departamentosEnviados;
             this.searchDepartament(CodeDepartament);
         }else if( event.source.selected.length < this.departActual.length){
-            console.log("soy menor que");
+            console.log("eliminar departamento");
             for (let item of this.departActual) {
                 existencia = departamentosEnviados.includes(item);
                 if (!existencia) {
@@ -262,9 +263,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     searchDepartament(CodeDepartament){
         const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament).pipe(
             switchMap(departamento => {
-                
+                console.log(this.arrayGeneral.findIndex(x => x.code == CodeDepartament))
                 if(this.arrayGeneral.findIndex(x => x.code == CodeDepartament) === -1){
-                    console.log(departamento)
+                    
+                    console.log("add array general Dep");
                     this.arrayGeneral.push({
                         id: departamento.id, 
                         code: departamento.code, 
@@ -273,6 +275,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                     });
                 };
                 if(this.departamentos.findIndex(x => x.code == CodeDepartament) === -1){
+                    console.log("add departamentos Dep");
                     this.departamentos.push({
                         id: departamento.id, 
                         code: departamento.code, 
@@ -280,23 +283,27 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                         provinces: []
                     });
                 };
-                return this.provinceService.getAllProvince(CodeDepartament+0);
+                return this.provinceService.getAllProvince(CodeDepartament);
             })
         ).subscribe((allProvince) => {
-            
+            console.log(allProvince)
             let indexDep = this.departamentos.findIndex(x => x.code == CodeDepartament);
             this.departamentos[indexDep].provinces = allProvince.content;
-            console.log(this.arrayGeneral);
+            console.log(this.selectedDepartaments)
+            console.log(this.selectedProvinces)
+            console.log(this.selectedDistricts)
         });
         this.subscriptions.push(sbDepartamentby);
         
     }
 
     checkProvince(event){
+        
         let provinciasEnviados = event.value;
         let CodeProvince: any;
         let existencia: boolean;
         if( event.source.selected.length > this.proviActual.length){
+            console.log("agregar province");
             for (let item of provinciasEnviados) {
                 existencia = this.proviActual.includes(item);
                 if (!existencia) {
@@ -304,8 +311,10 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 }
             }
             this.proviActual = provinciasEnviados;
+            console.log(CodeProvince)
             this.searchProvince(CodeProvince);
         }else if( event.source.selected.length < this.proviActual.length){
+            console.log("eliminar province");
             for (let item of this.proviActual) {
                 existencia = provinciasEnviados.includes(item);
                 if (!existencia) {
@@ -335,9 +344,11 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 let codeDep = CodeProvince.substring(0,2);           
                 var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
                 if(this.arrayGeneral[indexDep].provinces.findIndex(x => x.code == CodeProvince) === -1){
+                    console.log("add array general prov");
                     this.arrayGeneral[indexDep].provinces.push(newProv1);
                 }
                 if(this.provincias.findIndex(x => x.code == CodeProvince) === -1){
+                    console.log("add provincias prov");
                     this.provincias.push(newProv);
                 };
                 return this.districtService.getAllDistrict(CodeProvince+0);
@@ -347,16 +358,21 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             let indexProv = this.provincias.findIndex(x => x.code == CodeProvince);
             this.provincias[indexProv].districts = allDistricts.content;
             console.log(this.arrayGeneral);
+            console.log(this.selectedDepartaments)
+            console.log(this.selectedProvinces)
+            console.log(this.selectedDistricts)
         });
         this.subscriptions.push(sbProvinceby);
         
     }
 
     checkDistrict(event){
+        
         let distritosEnviados = event.value;
         let CodeDistrict: any;
         let existencia: boolean;
         if( event.source.selected.length > this.distriActual.length){
+            console.log("agregar distrito")
             for (let item of distritosEnviados) {
                 existencia = this.distriActual.includes(item);
                 if (!existencia) {
@@ -366,6 +382,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             this.distriActual = distritosEnviados;
             this.searchDistrict(CodeDistrict);
         }else if( event.source.selected.length < this.distriActual.length){
+            console.log("eliminar distrito")
             for (let item of this.distriActual) {
                 existencia = distritosEnviados.includes(item);
                 if (!existencia) {
@@ -379,11 +396,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     searchDistrict(CodeDistrict){
+        console.log(CodeDistrict)
         const sbDistrictby = this.districtService.getByDistrict(CodeDistrict).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })
         ).subscribe((district) => {
+            console.log(district)
+            console.log("respuesta de search district")
             this.$_getbydistrict = district.content;
             let codeDep = CodeDistrict.substring(0,2);
             let codeProv = CodeDistrict.substring(0,4);
@@ -395,8 +415,12 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             if(this.distritos.findIndex(x => x.code == CodeDistrict) === -1){
                 this.distritos.push(district.content[0]);
             };
+            console.log(this.selectedDepartaments)
+            console.log(this.selectedProvinces)
+            console.log(this.selectedDistricts)
         });
         this.subscriptions.push(sbDistrictby);
+        console.log(this.arrayGeneral)
     }
 
     removeDepartament(Departament) {
@@ -447,12 +471,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     selectBeneficiary(item){
-        this._user_dni=item.id;
-        this.formGroup.patchValue({
-        fullName: item.name+item.secondName+item.lastName+item.secondLastName,
-        dni: item.documentNumber,
-           
-        });
+        this.ubigeo.id = item.id;
         this.isLoadingSearchDni=false;
     }
 }

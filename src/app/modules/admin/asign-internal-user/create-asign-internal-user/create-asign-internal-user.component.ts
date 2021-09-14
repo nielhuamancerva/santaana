@@ -241,7 +241,7 @@ export class CreateAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     searchDepartament(CodeDepartament){
-        const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament).pipe(
+        const sbDepartamentby = this.departamentService.getByDepartament2(CodeDepartament).pipe(
             catchError((errorMessage) => {
             return of(errorMessage);
             })

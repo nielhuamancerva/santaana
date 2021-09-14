@@ -14,8 +14,7 @@ import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 })
 
 export class ProvinceHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/ubigee/province?code=13`;
-    API_URL1 = `${environment.apiUrlNiel}/ubigee/province`;
+    API_URL_Local = `${environment.apiUrl}/ubigee/province`;
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
     data: Data;
@@ -36,8 +35,9 @@ export class ProvinceHTTPServiceDomain {
     ) { }
 
     getAllProvince(code): Observable<ApiResponse<PagedResponse<ProvinceModel>>> {
+        console.log(code)
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<ProvinceModel>>>(`${environment.apiUrlNiel}/ubigee/province?code=${code}`,{
+        return this.http.get<ApiResponse<PagedResponse<ProvinceModel>>>(this.API_URL_Local + `?code=${code}`,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -45,16 +45,17 @@ export class ProvinceHTTPServiceDomain {
     }
 
     getAll(){
-        return this.http.get<ApiRespuesta>(this.API_URL,{
+        return this.http.get<ApiRespuesta>(this.API_URL_Local,{
             headers: this.header
         }).subscribe( (resp) => {
+            console.log(resp)
             this._provinces = resp.data.content;
         })
     }
 
     getByProvince(code): Observable<ApiResponse<PagedResponse<ProvinceModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<ProvinceModel>>>(`${environment.apiUrlNiel}/ubigee/province?code=${code}`,{
+        return this.http.get<ApiResponse<PagedResponse<ProvinceModel>>>(this.API_URL_Local + `?code=${code}`,{
             headers: header
         })
             .pipe(map(response => response))
@@ -62,7 +63,7 @@ export class ProvinceHTTPServiceDomain {
     }
 
     getById(code){
-        return this.http.get<ApiRespuesta>(this.API_URL + `?code=${code}`,{
+        return this.http.get<ApiRespuesta>(this.API_URL_Local + `?code=${code}`,{
             headers: this.header
         }).pipe(map(
             response => {
@@ -86,7 +87,7 @@ export class ProvinceHTTPServiceDomain {
     getAllProvincesByDepartament(departamentCode): Observable<any>{
         console.log(departamentCode)
         const header = this.buildheader.buildHeader();
-        return this.http.get<any>(`${environment.apiUrlNiel}/ubigee/province?code=13`,{
+        return this.http.get<any>(this.API_URL_Local + `?code=13`,{
             headers: header
         })
             .pipe(map(response => response))

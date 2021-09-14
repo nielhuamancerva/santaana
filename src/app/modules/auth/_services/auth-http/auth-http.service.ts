@@ -7,6 +7,7 @@ import { AuthModel } from '../../_models/auth.model';
 import { map } from 'rxjs/operators';
 const API_USERS_URLNIE = `${environment.apiUrlNiel}/auth/signin`;
 const API_USERS_URL = `${environment.apiUrl}/auth`;
+const API_URL_Local = `http://localhost:8880/api/auth/signin`;
 @Injectable({
   providedIn: 'root',
 })
@@ -24,11 +25,11 @@ export class AuthHTTPServiceURL {
      //   console.log(API_USERS_URLNIE);
    
    // return this.http.post<any>(API_USERS_URLNIE, { usernameOrEmail, password },{observe: 'response' as 'body'});
-   return this.http.post<any>(API_USERS_URLNIE, { usernameOrEmail, password });
+   return this.http.post<any>(API_URL_Local, { usernameOrEmail, password });
   }
 
   loginToken(usernameOrEmail: string, password: string): Observable<any>{
-     return this.http.post<any>(API_USERS_URLNIE, { usernameOrEmail, password },{observe: 'response' as 'body'});   
+     return this.http.post<any>(API_URL_Local, { usernameOrEmail, password },{observe: 'response' as 'body'});   
     }
 
   // CREATE =>  POST: add a new user to the server

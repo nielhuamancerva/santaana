@@ -14,7 +14,7 @@ import { v4 as uuid } from 'uuid';
 })
 
 export class PaymentHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/payment`;
+    API_URL_Local = `${environment.apiUrl}/payment`;
     constructor(private http: HttpClient,
     private auth: AuthService) { }
 
@@ -26,13 +26,13 @@ export class PaymentHTTPServiceDomain {
         formData.append('files', f1, 'files');
 
         const header = this.buildHeader();
-        this.http.post(this.API_URL, formData,{headers: header})
+        this.http.post(this.API_URL_Local, formData,{headers: header})
             .subscribe(
                 data => {
                     console.log(data);
                 }
             );
-        return this.http.post<UserModel>(this.API_URL, formData,{
+        return this.http.post<UserModel>(this.API_URL_Local, formData,{
             headers: header 
         })
             .pipe(map(response => response))

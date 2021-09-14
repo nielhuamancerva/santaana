@@ -16,7 +16,7 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 
 export class SalesHTTPServiceDomain {
 
-    API_URL = `${environment.apiUrlNiel}/sales`;
+    API_URL = `${environment.apiUrl}/sales`;
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService

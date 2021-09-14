@@ -28,8 +28,18 @@ export class DepartamentRepositoryService {
         return this._departmentservicedomain.getByDepartament(code).pipe(
             map(
             response => {
-                console.log(response.data);
+                //console.log(response.data);
                 return response.data.content[0];
+            }
+        ));    
+    }
+
+    getByDepartament2(code): Observable<PagedResponse<DepartamentModel>> {
+        return this._departmentservicedomain.getByDepartament(code).pipe(
+            map(
+            response => {
+                //console.log(response.data);
+                return response.data;
             }
         ));    
     }

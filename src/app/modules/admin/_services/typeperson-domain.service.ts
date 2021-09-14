@@ -13,7 +13,7 @@ import { BuildHeaderService } from '../../../_commons/_services/Header-Builder.s
 })
 
 export class TypePersontHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/element/typeperson`;
+    API_URL = `${environment.apiUrl}/element/typeperson`;
     constructor(
         private http: HttpClient,
         private buildheader:BuildHeaderService

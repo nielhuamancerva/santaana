@@ -20,9 +20,8 @@ export class UserHTTPServiceDomain {
     public _itemsUbigee$ = new BehaviorSubject<DepartamentModel[]>([]);
     private _isLoading$ = new BehaviorSubject<boolean>(false);
     private _subscriptions: Subscription[] = [];
-    API_URL = `${environment.apiUrlNiel}/user`;
-    API_URL1 = `${environment.apiUrlNiel}/users`;
-    API_URL_Local = `http://localhost:8880/api/user`;
+    API_URL1 = `${environment.apiUrl}/users`;
+    API_URL_Local = `${environment.apiUrl}/user`;
 
     get itemsUbigee$() {
         return this._itemsUbigee$.asObservable();
@@ -52,13 +51,13 @@ export class UserHTTPServiceDomain {
         formData.append('lastPage', f3, 'name1');
         formData.append('evidence', f4, 'name1');
         const header = this.buildheader.buildHeaderPost();
-        this.http.post(this.API_URL, formData,{headers: header})
+        this.http.post(this.API_URL_Local, formData,{headers: header})
         .subscribe(
             data => {
                 console.log(data);
             }
           );
-        return this.http.post<UserModel>(this.API_URL, formData,{
+        return this.http.post<UserModel>(this.API_URL_Local, formData,{
             headers: header 
         })
             .pipe(map(response => response))

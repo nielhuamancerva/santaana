@@ -13,8 +13,8 @@ import { CollectionAgentModel } from '../_models/collectionAgent.model';
 })
 
 export class CollectionAgentHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/user`;
-    API_URL1 = `${environment.apiUrlNiel}/users?type=1`;
+    //API_URL1 = `${environment.apiUrlNiel}/users?type=1`;
+    API_URL_Local = `${environment.apiUrl}/user`;
     constructor(private http: HttpClient,
     private auth: AuthService) { }
 
@@ -32,13 +32,13 @@ export class CollectionAgentHTTPServiceDomain {
         formData.append('lastPage', f3, 'name1');
         formData.append('evidence', f4, 'name1');
         const header = this.buildHeader();
-        this.http.post(this.API_URL, formData,{headers: header})
+        this.http.post(this.API_URL_Local, formData,{headers: header})
         .subscribe(
             data => {
                 console.log(data);
             }
         );
-            return this.http.post<CollectionAgentModel>(this.API_URL, formData,{
+            return this.http.post<CollectionAgentModel>(this.API_URL_Local, formData,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -47,7 +47,7 @@ export class CollectionAgentHTTPServiceDomain {
 
     getAllUser(): Observable<ApiResponse<any>> {
         const header = this.buildHeader();
-        return this.http.get<ApiResponse<any[]>>(this.API_URL1,{
+        return this.http.get<ApiResponse<any[]>>(this.API_URL_Local + 's',{
             headers: header 
         })
             .pipe(map(response => response))

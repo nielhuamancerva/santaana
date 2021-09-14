@@ -14,7 +14,7 @@ import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 })
 export class TypeDocumentHTTPServiceDomain {
 
-    API_URL = `${environment.apiUrlNiel}/element/typedocument`;
+    API_URL = `${environment.apiUrl}/element/typedocument`;
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
     data: Data;

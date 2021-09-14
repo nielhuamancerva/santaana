@@ -13,7 +13,7 @@ import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 })
 
 export class DistrictHTTPServiceDomain {
-    API_URL = `${environment.apiUrlNiel}/ubigee/district`;
+    API_URL_Local = `${environment.apiUrl}/ubigee/district`;
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
     data: Data;
@@ -30,7 +30,7 @@ export class DistrictHTTPServiceDomain {
 
     getAllDistrict(codedistrict): Observable<ApiResponse<PagedResponse<DistrictModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<DistrictModel>>>( `${environment.apiUrlNiel}/ubigee/district?code=${codedistrict}`,{
+        return this.http.get<ApiResponse<PagedResponse<DistrictModel>>>( this.API_URL_Local + `?code=${codedistrict}`,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -38,7 +38,7 @@ export class DistrictHTTPServiceDomain {
     }
 
     getAll(){
-        return this.http.get<ApiRespuesta>(this.API_URL,{
+        return this.http.get<ApiRespuesta>(this.API_URL_Local,{
             headers: this.header
         }).subscribe( (resp) => {
             this._districts = resp.data.content;
@@ -47,7 +47,7 @@ export class DistrictHTTPServiceDomain {
 
     getByDistrict(code): Observable<ApiResponse<PagedResponse<DistrictModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<DistrictModel>>>(`${environment.apiUrlNiel}/ubigee/district?code=${code}`,{
+        return this.http.get<ApiResponse<PagedResponse<DistrictModel>>>(this.API_URL_Local + `?code=${code}`,{
             headers: header
         })
             .pipe(map(response => response))

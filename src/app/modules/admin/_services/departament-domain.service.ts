@@ -16,8 +16,7 @@ import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 export class DepartamentHTTPServiceDomain {
     public _items$ = new BehaviorSubject<DepartamentModel[]>([]);
     private _subscriptions: Subscription[] = [];
-    API_URL = `${environment.apiUrlNiel}/ubigee/department`;
-    API_URL_Local = `http://localhost:8880/api/ubigee/department`;
+    API_URL_Local = `${environment.apiUrl}/ubigee/department`;
     private _isLoading$ = new BehaviorSubject<boolean>(false);
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
@@ -44,7 +43,7 @@ export class DepartamentHTTPServiceDomain {
 
     getAllDepartament(): Observable<ApiResponse<PagedResponse<DepartamentModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(this.API_URL,{
+        return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(this.API_URL_Local,{
             headers: header
         })
             .pipe(map(response => response))
@@ -53,7 +52,7 @@ export class DepartamentHTTPServiceDomain {
 
     getByDepartament(code): Observable<ApiResponse<PagedResponse<DepartamentModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(`${environment.apiUrlNiel}/ubigee/department?code=${code}`,{
+        return this.http.get<ApiResponse<PagedResponse<DepartamentModel>>>(this.API_URL_Local + `?code=${code}`,{
             headers: header
         })
             .pipe(map(response => response))
@@ -68,7 +67,7 @@ export class DepartamentHTTPServiceDomain {
     }
 
     getById(code){
-        return this.http.get<ApiRespuesta>(this.API_URL + `?code=${code}`,{
+        return this.http.get<ApiRespuesta>(this.API_URL_Local + `?code=${code}`,{
             headers: this.header
         }).pipe(map(
             response => {

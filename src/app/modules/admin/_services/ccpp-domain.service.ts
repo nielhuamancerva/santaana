@@ -15,7 +15,8 @@ import { ApiRespuesta, Data, Content } from '../_models/Prueba.interface';
 
 export class CcppHTTPServiceDomain {
 
-    API_URL = `${environment.apiUrlNiel}/ubigee/ccpp`;
+    API_URL_Local = `${environment.apiUrl}/ubigee/ccpp`;
+
     header = this.buildheader.buildHeader();
     responseApi: ApiRespuesta;
     data: Data;
@@ -32,7 +33,7 @@ export class CcppHTTPServiceDomain {
 
     getAllCcpp(): Observable<ApiResponse<PagedResponse<CcppModel>>> {
         const header = this.buildheader.buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<CcppModel>>>( `${environment.apiUrlNiel}/ubigee/ccpp?code=`,{
+        return this.http.get<ApiResponse<PagedResponse<CcppModel>>>( this.API_URL_Local + `?code=`,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -40,7 +41,7 @@ export class CcppHTTPServiceDomain {
     }
 
     getAll(){
-        return this.http.get<ApiRespuesta>(this.API_URL,{
+        return this.http.get<ApiRespuesta>(this.API_URL_Local,{
             headers: this.header
         }).subscribe( (resp) => {
             this._ccpps = resp.data.content;
