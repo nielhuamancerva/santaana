@@ -34,7 +34,7 @@ export class ListAsignInternalUserComponent implements OnInit {
     loadAsignInternalUser(){
         this.isLoading = true;
         this.$_ubigee = this.asignInternalUserService.getAllUserAsign().pipe(
-            map((_asign)=>_asign.content,
+            map((_asign)=>_asign,
             finalize(()=>this.isLoading=false)
             )
         )
