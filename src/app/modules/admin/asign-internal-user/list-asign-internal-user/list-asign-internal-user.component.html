@@ -65,7 +65,7 @@
                     <th>OPCIONES</th>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let departament of $_ubigee | async">
+                    <tr *ngFor="let data of $_ubigee | async">
                         <td class="selection-cell">
                             <label class="checkbox checkbox-single"
                             ><input
@@ -74,13 +74,33 @@
                             <span></span>
                             </label>
                         </td>
-                        <td>{{ departament.user_name}}</td>
-                        <td>{{  departament.department.description}}</td>
+                        <td>{{  data.userName }}</td>
+                        <td> 
+                            <div *ngFor="let depart of data.data">
+                                {{  depart.description}}
+                            </div>
+                        </td>
+                        <td> 
+                            <div *ngFor="let depart of data.data">
+                                <div *ngFor="let prov of depart.provinces">
+                                    {{  prov.description}}
+                                </div>
+                            </div>
+                        </td>
+                        <td> 
+                            <div *ngFor="let depart of data.data">
+                                <div *ngFor="let prov of depart.provinces">
+                                    <div *ngFor="let distri of prov.districts">
+                                        {{  distri.description}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <a
                             title="Edit product"
                             class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-                            [routerLink]="'/asign-internal-user/edit/' + departament.user_id"
+                            [routerLink]="'/asign-internal-user/edit/' + data.id"
                             >
                             <span
                                 [inlineSVG]="'./assets/media/svg/view.svg'"
