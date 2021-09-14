@@ -120,7 +120,13 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Distritos</mat-label>
-                                    <mat-select multiple (selectionChange)="checkDistrict($event)" #MatDistrito [(ngModel)]="selectedDistricts" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
+                                    <mat-select multiple 
+                                                (selectionChange)="checkDistrict($event)"
+                                                #MatDistrito 
+                                                [(ngModel)]="selectedDistricts"
+                                                [compareWith]="comparer"
+                                                [ngModelOptions]="{standalone: true}"
+                                    >
                                         <mat-select-trigger>
                                             <mat-chip-list>
                                                 <mat-label *ngFor="let departamento of arrayGeneral">
