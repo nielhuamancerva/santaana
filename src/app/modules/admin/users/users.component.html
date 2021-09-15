@@ -1,0 +1,93 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label"> Lista de usuarios internos </h3>
+        </div>
+        <div class="card-toolbar">
+            <button type="button" class="btn btn-primary" (click)="create()"> Crear Usuario </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- begin: Filtration form -->
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-2">
+                    <div class="row" [formGroup]="filterGroup">
+                        <div class="col-lg-12">
+                            <select class="form-control" name="state" placeholder="Filtrar por estado"
+                                formControlName="state">
+                                <option value="">Todos</option>
+                                <option value="false">Desactivados</option>
+                                <option value="true">Activados</option>
+                            </select><small class="form-text text-muted"><b>Filtrar</b> por estado</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="row" [formGroup]="searchGroup">
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" name="docnum" placeholder="Buscar por documento" value=""
+                            formControlName="docnum" /><small class="form-text text-muted"><b>Buscar</b> por documento</small>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" name="name" placeholder="Buscar por nombre" value=""
+                            formControlName="name" /><small class="form-text text-muted"><b>Buscar</b> por nombre</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: Filtration form -->
+
+        <!-- begin:Table -->
+        <div class="table-responsive angular-bootstrap-table">
+            <table class="table table-head-custom table-vertical-center overflow-hidden">
+                <thead>
+                    <th>USUARIO</th>
+                    <th># DOCUMENTO</th>
+                    <th>NOMBRE</th>
+                    <th>CORREO</th>
+                    <th>ESTADO</th>
+                    <th>ACTIONS</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of _userService.items$ | async">
+                        <td>{{ user.userName }}</td>
+                        <td>{{ user.documentNumber }}</td>
+                        <td>{{ user.name }} {{ user.secondName }} {{ user.lastName }} {{ user.secondLastName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <a [title]="user.enabled === '0' ? 'Inactivar' : 'Activar'" class="btn  btn-light btn-hover-primary btn-sm mx-3"
+                                (click)="enableDisabled(user)">
+                                <span class="label label-lg label-inline" [class.label-light-danger]="user.enabled === '0'"
+                                [class.label-light-success]="user.enabled === '1'">
+                                    <ng-container *ngIf="user.enabled === '0'">Inactivo</ng-container>
+                                    <ng-container *ngIf="user.enabled === '1'">Activo</ng-container>
+                                </span>
+                            </a>
+                        </td>
+                        <td>
+
+                            <a title="Editar" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                (click)="edit(user)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-md svg-icon-primary">
+                                </span>
+                            </a>
+
+                            <a title="Cambiar contraseña" class="btn btn-icon btn-light btn-hover-info btn-sm"
+                                (click)="changePassword(user)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Lock.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-md svg-icon-info">
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- end: Table -->
+        <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+    </div>
+</div>

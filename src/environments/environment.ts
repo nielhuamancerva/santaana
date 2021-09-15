@@ -7,8 +7,7 @@ export const environment = {
   appVersion: 'v726demo1',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
-  apiUrl: 'http://localhost:8880/api',
-  apiUrlNiel:'https://treeperu.narakats.com/api'
+  apiService:'https://tozziserv.narakats.com/api'
 };
 
 /*

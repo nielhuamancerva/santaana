@@ -1,0 +1,124 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title h4" id="example-modal-sizes-title-lg">
+            Cierre de {{$_boxSquare.agent.name }} {{$_boxSquare.agent.lastName }} | {{$_boxSquare.squareDate }}
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body">
+        <ng-container>
+            <form action="#" class="form form-label-right" [formGroup]="formGroup">
+                <div class="form-group row">
+                    <div class="col-lg-8">
+                        <label>Nota</label>
+                        <input 
+                            type="textarea" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Ingrese una nota" 
+                            name="note"
+                            formControlName="note"
+                        />
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Total Recaudado <b>Soles</b></label>
+                        <input 
+                            type="number" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Total Recaudado" 
+                            formControlName="totalcharged"
+                            readonly
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-lg-4">
+                        <label>Estado de cierre</label>
+                        <select class="form-control" name="state" placeholder="Estado de cierre"
+                                    formControlName="state">
+                                    <option value="0">Pendiente a revisar</option>
+                                    <option value="1">Saldo Pendiente</option>
+                                    <option value="2">Validado</option>
+                                    <option value="3">Observado</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Saldo <b>Soles</b></label>
+                        <input 
+                            type="number" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Saldo del Cierre" 
+                            formControlName="balance"
+                            
+                        />
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Comision Agente <b>Soles</b></label>
+                        <input 
+                            type="number" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Comision Agente" 
+                            formControlName="commission"
+                            readonly
+                        />
+
+                    </div>  
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-lg-8">
+                        <div class="form-group row">
+                            <div class="col-lg-3 m-8" *ngFor='let item of $_urls | async'>
+                                <div>
+                                    <div class="image-input image-input-outline" id="kt_profile_avatar">
+                                        <img class="image-input-wrapper" [src]="item.fileread">
+                                        <a (click)="download(item)">
+                                        <label class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                            data-action="change"
+                                            data-toggle="tooltip"
+                                            title=""
+                                            data-original-title="Download file"
+                                            
+                                            >
+                                            <i class="fa fa-download icon-sm text-muted"></i>
+
+                                        </label>   
+                                    </a>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                    </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Total a Depositar <b>Soles</b></label>
+                        <input 
+                            type="number" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Total a Depositar" 
+                            formControlName="totalpay"
+                            readonly
+                        />
+                    </div>  
+                </div>
+            </form>
+        </ng-container>
+        
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-light btn-elevate mr-2"
+            (click)="modal.dismiss()"
+            >Cerrar
+        </button>
+        <ng-container>
+            <button
+                type="submit"
+                class="btn btn-primary btn-elevate"
+                (click)="save()"
+                [disabled]="formGroup.invalid"
+            >Actualizar
+            </button>
+        </ng-container>
+    </div>
+</div>

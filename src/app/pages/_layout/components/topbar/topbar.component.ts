@@ -108,4 +108,10 @@ export class TopbarComponent implements OnInit, AfterViewInit {
       KTLayoutHeaderTopbar.init('kt_header_mobile_topbar_toggle');
     });
   }
+
+  logout(): void {
+    this.auth.logout();
+    document.location.reload();
+  }
+
 }

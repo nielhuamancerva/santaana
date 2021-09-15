@@ -13,59 +13,12 @@ const routes: Routes = [
           import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
       {
-        path: 'builder',
+        path: 'admin',
         loadChildren: () =>
-          import('./builder/builder.module').then((m) => m.BuilderModule),
-      },
-      {
-        path: 'ecommerce',
-        loadChildren: () =>
-          import('../modules/e-commerce/e-commerce.module').then(
-            (m) => m.ECommerceModule
+          import('../modules/admin/admin.module').then(
+            (m) => m.AdminModule
           ),
-      },
-      {
-        path: 'user-profile',
-        loadChildren: () =>
-          import('../modules/user-profile/user-profile.module').then(
-            (m) => m.UserProfileModule
-          ),
-      },
-      {
-        path: 'internal-users',
-        loadChildren: () =>
-        import('../modules/admin/internal-users/internal-users.module').then(
-            (m) => m.InternalUsersModule
-            ),
-      },
-      {
-          path: 'user-management',
-          loadChildren: () =>
-          import('../modules/admin/user-management/user-management.module').then(
-              (m) => m.UserManagementModule
-              ),
-      },
-      {
-        path: 'asign-internal-user',
-        loadChildren: () =>
-        import('../modules/admin/asign-internal-user/asign-internal-user.module').then(
-            (m) => m.AsignInternalUserModule
-            ),
-      },
-      {
-        path: 'tasks',
-        loadChildren: () =>
-        import('../modules/admin/task/task.module').then(
-            (m) => m.TaskModule
-            ),
-      },
-      {
-          path: 'payment-management',
-          loadChildren: () =>
-          import('../modules/admin/payment-management/payment-management.module').then(
-              (m) => m.PaymentManagementModule
-              ),
-      },
+      }, 
       {
         path: '',
         redirectTo: '/dashboard',

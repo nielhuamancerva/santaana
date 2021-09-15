@@ -1,0 +1,130 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">
+            <ng-container>
+                Registrar Cierre
+            </ng-container>
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a
+                type="button"
+                class="btn btn-primary"
+                routerLink="/admin/boxsquares"
+                >Lista de Cierres</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ng-container >
+           
+                <form action="#" class="form form-label-right" [formGroup]="formGroup">
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>Nota</label>
+                            <input 
+                                type="textarea" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese una nota" 
+                                name="note"
+                                formControlName="note"
+                            />
+                        </div>
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <label>Total Recaudado <b>Soles</b></label>
+                            <input 
+                                type="number" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Total Recaudado" 
+                                formControlName="totalcharged"
+                                readonly
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <button class="btn btn-primary" (click)="uploadFile()" type="button">
+                                Cargar Imagen
+                                <span
+                                [inlineSVG]="'./assets/media/svg/icons/Files/Uploaded-file.svg'"
+                                cacheSVG="true"
+                                class="svg-icon menu-icon">
+                            
+                            </span>
+                            </button>
+                            <div>
+                                <input id="fileUploader" style="display: none;" type="file" accept=".png, .jpg, .jpeg" (change)="onFileChange($event)" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <label>Comision Agente <b>Soles</b></label>
+                            <input 
+                                type="number" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Comision Agente" 
+                                formControlName="commission"
+                                readonly
+                            />
+
+                        </div>  
+                    </div>
+
+
+                    <div class="form-group row">
+                        <div class="col-lg-8">
+                            <div class="form-group row">
+                                <div class="col-lg-3" *ngFor='let item of $_urls | async' [id]="item.url">
+                                    <div *ngIf="item.show">
+                                        <div class="image-input image-input-outline" id="kt_profile_avatar">
+                                            <img class="image-input-wrapper" [src]="item.url">
+                                            <span [id]="item.url"
+                                                class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                (click)="eliminar($event)"
+                                                *ngIf="item.delete"
+                                                data-action="remove" title="" data-original-title="Remove avatar">
+                                                <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                            </span>
+        
+                                            <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow"
+                                                data-action="cancel" data-toggle="tooltip" title="" data-original-title="Cancel avatar">
+                                                <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                            </span>
+        
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Total a Depositar <b>Soles</b></label>
+                            <input 
+                                type="number" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Total a Depositar" 
+                                formControlName="totalpay"
+                                readonly
+                            />
+                        </div>  
+                    </div>
+                    
+                    
+                        
+
+                    <div class="float-right">
+                    <button
+                        type="submit"
+                        class="btn btn-primary font-weight-bold mr-2"
+                        (click)="save()"
+                        [disabled]="formGroup.invalid || !($_paymentsForBoxSquare.getValue().length > 0)">
+                        Registrar
+                    </button>
+                    </div>
+                </form>
+            
+        </ng-container>
+    </div>
+</div>

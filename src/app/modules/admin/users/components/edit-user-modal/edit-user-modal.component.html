@@ -1,0 +1,140 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title h4" id="example-modal-sizes-title-lg">
+            Crear Usuario Interno
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body">
+        <ng-container>
+            <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label>Tipo Documento</label>
+                        <select formControlName="typeDocumentCode" class="form-control form-control-lg form-control-solid">
+                            <option value="" hidden disabled>Elija un tipo de documento</option>
+                            <option *ngFor="let item of $_typesDocument | async" [value]="item.code"> {{item.description}} </option>
+                        </select>
+                    </div>
+                    <div class="col-lg-6">
+                        <label>Número de documento</label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Número de documento"
+                            formControlName="documentNumber"
+                            [class.is-invalid]="isControlInvalid('documentNumber')"
+                            [class.is-valid]="isControlValid('documentNumber')"
+                        />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label>Nombre(s)</label>
+                        <input 
+                            type="text"
+                            class="form-control form-control-lg form-control-solid"
+                            autocomplete="off"
+                            placeholder="Primer nombre"
+                            formControlName="name"
+                            [class.is-invalid]="isControlInvalid('name')"
+                            [class.is-valid]="isControlValid('name')"
+                        />
+                    </div>
+                    <div class="col-lg-6">
+                        <label>Apellido(s)</label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Apellido paterno"
+                            formControlName="lastName"
+                            [class.is-invalid]="isControlInvalid('lastName')"
+                            [class.is-valid]="isControlValid('lastName')"
+                        />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-4">
+                        <label for="roles">Roles</label>
+                        <select formControlName="roleCode" class="form-control form-control-lg form-control-solid">
+                            <option value="" hidden disabled>Elija un rol</option>
+                            <option *ngFor="let item of $_roles | async" [value]="item.code">{{item.description}}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Usuario</label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Ingrese el usuario"
+                            [class.is-invalid]="isControlInvalid('userName')"
+                            [class.is-valid]="isControlValid('userName')"
+                            formControlName="userName"
+                        />
+                    </div>  
+                    
+                    <div class="col-lg-4">
+                        <ng-container *ngIf="!this.id">
+                        <label>Contraseña</label>
+                            <input 
+                                type="password" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Ingrese el Password"
+                                [class.is-invalid]="isControlInvalid('password')"
+                                [class.is-valid]="isControlValid('password')"
+                                formControlName="password"
+                            />
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-lg-6">
+                        <label>Correo electrónico</label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="ejemplo@gmail.com" 
+                            name="email"
+                            [class.is-invalid]="isControlInvalid('email')"
+                            [class.is-valid]="isControlValid('email')"
+                            formControlName="email"
+                        />
+                    </div>
+                    <div class="col-lg-6">
+                        <label>Telefono</label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-lg form-control-solid"
+                            placeholder="Ingrese el telefono"
+                            [class.is-invalid]="isControlInvalid('phone1')"
+                            [class.is-valid]="isControlValid('phone1')"
+                            formControlName="phone1"
+                            (keypress)="numericOnly($event)"
+                            maxlength="9"
+                        />
+                    </div>
+                </div>
+
+            </form>
+        </ng-container>
+        
+    </div>
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-light btn-elevate mr-2"
+            (click)="modal.dismiss()"
+            >Cerrar
+        </button>
+        <ng-container>
+            <button
+                type="submit"
+                class="btn btn-primary btn-elevate"
+                (click)="sendToServer()"
+                [disabled]="formGroup.invalid"
+            >
+            <ng-container *ngIf="!id">Guardar</ng-container>
+            <ng-container *ngIf="id">Actualizar</ng-container>
+            </button>
+        </ng-container>
+    </div>
+</div>

@@ -7,6 +7,12 @@ export interface ITableState {
   paginator: PaginatorState;
   sorting: SortState;
   searchTerm: string;
+  searchAux1?: string;
+  searchAux2?: string;
+  searchAux3?: string;
+  searchAux4?: string;
+  searchAux10?: any;
+
   grouping: GroupingState;
   entityId: number | undefined;
 }
@@ -14,6 +20,7 @@ export interface ITableState {
 export interface TableResponseModel<T> {
   items: T[];
   total: number;
+  lenght?: number;
 }
 
 export interface ICreateAction {
@@ -21,11 +28,11 @@ export interface ICreateAction {
 }
 
 export interface IEditAction {
-  edit(id: number): void;
+  edit(id: any): void;
 }
 
 export interface IDeleteAction {
-  delete(id: number): void;
+  delete(id: any): void;
 }
 
 export interface IDeleteSelectedAction {

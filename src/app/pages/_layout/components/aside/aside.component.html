@@ -17,7 +17,7 @@
 <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
     <ng-container *ngIf="disableAsideSelfDisplay">
         <a routerLink="/">
-        <img alt="Logo" [attr.src]="headerLogo" />
+        <img alt="Logo" [attr.src]="headerLogo"  />
         </a>
     </ng-container>
     <div
@@ -41,7 +41,7 @@
                     cacheSVG="true"
                     class="svg-icon menu-icon"
                 ></span>
-                <span class="menu-text" translate="MENU.DASHBOARD"></span>
+                <span class="menu-text">Dashboard</span>
                 </a>
             </li>
             <li class="menu-section">
@@ -57,10 +57,10 @@
                 <a
                 class="menu-link menu-toggle"
                 routerLinkActive="active"
-                href="/ecommerce"
+                href="/admin"
                 >
                 <span
-                    [inlineSVG]="'./assets/media/svg/icons/Shopping/Cart3.svg'"
+                    [inlineSVG]="'./assets/media/svg/icons/Communication/Group.svg'"
                     cacheSVG="true"
                     class="svg-icon menu-icon"
                 ></span>
@@ -75,10 +75,10 @@
                     aria-haspopup="true"
                     data-menu-toggle="hover"
                     routerLinkActive="menu-item-active"
-                    >
+                    > 
                     <a
                         class="menu-link"
-                        routerLink="/internal-users"
+                        routerLink="/admin/users"
                         routerLinkActive="active"
                     >
                         <i class="menu-bullet menu-bullet-dot">
@@ -95,7 +95,7 @@
                     >
                     <a
                         class="menu-link"
-                        routerLink="/user-management"
+                        routerLink="/admin/agents"
                         routerLinkActive="active"
                     >
                         <i class="menu-bullet menu-bullet-dot">
@@ -118,24 +118,7 @@
                         <i class="menu-bullet menu-bullet-dot">
                         <span></span>
                         </i>
-                        <span class="menu-text">Asignación de Usuarios Internos</span>
-                    </a>
-                    </li>
-                    <li
-                    class="menu-item"
-                    aria-haspopup="true"
-                    data-menu-toggle="hover"
-                    routerLinkActive="menu-item-active"
-                    >
-                    <a
-                        class="menu-link"
-                        routerLink="/tasks"
-                        routerLinkActive="active"
-                    >
-                        <i class="menu-bullet menu-bullet-dot">
-                        <span></span>
-                        </i>
-                        <span class="menu-text">Tareas y notas</span>
+                        <span class="menu-text">Ubigeo</span>
                     </a>
                     </li>
                 </ul>
@@ -154,14 +137,14 @@
                 <a
                 class="menu-link menu-toggle"
                 routerLinkActive="active"
-                href="/user-management"
+                href="/applications"
                 >
                 <span
-                    [inlineSVG]="'./assets/media/svg/icons/General/User.svg'"
+                    [inlineSVG]="'./assets/media/svg/icons/Shopping/Dollar.svg'"
                     cacheSVG="true"
                     class="svg-icon menu-icon"
                 ></span>
-                <span class="menu-text">Pagos</span>
+                <span class="menu-text">Gestion de cobros</span>
                 <i class="menu-arrow"></i>
                 </a>
                 <div class="menu-submenu">
@@ -175,13 +158,183 @@
                     >
                     <a
                         class="menu-link"
-                        routerLink="/payment-management"
+                        routerLink="/admin/payment"
                         routerLinkActive="active"
                     >
                         <i class="menu-bullet menu-bullet-dot">
                         <span></span>
                         </i>
-                        <span class="menu-text">Gestión de pagos</span>
+                        <span class="menu-text">Registrar Pago</span>
+                    </a>
+                    </li>
+                    <li
+                    class="menu-item"
+                    routerLinkActive="menu-item-active"
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    >
+                    <a
+                        class="menu-link"
+                        routerLink="/admin/documents"
+                        routerLinkActive="active"
+                    >
+                        <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                        </i>
+                        <span class="menu-text">Documentos</span>
+                    </a>
+                    </li>
+                    <li
+                    class="menu-item"
+                    routerLinkActive="menu-item-active"
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    >
+                    <a
+                        class="menu-link"
+                        routerLink="/admin/beneficiaries"
+                        routerLinkActive="active"
+                    >
+                        <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                        </i>
+                        <span class="menu-text">Beneficiarios</span>
+                    </a>
+                    </li>
+                    <li
+                    class="menu-item"
+                    routerLinkActive="menu-item-active"
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    >
+                    <a
+                        class="menu-link"
+                        routerLink="/admin/payments"
+                        routerLinkActive="active"
+                    >
+                        <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                        </i>
+                        <span class="menu-text">Pagos</span>
+                    </a>
+                    </li>
+                </ul>
+                </div>
+            </li>
+            <li
+            class="menu-item menu-item-submenu"
+            aria-haspopup="true"
+            data-menu-toggle="hover"
+            routerLinkActive="menu-item-open"
+            >
+                <a
+                class="menu-link menu-toggle"
+                routerLinkActive="active"
+                href="/admin"
+                >
+                <span
+                    [inlineSVG]="'./assets/media/svg/icons/Shopping/Box2.svg'"
+                    cacheSVG="true"
+                    class="svg-icon menu-icon"
+                ></span>
+                <span class="menu-text">Gestion de cierre</span>
+                <i class="menu-arrow"></i>
+                </a>
+                <div class="menu-submenu">
+                <i class="menu-arrow"></i>
+                <ul class="menu-subnav">
+                    <li
+                    class="menu-item"
+                    routerLinkActive="menu-item-active"
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    >
+                    <a
+                        class="menu-link"
+                        routerLink="/admin/boxsquare"
+                        routerLinkActive="active"
+                    >
+                        <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                        </i>
+                        <span class="menu-text">Registrar Cierre</span>
+                    </a>
+                    </li>
+                    <li
+                    class="menu-item"
+                    routerLinkActive="menu-item-active"
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    >
+                    <a
+                        class="menu-link"
+                        routerLink="/admin/boxsquareme"
+                        routerLinkActive="active"
+                    >
+                        <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                        </i>
+                        <span class="menu-text">Mis Cierres</span>
+                    </a>
+                    </li>
+                    <li
+                    class="menu-item"
+                    routerLinkActive="menu-item-active"
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    >
+                    <a
+                        class="menu-link"
+                        routerLink="/admin/boxsquares"
+                        routerLinkActive="active"
+                    >
+                        <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                        </i>
+                        <span class="menu-text">Lista de Cierres</span>
+                    </a>
+                    </li>
+                </ul>
+                </div>
+            </li>
+            <li
+            class="menu-item menu-item-submenu"
+            aria-haspopup="true"
+            data-menu-toggle="hover"
+            routerLinkActive="menu-item-open"
+            >
+                <a
+                class="menu-link menu-toggle"
+                routerLinkActive="active"
+                href="/utilities"
+                >
+                <span
+                    [inlineSVG]="'./assets/media/svg/icons/Tools/Tools.svg'"
+                    cacheSVG="true"
+                    class="svg-icon menu-icon"
+                ></span>
+                <span class="menu-text">Utilidades</span>
+                <i class="menu-arrow"></i>
+                </a>
+                <div class="menu-submenu">
+                <i class="menu-arrow"></i>
+                <ul class="menu-subnav">
+                    <li
+                    class="menu-item"
+                    routerLinkActive="menu-item-active"
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    >
+                    <a
+                        class="menu-link"
+                        routerLink="#"
+                        routerLink="/admin/taks"
+                        routerLinkActive="active"
+                    >
+                        <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                        </i>
+                        <span class="menu-text">Tareas y Notas</span>
                     </a>
                     </li>
                 </ul>

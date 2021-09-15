@@ -31,6 +31,12 @@ export abstract class TableService<T> {
   get items$() {
     return this._items$.asObservable();
   }
+  get isLoading() {
+    return this._isLoading$;
+  }
+  get errorMessage() {
+    return this._errorMessage;
+  }
   get isLoading$() {
     return this._isLoading$.asObservable();
   }
@@ -62,7 +68,7 @@ export abstract class TableService<T> {
 
   protected http: HttpClient;
   // API URL has to be overrided
-  API_URL = `${environment.apiUrl}/endpoint`;
+  API_URL = `${environment.apiService}/endpoint`;
   constructor(http: HttpClient) {
     this.http = http;
   }

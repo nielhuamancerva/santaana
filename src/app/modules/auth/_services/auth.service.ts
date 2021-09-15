@@ -1,20 +1,23 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, of, Subscription, throwError } from 'rxjs';
 import { map, catchError, switchMap, finalize } from 'rxjs/operators';
 import { UserModel } from '../../admin/_models/user.model';
 import { AuthModel } from '../_models/auth.model';
-import { AuthHTTPService } from './auth-http';
-import { AuthHTTPServiceDomain } from './auth-domain/auth-domain.service';
-import { environment } from '../../../../../src/environments/environment';
+import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { retrieveStringFromStorage } from 'src/app/_commons/utils/storage';
+import { AuthHTTPRepositoryService } from '../_domain/auth-http-repository.service';
+import { ApiResponse } from 'src/app/_commons/_models/api-response.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
   // private fields
-  private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
-  public authLocalStorageToken = "Auth-Token";
+  private unsubscribe: Subscription[] = [];
+  private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
 
   // public fields
   currentUser$: Observable<UserModel>;
@@ -27,36 +30,49 @@ export class AuthService implements OnDestroy {
     return this.currentUserSubject.value;
   }
 
+  get getAuthorizationToken(): String {
+    return retrieveStringFromStorage("TokenAuthorization");
+  }
+
   set currentUserValue(user: UserModel) {
     this.currentUserSubject.next(user);
   }
 
   constructor(
-    private authHttpService: AuthHTTPService,
-    private authHttpServicedomain: AuthHTTPServiceDomain,
+    private _authHttpService: AuthHTTPRepositoryService,
     private router: Router
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserModel>(undefined);
     this.currentUser$ = this.currentUserSubject.asObservable();
     this.isLoading$ = this.isLoadingSubject.asObservable();
- //     const subscr = this.getUserByToken().subscribe();
- //      this.unsubscribe.push(subscr);
+    const subscr = this.getUserByToken().subscribe();
+    this.unsubscribe.push(subscr);
   }
 
   // public methods
-  login(email: string, password: string): Observable<UserModel> {
+  login(email: string, password: string):  Observable<ApiResponse<UserModel>> {
     this.isLoadingSubject.next(true);
-    return this.authHttpServicedomain.login(email, password).pipe(
-      map((auth: AuthModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
-        return result;
+    return this._authHttpService.login({usernameOrEmail: email, password: password}).pipe(
+      map( response => {
+        if (response.success) {
+          const result = this.setAuthFromLocalStorage({
+            authToken: retrieveStringFromStorage("TokenAuthorization"),
+            refreshToken: retrieveStringFromStorage("RefreshAuthorization"),
+            expiresIn: moment(retrieveStringFromStorage("ExpirationAuthorization"), 'yyyy-MM-dd  hh:mm:ss').toDate()
+          });
+
+          this.currentUserSubject = new BehaviorSubject<UserModel>(response.data);
+         
+        } else {
+          
+          this.logout();
+          
+        }
+        
+        return response;
       }),
-      switchMap(() => this.getUserByToken()),
-      catchError((err) => {
-        console.error('err', err);
-        return of(undefined);
-      }),
+      catchError(this.handleError),
       finalize(() => this.isLoadingSubject.next(false))
     );
   }
@@ -69,53 +85,29 @@ export class AuthService implements OnDestroy {
     });
   }
 
-  getUserByToken(): Observable<UserModel> {
+  getUserByToken(): Observable<ApiResponse<UserModel>> {
     const auth = this.getAuthFromLocalStorage();
-    if (!auth) {
+    if (!auth || !auth.authToken) {
       return of(undefined);
     }
 
     this.isLoadingSubject.next(true);
-    return this.authHttpServicedomain.getUserByToken(auth).pipe(
-      map((user: UserModel) => {
-        if (user) {
-          this.currentUserSubject = new BehaviorSubject<UserModel>(user);
+    return this._authHttpService.getUserByToken().pipe(
+      map((_response: ApiResponse<UserModel>) => {
+        if (_response.success) {
+          this.currentUserSubject = new BehaviorSubject<UserModel>(_response.data);
         } else {
           this.logout();
         }
-        return user;
+        return _response;
       }),
       finalize(() => this.isLoadingSubject.next(false))
     );
   }
-
-  // need create new user then login
-  registration(user: UserModel): Observable<any> {
-    this.isLoadingSubject.next(true);
-    return this.authHttpService.createUser(user).pipe(
-      map(() => {
-        this.isLoadingSubject.next(false);
-      }),
-     // switchMap(() => this.login(user.email, user.password)),
-      catchError((err) => {
-        console.error('err', err);
-        return of(undefined);
-      }),
-      finalize(() => this.isLoadingSubject.next(false))
-    );
-  }
-
- // forgotPassword(email: string): Observable<boolean> {
-  //  this.isLoadingSubject.next(true);
-  //  return this.authHttpService.forgotPassword(email)
-   //   .pipe(finalize(() => this.isLoadingSubject.next(false)));
- // }
 
   // private methods
   private setAuthFromLocalStorage(auth): boolean {
-    // store auth authToken/refreshToken/epiresIn in local storage to keep user logged in between page refreshes
     if (auth) {
-      console.log(auth);
       localStorage.setItem(this.authLocalStorageToken, JSON.stringify(auth));
       return true;
     }
@@ -136,5 +128,17 @@ export class AuthService implements OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribe.forEach((sb) => sb.unsubscribe());
+  }
+
+  private handleError(err: HttpErrorResponse): Observable<never> {
+    let errorMessage = "";
+    if (err.error instanceof ErrorEvent) {
+      errorMessage = `Un error ha ocurrido: ${err.error.message}`;
+    } else {
+      errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+    }
+    console.error(errorMessage);
+
+    return throwError(errorMessage);
   }
 }

@@ -1,69 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
-import { TareaModel } from '../../_models/Tarea.model';
-import { TaskRepositoryService } from '../../_services-repository/task-repository.service';
-import { TaskHTTPServiceDomain } from '../../_services/task-domain.service';
-import { ModalTaskComponent } from './modal-task/modal-task.component'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-    selector: 'app-tasks',
-    templateUrl: './tasks.component.html'
+  selector: 'app-tasks',
+  templateUrl: './tasks.component.html'
 })
 export class TasksComponent implements OnInit {
-    isLoading:boolean;
-    $_task: Observable<TareaModel[]>;
-    private subscriptions: Subscription[] = [];
+    formGroup: FormGroup;
     constructor(
-        private modalService: NgbModal,
-        public tasksService: TaskRepositoryService,
-        public tasksServiceDomain: TaskHTTPServiceDomain,
-        
+        private fb: FormBuilder,
     ) { }
 
     ngOnInit(): void {
-        this.loadTasks();
-        const sb = this.tasksServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
-        this.subscriptions.push(sb);
-        this.tasksServiceDomain.fetch();
-
-
-        const sbtask = this.tasksService.isLoading$.subscribe(res => this.isLoading = res);
-        this.subscriptions.push(sbtask);
-        this.tasksService.AllTaks();
- 
+        this.loadForm();
     }
 
-    loadTasks(){
-        this.isLoading=true;
-        
-        this.$_task=this.tasksService.getAllTasks().pipe(
-            map((_beneficiary)=>_beneficiary.content,
-            finalize(()=>this.isLoading=false)
-            )
-        )
+    loadForm() {
+        this.formGroup = this.fb.group({
+            userName: ['', Validators.compose([Validators.required])],
+            title: ['', Validators.compose([Validators.required])],
+            createdAt: ['', Validators.compose([Validators.required])],
+            caducedAt: ['', Validators.compose([Validators.required])],
+            description: ['', Validators.compose([Validators.required])]
+        });
     }
 
-    openModal() {
-        const modalRef = this.modalService.open(ModalTaskComponent, { size: 'xl' });
-        modalRef.result.then(() =>
-      //this.tasksService.getAllTasks(),
-    this.tasksServiceDomain.fetch(),
-        () => { }
-      );
-
-      console.log(this.$_task);
+    save(){
+        this.formGroup.reset();
     }
 
-    editTask(task: TareaModel){
-        const modalRef = this.modalService.open(ModalTaskComponent, { size: 'xl' })
-        modalRef.componentInstance.passedData = task;
-        modalRef.result.then(() =>
-    //this.tasksService.getAllTasks(),
-    this.tasksServiceDomain.fetch(),
-    () => { }
-  );
-    }
 }

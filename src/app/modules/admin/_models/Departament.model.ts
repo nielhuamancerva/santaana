@@ -1,4 +1,3 @@
-import { Observable } from "rxjs";
 import { ProvinceModel } from "./Province.model";
 
 export interface DepartamentModel{

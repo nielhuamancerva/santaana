@@ -1,0 +1,81 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label"> Lista de beneficiarios </h3>
+        </div>
+        <div class="card-toolbar">
+            
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- begin: Filtration form -->
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-12">
+                    <div class="row" [formGroup]="searchGroup">
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" name="docnum" placeholder="Buscar por codigo" value=""
+                            formControlName="code" /><small class="form-text text-muted"><b>Buscar</b> por codigo</small>
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" name="name" placeholder="Buscar por documento" value=""
+                            formControlName="docnum" /><small class="form-text text-muted"><b>Buscar</b> por # documento</small>
+                        </div>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" name="name" placeholder="Buscar por nombre" value=""
+                            formControlName="name" /><small class="form-text text-muted"><b>Buscar</b> por nombre</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end: Filtration form -->
+
+        <!-- begin:Table -->
+        <div class="table-responsive angular-bootstrap-table">
+            <table class="table table-head-custom table-vertical-center overflow-hidden">
+                <thead>
+                    <th>CODIGO EXTERNO</th>
+                    <th># DOCUMENTO</th>
+                    <th>NOMBRE</th>
+                    <th>SUMINISTRO</th>
+                    <th>UBIGEO</th>
+                    <th>CCPP</th>
+                    <th>DIRECCION</th>
+                    <th>ACTIONS</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let _item of _beneficiesService.items$ | async">
+                        <td>{{ _item.externalCode }}</td>
+                        <td>{{ _item.documentType }} | {{ _item.documentNumber }}</td>
+                        <td>{{ _item.completeName }}</td>
+                        <td>{{ _item.supply.code }}</td>
+                        <td>{{ _item.department.description }} - {{ _item.province.description }} - 
+                            {{ _item.district.description }}</td>
+                        <td>{{ _item.ccpp }}</td>
+                        <td>{{ _item.address }}</td>
+                        <td>
+
+                            <a title="Editar" class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                                (click)="edit(_item)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-md svg-icon-primary">
+                                </span>
+                            </a>
+
+                            <a title="Cambiar contraseña" class="btn btn-icon btn-light btn-hover-info btn-sm"
+                                (click)="changePassword(_item)">
+                                <span [inlineSVG]="'./assets/media/svg/icons/General/Lock.svg'" cacheSVG="true"
+                                    class="svg-icon svg-icon-md svg-icon-info">
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- end: Table -->
+        <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
+    </div>
+</div>

@@ -1,56 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable, Subscription } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
-import { NotaModel } from '../../_models/Nota.interface';
-import { NoteRepositoryService } from '../../_services-repository/note-repository.service';
-import { NoteHTTPServiceDomain } from '../../_services/note-domain.service';
-import { ModalNoteComponent } from './modal-note/modal-note.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-    selector: 'app-notes',
-    templateUrl: './notes.component.html'
+  selector: 'app-notes',
+  templateUrl: './notes.component.html'
 })
 export class NotesComponent implements OnInit {
-    isLoading:boolean;
-    $_note: Observable<NotaModel[]>;
-    private subscriptions: Subscription[] = [];
+    formGroup: FormGroup;
     constructor(
-        private modalService: NgbModal,
-        private noteService: NoteRepositoryService,
-        public notesServiceDomain: NoteHTTPServiceDomain,
+        private fb: FormBuilder,
     ) { }
 
     ngOnInit(): void {
-        this.loadNotes();
-        const sb = this.notesServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
-        this.subscriptions.push(sb);
-        this.notesServiceDomain.fetch();
+        this.loadForm();
     }
 
-    loadNotes(){
-        this.isLoading=true;
-        this.$_note=this.noteService.getAllNotes().pipe(
-            map((_beneficiary)=>_beneficiary.content,
-            finalize(()=>this.isLoading=false)
-            )
-        )
+    loadForm() {
+        this.formGroup = this.fb.group({
+            title: ['', Validators.compose([Validators.required])],
+            createdAt: ['', Validators.compose([Validators.required])],
+            description: ['', Validators.compose([Validators.required])]
+        });
     }
 
-    openModal() {
-        const modalRef = this.modalService.open(ModalNoteComponent, { size: 'lg' });
-        modalRef.result.then(() =>
-            this.notesServiceDomain.fetch(),
-            () => { }
-        );
+    save(){
+        this.formGroup.reset();
     }
 
-    editNote(note: NotaModel){
-        const modalRef = this.modalService.open(ModalNoteComponent, { size: 'xl' });
-        modalRef.componentInstance.passedNote = note;
-        modalRef.result.then(() =>
-            this.notesServiceDomain.fetch(),
-            () => { }
-        );
-    }
 }

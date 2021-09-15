@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { UserModel } from '../../admin/_models/user.model';
 import { AuthService } from '../_services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiResponse } from 'src/app/_commons/_models/api-response.model';
 
 @Component({
   selector: 'app-login',
@@ -12,15 +13,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  // KeenThemes mock, change it to:
-  // defaultAuth = {
-  //   email: '',
-  //   password: '',
-  // };
+
   defaultAuth: any = {
-    email: 'admin@demo.com',
-    password: 'demo',
+    email: '',
+    password: '',
   };
+  infoError: string = '';
   loginForm: FormGroup;
   hasError: boolean;
   returnUrl: string;
@@ -60,16 +58,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.defaultAuth.email,
         Validators.compose([
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(320), // https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+          Validators.minLength(3)
         ]),
       ],
       password: [
         this.defaultAuth.password,
         Validators.compose([
           Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
+          Validators.minLength(3)
         ]),
       ],
     });
@@ -79,12 +75,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.hasError = false;
     const loginSubscr = this.authService
       .login(this.f.email.value, this.f.password.value)
-      .pipe(first())
-      .subscribe((user: UserModel) => {
-        if (user) {
-          this.router.navigate([this.  returnUrl]);
+      .subscribe((response: ApiResponse<UserModel>) => {
+        if (response.success) {
+          this.router.navigate([this.returnUrl]);
         } else {
           this.hasError = true;
+          this.infoError = response.message;
         }
       });
     this.unsubscribe.push(loginSubscr);

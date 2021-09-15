@@ -13,9 +13,7 @@ import { AuthService } from './modules/auth/_services/auth.service';
 import { environment } from '../../src/environments/environment';
 // Highlight JS
 import { HighlightModule, HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
-// #fake-start#
-import { FakeAPIService } from './_fake/fake-api.service';
-// #fake-end#
+
 import { LayoutModule } from './pages/layout.module';
 
 function appInitializer(authService: AuthService) {
@@ -36,14 +34,6 @@ function appInitializer(authService: AuthService) {
     HttpClientModule,
     HighlightModule,
     ClipboardModule,
-    // #fake-start#
-    environment.isMockEnabled
-      ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
-        passThruUnknownUrl: true,
-        dataEncapsulation: false,
-      })
-      : [],
-    // #fake-end#
     AppRoutingModule,
     InlineSVGModule.forRoot(),
     NgbModule,
