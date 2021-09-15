@@ -12,6 +12,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { UsersComponent } from "./users/users.component";
 
+
+import {
+  MatRippleModule,
+} from '@angular/material/core';
+
+
 import { AgentsComponent } from "./agents/agents.component";
 import { EditAgentModalComponent } from "./agents/components/edit-agent-modal/edit-agent-modal.component";
 import { EditUserModalComponent } from "./users/components/edit-user-modal/edit-user-modal.component";

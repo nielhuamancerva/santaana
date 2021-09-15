@@ -1,30 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable, Subscription } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
+import { NotaModel } from '../../_models/Nota.interface';
 
 @Component({
-  selector: 'app-notes',
-  templateUrl: './notes.component.html'
+    selector: 'app-notes',
+    templateUrl: './notes.component.html'
 })
 export class NotesComponent implements OnInit {
-    formGroup: FormGroup;
+    isLoading:boolean;
+    $_note: Observable<NotaModel[]>;
+    private subscriptions: Subscription[] = [];
     constructor(
-        private fb: FormBuilder,
+        private modalService: NgbModal,
+
     ) { }
 
     ngOnInit(): void {
-        this.loadForm();
+        this.loadNotes();
+     
+
     }
 
-    loadForm() {
-        this.formGroup = this.fb.group({
-            title: ['', Validators.compose([Validators.required])],
-            createdAt: ['', Validators.compose([Validators.required])],
-            description: ['', Validators.compose([Validators.required])]
-        });
+    loadNotes(){
+  
     }
 
-    save(){
-        this.formGroup.reset();
+    openModal() {
+
     }
 
+    editNote(note: NotaModel){
+ 
+    }
 }

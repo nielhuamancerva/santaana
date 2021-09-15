@@ -60,7 +60,7 @@ const routes: Routes = [
                 component: TaskComponent
             },
             {
-                path: 'taks/tak',
+                path: 'taks/tasks',
                 component: TasksComponent
             }
             ,
