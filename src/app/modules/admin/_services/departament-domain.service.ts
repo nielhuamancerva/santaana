@@ -22,10 +22,15 @@ export class DepartamentHTTPServiceDomain {
     responseApi: ApiRespuesta;
     data: Data;
     private _departaments: Content[] = [];
+    private _depsRoyer: DepartamentModel[] = [];
     _departamentByCode: Content[] = [];
 
     get departaments(){
         return [...this._departaments];
+    }
+
+    get depsRoyer(){
+        return [...this._depsRoyer];
     }
 
     get isLoading$() {
@@ -62,18 +67,30 @@ export class DepartamentHTTPServiceDomain {
     getAll(): Observable<DepartamentModel[]>{
         return this.http.get<ApiRespuesta>(this.API_URL_Local,{
             headers: this.header
-        }).pipe(map(response => response.data.content))
+        }).pipe(map(response => 
+            response.data.content
+        ))
         .pipe(catchError(this.handleError));
     }
 
-    getById(code){
-        return this.http.get<ApiRespuesta>(this.API_URL_Local + `?code=${code}`,{
+    getAll2(){
+        return this.http.get<ApiRespuesta>(this.API_URL_Local,{
             headers: this.header
         }).pipe(map(
             response => {
                 return response.data;
             }
-        ));  
+        ));
+    }
+
+    getById(code){
+        return this.http.get<any>(this.API_URL_Local + `?code=${code}`,{
+            headers: this.header
+        }).pipe(map(
+            response => {
+                return response.data.content;
+            }
+        ));
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {

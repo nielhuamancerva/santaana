@@ -1,7 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { DepartamentModel } from '../../_models/Departament.model';
 import { ProvinceModel } from '../..//_models/Province.model';
@@ -77,7 +77,7 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     public appleStreamMapped:Observable<any[]>;
     public _UbigeoGeneral$ = new BehaviorSubject<DepartamentModel[]>([]);
     public _visor$ = new BehaviorSubject<DepartamentModel[]>([]);
-    public _visorproviActual$= new BehaviorSubject<DepartamentModel[]>([]);
+    public _visorproviActual$= new BehaviorSubject<ProvinceModel[]>([]);
     constructor(
         private departamentService: DepartamentRepositoryService,
         private userService: UserRepositoryService,
@@ -86,14 +86,12 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         private districtService: DistrictRepositoryService,
         private route: ActivatedRoute,
         public UserAsignServiceDomain: UserAsignHTTPServiceDomain,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
-        this.UserAsignServiceDomain.fetch();
         this.loadInternalUser();
         this.loadApiDepartamentos();
         this.ubigeo = EMPTY_ASIGN_INTERNAL_USER;
-
     }
 
     ngOnDestroy() {
@@ -120,25 +118,21 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         ).subscribe((res) => {
             if(res.data.id){
                 this.arrayGeneral = res.data.data;
-
-
-            
-                this._UbigeoGeneral$.asObservable();
-                this._UbigeoGeneral$.next(res.data.data);
-
-
+                this.arrMaster2.asObservable();
+                this.arrMaster2.next(this.arrayGeneral);
+                
                 this.ubigeo = res.data;
+
                 for(let dep of res.data.data){
                     this.selectedDepartaments.push(dep);
                     this.searchDepartament(dep.code);
                     this.departActual.push(dep.code);
+
                     for(let prov of dep.provinces){
                         this.selectedProvinces.push(prov)
                         this.searchProvince(prov.code);
                         this.proviActual.push(prov.code);
 
-
-                        
                         for(let distri of prov.districts){
                             this.selectedDistricts.push(distri)
                             this.searchDistrict(distri.code);
@@ -153,11 +147,9 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             
         });
         this.subscriptions.push(sb);
-        
     }
 
     mostrar(InputSearchDni){
-        console.log(InputSearchDni)
         this.isLoadingSearchDni=true;
         if(InputSearchDni == ''){
             this.isLoadingSearchDni=false;
@@ -175,8 +167,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     }
 
     save(){
-        console.log(this._user_dni);
-        this.UserAsignServiceDomain.postEditAsingUser(this._user_dni,this.arrayGeneral);
+        console.log(this._user_dni)
+        this.UserAsignServiceDomain.postEditAsingUser(this.ubigeo.id,this.arrayGeneral);
     }
 
     isDepartmentValid(controlName: string): boolean {
@@ -223,10 +215,12 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
         return result;
     }
 
-    ApiDepartamentos: Observable<DepartamentModel[]>;
+    public ApiDepartamentos= new BehaviorSubject<DepartamentModel[]>([]);
+    public arrMaster2 = new BehaviorSubject<DepartamentModel[]>([]);
     loadApiDepartamentos(){
-        this.ApiDepartamentos = this.departamentDomainService.getAll();
-        console.log(this.ApiDepartamentos);
+        this.ApiDepartamentos.asObservable();
+        this.departamentDomainService.getAll2().subscribe(respo => this.ApiDepartamentos.next(respo.content));
+        this.departamentDomainService.getAll2().subscribe(respo => this.arrMaster = respo.content);
     }
 
     //es el actual selected del <select> de (departament.code)
@@ -237,6 +231,8 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
     departamentos: DepartamentModel[] = [];
     provincias: ProvinceModel[] = [];
     distritos: DistrictModel[] = [];
+
+    arrMaster: DepartamentModel[] = [];
 
     arrayGeneral: DepartamentModel[];
  
@@ -272,7 +268,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             switchMap(departamento => {
                 
                 if(this.arrayGeneral.findIndex(x => x.code == CodeDepartament) === -1){
-                    console.log(departamento)
                     this.arrayGeneral.push({
                         id: departamento.id, 
                         code: departamento.code, 
@@ -282,7 +277,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 };
                 if(this.departamentos.findIndex(x => x.code == CodeDepartament) === -1){
 
-            
                     this.departamentos.push({
                         id: departamento.id, 
                         code: departamento.code, 
@@ -290,14 +284,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                         provinces: []
                     });
 
-                    this._visor$.asObservable();
-                    this._visor$.next(this.departamentos);
-
-                     this.appleStreamMapped = of(this.departamentos)
-                            .pipe(
-                                mergeMap(item => item),
-                            toArray()
-                            );
                 };
                 return this.provinceService.getAllProvince(CodeDepartament+0);
             })
@@ -305,7 +291,14 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             
             let indexDep = this.departamentos.findIndex(x => x.code == CodeDepartament);
             this.departamentos[indexDep].provinces = allProvince.content;
-           // console.log(this.arrayGeneral);
+            this._visor$.asObservable();
+            this._visor$.next(this.departamentos);
+
+            let indexDep2 = this.arrMaster.findIndex(x => x.code == CodeDepartament);
+            this.arrMaster[indexDep2].provinces = allProvince.content;
+            this.ApiDepartamentos.next(this.arrMaster)
+
+            this.arrMaster2.next(this.arrayGeneral)
         });
         this.subscriptions.push(sbDepartamentby);
         
@@ -359,11 +352,6 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
                 if(this.provincias.findIndex(x => x.code == CodeProvince) === -1){
 
                     this.provincias.push(newProv);
-
-                    /*aquiii se sube */
-                    this._visorproviActual$.asObservable();
-                    this._visorproviActual$.next(this.provincias);
-
                 };
                 return this.districtService.getAllDistrict(CodeProvince+0);
             })
@@ -371,7 +359,17 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             
             let indexProv = this.provincias.findIndex(x => x.code == CodeProvince);
             this.provincias[indexProv].districts = allDistricts.content;
-          //  console.log(this.arrayGeneral);
+            
+            this._visorproviActual$.asObservable();
+            this._visorproviActual$.next(this.provincias);
+
+
+            console.log(this.arrMaster)
+            let indexDep2 = this.arrMaster.findIndex(x => x.code == CodeProvince.substring(0,2));
+            let indexDep3 = this.arrMaster[indexDep2].provinces.findIndex(x => x.code == CodeProvince);
+            this.arrMaster[indexDep2].provinces[indexDep3].districts = allDistricts.content;
+            this.ApiDepartamentos.next(this.arrMaster)
+            this.arrMaster2.next(this.arrayGeneral)
         });
         this.subscriptions.push(sbProvinceby);
         
@@ -420,8 +418,11 @@ export class EditAsignInternalUserComponent implements OnInit, OnDestroy{
             if(this.distritos.findIndex(x => x.code == CodeDistrict) === -1){
                 this.distritos.push(district.content[0]);
             };
+
+            
         });
         this.subscriptions.push(sbDistrictby);
+        this.arrMaster2.next(this.arrayGeneral)
     }
 
     removeDepartament(Departament) {

@@ -73,7 +73,7 @@
                                                     [removable]="removable" 
                                                     (removed)="removeDepartament(departamento.code)" 
                                                     [selectable]="true"
-                                                    *ngFor="let departamento of _UbigeoGeneral$ | async"
+                                                    *ngFor="let departamento of arrayGeneral"
                                                 >
                                                     {{ departamento.description }}
                                                     <mat-icon matChipRemove>cancel</mat-icon>
@@ -91,20 +91,20 @@
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
                                     <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia [(ngModel)]="selectedProvinces" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
-                                        <mat-select-trigger>
-                                            <mat-chip-list *ngFor="let departamento of _UbigeoGeneral$ | async">
-                                                    <mat-chip 
-                                                        [removable]="removable" 
-                                                        (removed)="removeProvince(provincia.code)" 
-                                                        [selectable]="true"
-                                                        *ngFor="let provincia of departamento.provinces"
-                                                    >
-                                                        {{ provincia.description }}
-                                                        <mat-icon matChipRemove>cancel</mat-icon>
-                                                    </mat-chip>
+                                        <mat-select-trigger *ngFor="let departamento of arrayGeneral">
+                                            <mat-chip-list>
+                                                <mat-chip 
+                                                    [removable]="removable" 
+                                                    (removed)="removeProvince(provincia.code)" 
+                                                    [selectable]="true"
+                                                    *ngFor="let provincia of departamento.provinces"
+                                                >
+                                                    {{ provincia.description }}
+                                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                                </mat-chip>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-optgroup *ngFor="let group of _visor$ | async" [label]="group.description" >
+                                        <mat-optgroup *ngFor="let group of ApiDepartamentos | async" [label]="group.description" [disabled]="group.disabled" [hidden]="!group.provinces">
                                             <mat-option *ngFor="let province of group.provinces" [id]="province.id" [value]="province.code">
                                             {{province.description}}
                                             </mat-option>
@@ -125,23 +125,23 @@
                                                 [compareWith]="comparer"
                                                 [ngModelOptions]="{standalone: true}"
                                     >
-                                        <mat-select-trigger>
-                                            <mat-chip-list>
-                                                <mat-label *ngFor="let departamento of arrayGeneral">
-                                                    <mat-label *ngFor="let provincia of departamento.provinces">
-                                                        <mat-chip [removable]="removable" (removed)="removeDistrict(distrito.code)" *ngFor="let distrito of provincia.districts">
-                                                            {{ distrito.description }}
-                                                            <mat-icon matChipRemove>cancel</mat-icon>
-                                                        </mat-chip>
-                                                    </mat-label>
-                                                </mat-label>
+                                        <mat-select-trigger *ngFor="let departamento of arrayGeneral">
+                                            <mat-chip-list *ngFor="let provincia of departamento.provinces">
+                                                <mat-chip [removable]="removable" (removed)="removeDistrict(distrito.code)" *ngFor="let distrito of provincia.districts">
+                                                    {{ distrito.description }}
+                                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                                </mat-chip>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-optgroup *ngFor="let group of provincias" [label]="group.description" [disabled]="group.disabled">
+                                        <mat-label *ngFor="let group1 of ApiDepartamentos | async">
+                                        <mat-optgroup *ngFor="let group of group1.provinces" [label]="group.description" [disabled]="group.disabled" [hidden]="!group.districts">
+                                            
                                             <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
                                             {{district.description}}
                                             </mat-option>
+                                        
                                         </mat-optgroup>
+                                    </mat-label>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
