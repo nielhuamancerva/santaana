@@ -13,7 +13,7 @@
                 <div class="col-lg-3">
                     <mat-form-field class="example-full-width" appearance="fill">
                         <mat-label>Nombre</mat-label>
-                        <input matInput placeholder="Codigo" autocomplete="off">
+                        <input matInput placeholder="Codigo" >
                         <mat-hint>Buscar por Nombre</mat-hint>
                     </mat-form-field>
                 </div>
@@ -39,7 +39,7 @@
                 <div class="col-lg-1">
                 </div>
                 <div class="col-lg-2">
-                    <button class="btn btn-outline-primary mb-2 mr-2" (click)="openModal()">CREAR TAREA</button>
+                    <button class="btn btn-outline-primary mb-2 mr-2" (click)="openModal()">CREAR NOTA</button>
                 </div>
             </div>
         </div>
@@ -50,21 +50,19 @@
                 <thead>
                     <th>USUARIO</th>
                     <th>TITULO</th>
-                    <th>FECHA CADUCIDAD</th>
-                    <th>RESUMEN TAREA</th>
+                    <th>RESUMEN NOTE</th>
                     <th>OPCIONES</th>
                 </thead>
-                <tbody> 
-                    <tr *ngFor="let task of tasksServiceDomain.items$ | async">
-                        <td> {{ task.user_asigned }} </td>
-                        <td> {{ task.title }} </td>
-                        <td> {{ task.expiration }} </td>
-                        <td> {{ task.description }} </td>
+                <tbody>
+                    <tr *ngFor="let note of notesServiceDomain.items$ | async">
+                        <td> {{ note.user }} </td>
+                        <td> {{ note.title }} </td>
+                        <td> {{ note.description }} </td>
                         <td>
                             <a
                                 title="Edit product"
                                 class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-                                (click)="editTask(task)"
+                                (click)="editNote(note)"
                             >
                                 <span
                                 [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"

@@ -11,8 +11,7 @@ import { PaymentComponent } from "./payment/payment.component";
 import { PaymentsComponent } from "./payments/payments.component";
 import { UsersComponent } from "./users/users.component";
 import { TaskComponent } from "./task/task.component";
-import { TasksComponent } from './task/tasks/tasks.component';
-import { NotesComponent } from './task/notes/notes.component';
+import { NotesComponent } from './notes/notes.component';
 
 const routes: Routes = [
     {
@@ -56,16 +55,11 @@ const routes: Routes = [
                 component: BoxSquaresMeComponent
             },
             {
-                path: 'taks',
+                path: 'tasks',
                 component: TaskComponent
             },
             {
-                path: 'taks/tasks',
-                component: TasksComponent
-            }
-            ,
-            {
-                path: 'taks/notes',
+                path: 'notes',
                 component: NotesComponent
             },
             { path: '', redirectTo: 'users', pathMatch: 'full' },

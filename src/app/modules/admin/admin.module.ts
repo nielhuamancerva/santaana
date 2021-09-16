@@ -40,8 +40,9 @@ import { BoxSquareComponent } from "./boxsquare/boxsquare.component";
 import { BoxSquaresMeComponent } from "./boxsquaresme/boxsquaresme.component";
 import { EditBoxSquareModalComponent } from "./boxsquares/components/edit-boxsquare-modal.component";
 import { TaskComponent } from "./task/task.component";
-import { TasksComponent } from './task/tasks/tasks.component';
-import { NotesComponent } from './task/notes/notes.component';
+import { NotesComponent } from './notes/notes.component';
+import { ModalNoteComponent } from "./notes/components/modal-notes.component";
+import { ModalTaskComponent } from "./task/components/modal-tasks.component";
 
 @NgModule({
     declarations: [
@@ -62,8 +63,9 @@ import { NotesComponent } from './task/notes/notes.component';
         BoxSquaresMeComponent,
         EditBoxSquareModalComponent,
         TaskComponent,
-        TasksComponent, 
-        NotesComponent
+        NotesComponent,
+        ModalNoteComponent,
+        ModalTaskComponent
     ],
     imports: [
         CommonModule,
@@ -95,7 +97,9 @@ import { NotesComponent } from './task/notes/notes.component';
         BeneficiariesComponent,
         DocumentsComponent,
         TicketPaymentModalComponent,
-        EditBoxSquareModalComponent
+        EditBoxSquareModalComponent,
+        ModalNoteComponent,
+        ModalTaskComponent
     ]
 })
 export class AdminModule { }
