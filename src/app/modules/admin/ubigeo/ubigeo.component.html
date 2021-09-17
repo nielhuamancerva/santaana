@@ -1,0 +1,122 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">Lista de Usuarios UBIGEO</h3>
+        </div>
+        <div class="card-toolbar">
+            <a
+                type="button"
+                class="btn btn-primary"
+                routerLink="/admin/ubigeo/add"
+                >CREAR RELACIÓN
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form form-label-right">
+            <div class="form-group row">
+                <div class="col-lg-8">
+                    <div class="row" [formGroup]="searchGroup">
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" name="user" placeholder="Buscar por usuario" value=""
+                            formControlName="user" /><small class="form-text text-muted"><b>Buscar</b> por usuario</small>
+                        </div>
+                        <div class="col-lg-6">
+                            <input type="text" class="form-control" name="title" placeholder="Buscar por título" value=""
+                            formControlName="title" /><small class="form-text text-muted"><b>Buscar</b> por título</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive angular-bootstrap-table">
+            <table
+            class="table table-head-custom table-vertical-center overflow-hidden"
+            >
+                <thead>
+                    <th class="selection-cell-header" data-row-selection="true">
+                        <label class="checkbox checkbox-single"
+                            ><input
+                            type="checkbox" /><span></span
+                        ></label>
+                    </th>
+                    <th>USUARIO INTERNO</th>
+                    <th>DEPARTAMENTO</th>
+                    <th>PROVINCIA</th>
+                    <th>DISTRITO</th>
+                    <th>OPCIONES</th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of _ubigeoService.items$ | async">
+                        <td class="selection-cell">
+                            <label class="checkbox checkbox-single"
+                            ><input
+                                type="checkbox"
+                            />
+                            <span></span>
+                            </label>
+                        </td>
+                        <td>{{  data.userName }}</td>
+                        <td> 
+                            <div *ngFor="let depart of data.data">
+                                {{  depart.description}}
+                            </div>
+                        </td>
+                        <td> 
+                            <div *ngFor="let depart of data.data">
+                                <div *ngFor="let prov of depart.provinces">
+                                    {{  prov.description}}
+                                </div>
+                            </div>
+                        </td>
+                        <td> 
+                            <div *ngFor="let depart of data.data">
+                                <div *ngFor="let prov of depart.provinces">
+                                    <div *ngFor="let distri of prov.districts">
+                                        {{  distri.description}}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a
+                            title="Edit product"
+                            class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
+                            [routerLink]="'/asign-internal-user/edit/' + data.id"
+                            >
+                            <span
+                                [inlineSVG]="'./assets/media/svg/view.svg'"
+                                cacheSVG="true"
+                                class="svg-icon svg-icon-md svg-icon-primary"
+                            >
+                            </span>
+                            </a>
+                            <a
+                            title="Delete product"
+                            class="btn btn-icon btn-light btn-hover-danger btn-sm mx-3"
+                            >
+                            <span
+                                [inlineSVG]="'./assets/media/svg/do-not-disturb.svg'"
+                                cacheSVG="true"
+                                class="svg-icon svg-icon-md svg-icon-danger"
+                            >
+                            </span>
+                            </a>
+                            <a
+                            title="Delete product"
+                            class="btn btn-icon btn-light btn-hover-danger btn-sm mx-3"
+                            >
+                            <span
+                                [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                cacheSVG="true"
+                                class="svg-icon svg-icon-md svg-icon-danger"
+                            >
+                            </span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+  </div>

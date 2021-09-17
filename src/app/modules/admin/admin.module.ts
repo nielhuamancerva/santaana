@@ -43,6 +43,10 @@ import { TaskComponent } from "./task/task.component";
 import { NotesComponent } from './notes/notes.component';
 import { ModalNoteComponent } from "./notes/components/modal-notes.component";
 import { ModalTaskComponent } from "./task/components/modal-tasks.component";
+import { UbigeoComponent } from "./ubigeo/ubigeo.component";
+import { CreateUbigeoComponent } from "./ubigeo/components/create-ubigeo/create-ubigeo.component";
+import { MatSelectModule } from "@angular/material/select";
+import { ModalUploadFileComponent } from "./ubigeo/components/modal-upload-file/modal-upload-file.component";
 
 @NgModule({
     declarations: [
@@ -65,7 +69,10 @@ import { ModalTaskComponent } from "./task/components/modal-tasks.component";
         TaskComponent,
         NotesComponent,
         ModalNoteComponent,
-        ModalTaskComponent
+        ModalTaskComponent,
+        UbigeoComponent,
+        CreateUbigeoComponent,
+        ModalUploadFileComponent
     ],
     imports: [
         CommonModule,
@@ -87,7 +94,8 @@ import { ModalTaskComponent } from "./task/components/modal-tasks.component";
         MatDatepickerModule,
         MatDialogModule,
         MatNativeDateModule,
-        MatInputModule 
+        MatInputModule,
+        MatSelectModule,
     ],
     entryComponents: [
         EditUserModalComponent,
@@ -99,7 +107,8 @@ import { ModalTaskComponent } from "./task/components/modal-tasks.component";
         TicketPaymentModalComponent,
         EditBoxSquareModalComponent,
         ModalNoteComponent,
-        ModalTaskComponent
+        ModalTaskComponent,
+        ModalUploadFileComponent
     ]
 })
 export class AdminModule { }

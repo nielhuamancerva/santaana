@@ -12,6 +12,8 @@ import { PaymentsComponent } from "./payments/payments.component";
 import { UsersComponent } from "./users/users.component";
 import { TaskComponent } from "./task/task.component";
 import { NotesComponent } from './notes/notes.component';
+import { UbigeoComponent } from "./ubigeo/ubigeo.component";
+import { CreateUbigeoComponent } from "./ubigeo/components/create-ubigeo/create-ubigeo.component";
 
 const routes: Routes = [
     {
@@ -61,6 +63,14 @@ const routes: Routes = [
             {
                 path: 'notes',
                 component: NotesComponent
+            },
+            {
+                path: 'ubigeo',
+                component: UbigeoComponent
+            },
+            {
+                path: 'ubigeo/add',
+                component: CreateUbigeoComponent
             },
             { path: '', redirectTo: 'users', pathMatch: 'full' },
             { path: '**', redirectTo: 'users', pathMatch: 'full' },

@@ -1,0 +1,172 @@
+<div class="card card-custom gutter-b">
+    <div class="card-header">
+        <div class="card-title">
+            <h3 class="card-label">
+            <ng-container>
+                CREAR RELACION DE USUARIOS ASIGNACION
+            </ng-container>
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a type="button" class="btn btn-light" routerLink="/admin/ubigeo">
+              <i class="fa fa-arrow-left"></i>Regresar
+            </a>
+            <button class="btn btn-secondary ml-2" (click)="uploadFile()">
+                <i class="fa fa-file"></i>Subir Archivo
+              </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <ng-container >
+            <div class="mt-5">
+                <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
+                    <div class="form-group row">
+                        <div class="col-lg-4">
+                            <label>DNI</label>
+                            <input 
+                                type="text"
+                                class="form-control form-control-lg form-control-solid"
+                                autocomplete="off"
+                                placeholder="DNI"
+                                formControlName="dni"
+                            />
+                            <div class="results" *ngIf="isLoadingSearchDni">
+                                <ul>
+                                  <li *ngFor="let item of SearchDni">
+                                    <a class="name" (click)="selectBeneficiary(item)">
+                                      {{item.name}} {{item.secondName}} {{item.lastName}} {{item.secondLastName}}
+                                    </a>
+                                  </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Nombre Completo</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Nombre completo"
+                            />
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Correo</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-lg form-control-solid"
+                                placeholder="Correo"
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group row">    
+                        <div class="col-lg-4">
+                            <label for="">Departamento</label>
+                            <div class="example-button-row">
+                                <mat-form-field appearance="fill" class="example-full-width">
+                                    <mat-label>Lista de departamentos</mat-label>
+                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento>
+                                        <mat-select-trigger>
+                                            <mat-chip-list>
+                                                <mat-label *ngFor="let departamento of arrayGeneral">
+                                                    <mat-chip [removable]="removable" (removed)="removeDepartament(departamento.code)">
+                                                        {{ departamento.description }}
+                                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                                    </mat-chip>
+                                                </mat-label>   
+                                            </mat-chip-list>
+                                          </mat-select-trigger>
+                                        <mat-option *ngFor="let departament of $_departament | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Provincia</label>
+                            <div class="example-button-row">
+                                <mat-form-field appearance="fill" class="example-full-width">
+                                    <mat-label>Provincias</mat-label>
+                                    <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia>
+                                        <mat-select-trigger>
+                                            <mat-chip-list>
+                                                <mat-label *ngFor="let departamento of arrayGeneral">
+                                                    <mat-label *ngFor="let provincia of departamento.provinces">
+                                                        <mat-chip [removable]="removable" (removed)="removeProvince(provincia.code)">
+                                                            {{ provincia.description }}
+                                                            <mat-icon matChipRemove>cancel</mat-icon>
+                                                        </mat-chip>
+                                                    </mat-label>
+                                                </mat-label>
+                                            </mat-chip-list>
+                                        </mat-select-trigger>
+                                        <mat-optgroup *ngFor="let group of departamentos" [label]="group.description">
+                                            <mat-option *ngFor="let province of group.provinces" [id]="province.id" [value]="province.code">
+                                            {{province.description}}
+                                            </mat-option>
+                                        </mat-optgroup>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Distrito</label>
+                            <div class="example-button-row">
+                                <mat-form-field appearance="fill" class="example-full-width">
+                                    <mat-label>Distritos</mat-label>
+                                    <mat-select multiple (selectionChange)="checkDistrict($event)" #MatDistrito>
+                                        <mat-select-trigger>
+                                            <mat-chip-list>
+                                                <mat-label *ngFor="let departamento of arrayGeneral">
+                                                    <mat-label *ngFor="let provincia of departamento.provinces">
+                                                        <mat-label *ngFor="let distrito of provincia.districts">
+                                                            <mat-chip [removable]="removable" (removed)="removeDistrict(distrito.code)">
+                                                                {{ distrito.description }}
+                                                                <mat-icon matChipRemove>cancel</mat-icon>
+                                                            </mat-chip>
+                                                        </mat-label>
+                                                    </mat-label>
+                                                </mat-label>
+                                            </mat-chip-list>
+                                        </mat-select-trigger>
+                                        <mat-optgroup *ngFor="let group of provincias" [label]="group.description" [disabled]="group.disabled">
+                                            <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
+                                            {{district.description}}
+                                            </mat-option>
+                                        </mat-optgroup>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label>Centro Poblado</label>
+                            <div class="example-button-row">
+                                <mat-form-field appearance="fill" class="example-full-width">
+                                    <mat-label>Centros poblados:</mat-label>
+                                    <mat-select multiple>
+                                        <mat-optgroup *ngFor="let group of $_Ccpp" [label]="group.code"
+                                                        [disabled]="false">
+                                            <mat-option *ngFor="let group of $_Ccpp" [value]="group.code">
+                                            </mat-option>
+                                        </mat-optgroup>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="float-right">
+                    <a
+                        class="btn btn-default font-weight-bold mr-2" routerLink="/asign-internal-user/list"
+                        >Cancelar</a
+                    >
+                    <button
+                        type="submit"
+                        class="btn btn-primary font-weight-bold mr-2"
+                    >
+                        Guardar
+                    </button>
+                    </div>
+                </form>
+            </div>
+        </ng-container>
+    </div>
+</div>

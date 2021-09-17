@@ -33,4 +33,14 @@ export class DepartamentRepositoryService {
             }
         ));    
     }
+
+    getByDepartament2(code): Observable<PagedResponse<DepartamentModel>> {
+        return this._departmentservicedomain.getByDepartament(code).pipe(
+            map(
+            response => {
+                //console.log(response.data);
+                return response.data;
+            }
+        ));    
+    }
 }

@@ -120,6 +120,13 @@ export class NoteHTTPServiceDomain {
         if (user) {
             params = params.set("user", user);
         }
+
+        const request = this._http.get(this.API_URL + `/user`,{headers: header})
+            .subscribe(
+                data => {
+                    console.log(data);
+                }
+            );
         return this._http.get<ApiResponse<PagedResponse<NotaModel>>>( this.API_URL + `/user`,{
             headers: header,
             params: params
