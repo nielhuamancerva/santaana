@@ -75,7 +75,7 @@ export class TaskHTTPServiceDomain {
 
     getAllTasks(): Observable<ApiResponse<PagedResponse<TareaModel>>> {
         const header = buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL_Local+`?code=753a9458-2e42-4877-9f99-ce79b9dce992`,{
+        return this.http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL_Local,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -102,6 +102,7 @@ export class TaskHTTPServiceDomain {
       const request = this.getAllTasks()
       .pipe(
         tap((response) => {
+            console.log(response);
         this._items$.next(response.data.content);
         }),
         finalize(() => {

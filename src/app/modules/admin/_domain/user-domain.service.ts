@@ -15,7 +15,7 @@ import { retrieveStringFromStorage } from 'src/app/_commons/utils/storage';
 })
 export class UserDomainService {
 
-   API_URL = `${environment.apiService}/user`;
+   API_URL = `${environment.apiService}/users`;
    file: Blob;
 
   constructor(private _http: HttpClient,
@@ -77,7 +77,7 @@ export class UserDomainService {
             params = params.set("state", state);
         } 
 
-        return this._http.get<ApiResponse<PagedResponse<UserModel>>>( `${this.API_URL}s`,{
+        return this._http.get<ApiResponse<PagedResponse<UserModel>>>( `${this.API_URL}`,{
             headers: header,
             params: params
         })
@@ -87,7 +87,7 @@ export class UserDomainService {
 
     getByDocumentUser(InputSearchDni): Observable<ApiResponse<PagedResponse<UserModel>>> {
         const header = buildHeader();
-        return this._http.get<ApiResponse<PagedResponse<UserModel>>>(this.API_URL+ `?documentNumber=${InputSearchDni}`,{
+        return this._http.get<ApiResponse<PagedResponse<UserModel>>>(this.API_URL+ `?docnum=${InputSearchDni}`,{
             headers: header 
         })
             .pipe(map(response => response))

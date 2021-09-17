@@ -25,9 +25,10 @@ export class TaskComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadTasks();
+        this.tasksServiceDomain.fetch();
         const sb = this.tasksServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
         this.subscriptions.push(sb);
-        this.tasksServiceDomain.fetch();
+    
 
 
         const sbtask = this.tasksService.isLoading$.subscribe(res => this.isLoading = res);

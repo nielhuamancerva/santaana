@@ -56,7 +56,7 @@
                 </thead>
                 <tbody> 
                     <tr *ngFor="let task of tasksServiceDomain.items$ | async">
-                        <td> {{ task.user_asigned }} </td>
+                        <td> {{ task.user_asigned.userName }} </td>
                         <td> {{ task.title }} </td>
                         <td> {{ task.expiration }} </td>
                         <td> {{ task.description }} </td>

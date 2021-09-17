@@ -9,14 +9,15 @@ import { UsersService } from '../../_services/users.service';
 
 const EMPTY_TASK: TareaModel = {
     id:undefined,
-    user_created: '',
-    user_asigned: '',
+    user_created: undefined,
+    user_asigned: undefined,
     title: '',
     description: '',
     expiration: '',
     completed: 0,
     fl_enabled: 1,
-    fl_deleted: 0
+    fl_deleted: 0,
+    asigned_id:''
 };
 
 @Component({
@@ -60,6 +61,7 @@ export class ModalTaskComponent implements OnInit {
         this.taskService.UpdateTask(formValues);
         } else {
             console.log("create");
+            console.log(this.formGroup.value);
             const formValues = this.formGroup.value;
             this.taskService.CreateTask(formValues);
         }
@@ -70,13 +72,14 @@ export class ModalTaskComponent implements OnInit {
     loadForm() {
         this.formGroup = this.fb.group({
             user_created: ['', Validators.compose([Validators.required])],
-            user_asigned: [this.passedData.user_asigned, Validators.compose([Validators.required])],
+            user_asigned: ['', Validators.compose([Validators.required])],
             title: [this.passedData.title, Validators.compose([Validators.required])],
             description: [this.passedData.description, Validators.compose([Validators.required])],
             expiration: [this.passedData.expiration, Validators.compose([Validators.required])],
             completed: [0, Validators.compose([Validators.required])],
             fl_enabled: [1, Validators.compose([Validators.required])],
             fl_deleted: [0, Validators.compose([Validators.required])],
+            asigned_id:[''],
             fullname: [''],
             id: [this.passedData.id],
         });
@@ -100,9 +103,10 @@ export class ModalTaskComponent implements OnInit {
     }
     selectBeneficiary(item){
         this.formGroup.patchValue({
-        fullname: item.name+" "+item.secondName+" "+item.lastName+" "+item.secondLastName,
-        user_asigned: item.id,
-           
+        fullname: item.name+" "+item.lastName,
+        user_asigned: item,
+        user_created: item,
+        asigned_id: item.id,
         });
         this.isLoadingSearchDni=false;
     }
