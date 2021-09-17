@@ -31,6 +31,7 @@ export class ModalTaskComponent implements OnInit {
     public isLoadingSearchDni=false;
     public SearchDni: number;
     formGroup: FormGroup;
+    fullname: string;
     constructor(
         private fb: FormBuilder,
         public modal: NgbActiveModal,
@@ -44,50 +45,50 @@ export class ModalTaskComponent implements OnInit {
 
     loadTask() {
         if(this.passedData == undefined){
+            console.log("aqui if")
             this.passedData = EMPTY_TASK;
+            this.fullname = '';
             this.loadForm();
         }else{
-            console.log(this.passedData);
+            console.log("aqui else")
+            console.log(this.passedData)
+            this.fullname = this.passedData.user_asigned.name + ' ' + this.passedData.user_asigned.lastName;
             this.loadForm();
         }
     }
 
     save(){
         const formValues = this.formGroup.value;
-    
-        console.log(this.passedData.id);
+        console.log(formValues)
         if (this.passedData.id!=undefined) {
-        console.log("actualizar");
-        const formValues = this.formGroup.value;
-        this.taskService.UpdateTask(formValues);
+            return this.taskService.UpdateTask(formValues).subscribe((response) => {
+                this.formGroup.reset(),
+                this.modal.close()
+            });
         } else {
-            console.log("create");
-            console.log(this.formGroup.value);
-            const formValues = this.formGroup.value;
-            this.taskService.CreateTask(formValues);
+            this.taskService.CreateTask(formValues).subscribe((response) => {
+                this.formGroup.reset(),
+                this.modal.close()
+            });
         }
-        this.formGroup.reset();
-        this.modal.close();
     }
     
     loadForm() {
         this.formGroup = this.fb.group({
-            user_created: ['', Validators.compose([Validators.required])],
-            user_asigned: ['', Validators.compose([Validators.required])],
+            user_created: [this.passedData.user_created, Validators.compose([Validators.required])],
+            user_asigned: [this.passedData.user_asigned, Validators.compose([Validators.required])],
             title: [this.passedData.title, Validators.compose([Validators.required])],
             description: [this.passedData.description, Validators.compose([Validators.required])],
             expiration: [this.passedData.expiration, Validators.compose([Validators.required])],
             completed: [0, Validators.compose([Validators.required])],
             fl_enabled: [1, Validators.compose([Validators.required])],
             fl_deleted: [0, Validators.compose([Validators.required])],
-            asigned_id:[''],
-            fullname: [''],
-            id: [this.passedData.id],
+            fullname: [this.fullname],
+            id: [this.passedData.id]
         });
     }
 
     mostrar(InputSearchDni){
-        console.log(InputSearchDni);
         this.isLoadingSearchDni=true;
         if(InputSearchDni == ''){
             this.isLoadingSearchDni=false;

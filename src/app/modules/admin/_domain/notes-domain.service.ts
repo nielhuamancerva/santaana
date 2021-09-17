@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subscription, throwError } from 'rxjs';
 import { map, catchError, tap, finalize } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -18,6 +18,7 @@ export class NoteHTTPServiceDomain {
     private _isLoading$ = new BehaviorSubject<boolean>(false);
     private _subscriptions: Subscription[] = [];
     API_URL_Local = `http://localhost:8880/api/notes`;
+    API_URL = `${environment.apiService}/notes`;
     header = buildHeader();
 
     get items$() {
@@ -28,21 +29,21 @@ export class NoteHTTPServiceDomain {
     }
 
     constructor(
-        private http: HttpClient
+        private _http: HttpClient
     ){ }
 
     CreateNote(body): Observable<NotaModel> {
         let headers: HttpHeaders = new HttpHeaders()
             .set("Authorization", "Bearer " + retrieveStringFromStorage("TokenAuthorization") )
             .set("Access-Control-Allow-Origin", "*");
-        const request = this.http.post(this.API_URL_Local, body,{headers: headers})
+        const request = this._http.post(this.API_URL_Local, body,{headers: headers})
             .subscribe(
                 data => {
                     console.log(data);
                 }
             );
         this._subscriptions.push(request);
-        return this.http.post<NotaModel>(this.API_URL_Local, body,{
+        return this._http.post<NotaModel>(this.API_URL_Local, body,{
             headers: headers 
         })
             .pipe(map(response => response))
@@ -53,14 +54,14 @@ export class NoteHTTPServiceDomain {
         let headers: HttpHeaders = new HttpHeaders()
             .set("Authorization", "Bearer " + retrieveStringFromStorage("TokenAuthorization") )
             .set("Access-Control-Allow-Origin", "*");
-        const request = this.http.patch(this.API_URL_Local, body,{headers: headers})
+        const request = this._http.patch(this.API_URL_Local, body,{headers: headers})
             .subscribe(
                 data => {
                     console.log(data);
                 }
             );
         this._subscriptions.push(request);
-            return this.http.patch<NotaModel>(this.API_URL_Local, body,{
+            return this._http.patch<NotaModel>(this.API_URL_Local, body,{
             headers: headers 
         })
             .pipe(map(response => response))
@@ -69,7 +70,7 @@ export class NoteHTTPServiceDomain {
 
     getAllNotes(): Observable<ApiResponse<PagedResponse<NotaModel>>> {
         const header = buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<NotaModel>>>(this.API_URL_Local+`/user`,{
+        return this._http.get<ApiResponse<PagedResponse<NotaModel>>>(this.API_URL_Local+`/user`,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -101,5 +102,29 @@ export class NoteHTTPServiceDomain {
         )
         .subscribe();
         this._subscriptions.push(request);
+    }
+
+    getNotes(page: number , size: number, title: string, user: string): Observable<ApiResponse<PagedResponse<NotaModel>>> {
+        console.log("buscando...")
+        const header = buildHeader();
+
+        var params = new HttpParams();
+
+        params = params.set("page",page.toString());
+        params = params.set("size",size.toString());
+
+        if (title) {
+            params = params.set("title", title);
+        } 
+        
+        if (user) {
+            params = params.set("user", user);
+        }
+        return this._http.get<ApiResponse<PagedResponse<NotaModel>>>( this.API_URL + `/user`,{
+            headers: header,
+            params: params
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
     }
 }

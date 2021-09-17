@@ -40,13 +40,6 @@ export class TaskHTTPServiceDomain {
         let headers: HttpHeaders = new HttpHeaders()
             .set("Authorization", "Bearer " + retrieveStringFromStorage("TokenAuthorization") )
             .set("Access-Control-Allow-Origin", "*");
-        const request = this._http.post<TareaModel>(this.API_URL_Local, body,{headers: headers})
-            .subscribe(
-                data => {
-                    console.log(data);
-                }
-            );
-            this._subscriptions.push(request);
 
             return this._http.post<TareaModel>(this.API_URL_Local, body,{
             headers: headers 
@@ -59,13 +52,6 @@ export class TaskHTTPServiceDomain {
         let headers: HttpHeaders = new HttpHeaders()
             .set("Authorization", "Bearer " + retrieveStringFromStorage("TokenAuthorization") )
             .set("Access-Control-Allow-Origin", "*");
-        const request = this._http.patch(this.API_URL_Local, body,{headers: headers})
-            .subscribe(
-                data => {
-                    console.log(data);
-                }
-            );
-        this._subscriptions.push(request);
 
             return this._http.patch<TareaModel>(this.API_URL_Local, body,{
             headers: headers 
@@ -116,7 +102,6 @@ export class TaskHTTPServiceDomain {
     }
 
     getTasks(page: number , size: number, title: string, user: string): Observable<ApiResponse<PagedResponse<TareaModel>>> {
-        console.log("buscando")
         const header = buildHeader();
 
         var params = new HttpParams();

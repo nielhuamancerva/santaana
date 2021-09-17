@@ -30,9 +30,9 @@ export class TaskComponent implements OnInit {
 
     ngOnInit(): void {
         this.searchForm();
-        this.tasksServiceDomain.fetch();
+        this._tasksService.fetch();
         this.paginator = this._tasksService.paginator;
-        const sb = this.tasksServiceDomain.isLoading$.subscribe(res => this.isLoading = res);
+        const sb = this._tasksService.isLoading$.subscribe(res => this.isLoading = res);
         this.subscriptions.push(sb);
  
     }
@@ -75,27 +75,18 @@ export class TaskComponent implements OnInit {
     }
 
     paginate(paginator: PaginatorState) {
-        
+        this._tasksService.patchState({ paginator });
     }
-
 
     openModal() {
-        const modalRef = this.modalService.open(ModalTaskComponent, { size: 'xl' });
-        modalRef.result.then(() =>
-      //this.tasksService.getAllTasks(),
-    this.tasksServiceDomain.fetch(),
-        () => { }
-      );
-
-      console.log(this.$_task);
+        this.editTask(undefined);
     }
 
-    editTask(task: TareaModel){
+    editTask(task: TareaModel) {
         const modalRef = this.modalService.open(ModalTaskComponent, { size: 'xl' })
         modalRef.componentInstance.passedData = task;
         modalRef.result.then(() =>
-            //this.tasksService.getAllTasks(),
-            this.tasksServiceDomain.fetch(),
+            this._tasksService.fetch(),
             () => { }
         );
     }

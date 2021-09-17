@@ -36,7 +36,7 @@
                     <th>OPCIONES</th>
                 </thead>
                 <tbody> 
-                    <tr *ngFor="let task of tasksServiceDomain.items$ | async">
+                    <tr *ngFor="let task of _tasksService.items$ | async">
                         <td> {{ task.user_asigned.userName }} </td>
                         <td> {{ task.title }} </td>
                         <td> {{ task.expiration }} </td>

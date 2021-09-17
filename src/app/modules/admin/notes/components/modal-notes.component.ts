@@ -44,12 +44,18 @@ export class ModalNoteComponent implements OnInit {
     save(){
         const formValues = this.formGroup.value;
         if (this.passedNote.id!=undefined) {
-            this.noteService.UpdateNote(formValues);
+            return this.noteService.UpdateNote(formValues).subscribe((response) => {
+                this.formGroup.reset(),
+                this.modal.close()
+            });
+            
         } else {
-            this.noteService.CreateNote(formValues);
+            return this.noteService.CreateNote(formValues).subscribe((response) => {
+                this.formGroup.reset(),
+                this.modal.close()
+            });
         }
-        this.formGroup.reset();
-        this.modal.close();
+        
     }
     
     loadForm() {

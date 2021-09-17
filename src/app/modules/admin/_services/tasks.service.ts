@@ -52,5 +52,5 @@ export class TasksService extends TableService<TareaModel> implements OnDestroy{
 
     ngOnDestroy() {
         this.subscriptions.forEach(sb => sb.unsubscribe());
-      }
+    }
 }
