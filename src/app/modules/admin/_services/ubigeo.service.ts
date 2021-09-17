@@ -23,14 +23,13 @@ export class UbigeoService extends TableService<DepartamentModel> implements OnD
         console.log("ejecutando")
         let page = tableState.paginator.page -1;
         let size = tableState.paginator.pageSize;
-        let title = tableState.searchTerm;
-        let user = tableState.searchAux1;
+        let user = tableState.searchTerm;
     
-        return this._ubigeoservicedomain.getUbigeos(page , size, title, user).pipe(
+        return this._ubigeoservicedomain.getUbigeos(page , size, user).pipe(
         map(
         response => {
             let result: TableResponseModel<any> = {
-                items: response.data,
+                items: response.data.content,
                 total: response.data.totalElements,
                 lenght: response.data.content.length
             };

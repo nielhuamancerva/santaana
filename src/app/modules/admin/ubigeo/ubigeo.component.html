@@ -21,10 +21,6 @@
                             <input type="text" class="form-control" name="user" placeholder="Buscar por usuario" value=""
                             formControlName="user" /><small class="form-text text-muted"><b>Buscar</b> por usuario</small>
                         </div>
-                        <div class="col-lg-6">
-                            <input type="text" class="form-control" name="title" placeholder="Buscar por título" value=""
-                            formControlName="title" /><small class="form-text text-muted"><b>Buscar</b> por título</small>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -58,19 +54,19 @@
                         </td>
                         <td>{{  data.userName }}</td>
                         <td> 
-                            <div *ngFor="let depart of data.data">
+                            <div *ngFor="let depart of data.information">
                                 {{  depart.description}}
                             </div>
                         </td>
                         <td> 
-                            <div *ngFor="let depart of data.data">
+                            <div *ngFor="let depart of data.information">
                                 <div *ngFor="let prov of depart.provinces">
                                     {{  prov.description}}
                                 </div>
                             </div>
                         </td>
                         <td> 
-                            <div *ngFor="let depart of data.data">
+                            <div *ngFor="let depart of data.information">
                                 <div *ngFor="let prov of depart.provinces">
                                     <div *ngFor="let distri of prov.districts">
                                         {{  distri.description}}
@@ -118,5 +114,7 @@
                 </tbody>
             </table>
         </div>
+        <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
+            [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
     </div>
   </div>

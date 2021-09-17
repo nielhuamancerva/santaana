@@ -35,20 +35,14 @@ export class UbigeoComponent implements OnInit {
         this.subscriptions.push(sb);
     }
 
+    ngOnDestroy() {
+        this.subscriptions.forEach((sb) => sb.unsubscribe());
+    }
+
     searchForm() {
         this.searchGroup = this.fb.group({
-            title: [''],
             user: [''],
         });
-
-        const searchTitle = this.searchGroup.controls.title.valueChanges
-            .pipe(
-                debounceTime(150),
-                distinctUntilChanged()
-            )
-            .subscribe((val) => this.searchTitle(val));
-
-        this.subscriptions.push(searchTitle);
 
         const searchUser = this.searchGroup.controls.user.valueChanges
             .pipe(
@@ -64,7 +58,7 @@ export class UbigeoComponent implements OnInit {
         this._ubigeoService.patchState({ searchTerm });
     }
 
-    searchTitle(searchAux1: string) {
-        this._ubigeoService.patchState({ searchAux1 });
+    paginate(paginator: PaginatorState) {
+        this._ubigeoService.patchState({ paginator });
     }
 }  

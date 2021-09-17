@@ -93,7 +93,7 @@ export class UbigeoHTTPServiceDomain {
         return throwError(errorMessage);
     }
 
-    getItemById(id): Observable<ApiResponse<UserAsingModel>> {
+    getItemById(id): Observable<ApiResponse<PagedResponse<UserAsingModel<DepartamentModel>>>> {
         this._isLoading$.next(true);
         this._errorMessage.next('');
         const header = buildHeader();
@@ -110,9 +110,9 @@ export class UbigeoHTTPServiceDomain {
         );
     }
 
-    getAllAsignInternalUser(): Observable<ApiResponse<UserAsingModel>> {
+    getAllAsignInternalUser(): Observable<ApiResponse<PagedResponse<UserAsingModel<DepartamentModel>>>> {
         const header = buildHeader();
-        return this._http.get<ApiResponse<UserAsingModel>>(this.API_URL,{
+        return this._http.get<ApiResponse<PagedResponse<UserAsingModel<DepartamentModel>>>>(this.API_URL,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -126,7 +126,7 @@ export class UbigeoHTTPServiceDomain {
         .pipe(
             tap((response) => {
                 console.log(response)
-                this._itemsUbigee$.next(response.data.data);
+                // this._itemsUbigee$.next(response.data);
             }),
             finalize(() => {
                 this._isLoading$.next(false);
@@ -136,7 +136,7 @@ export class UbigeoHTTPServiceDomain {
         this._subscriptions.push(request);
     }
 
-    getUbigeos(page: number , size: number, title: string, user: string): Observable<any> {
+    getUbigeos(page: number , size: number, user: string): Observable<ApiResponse<PagedResponse<UserAsingModel<DepartamentModel>>>> {
         const header = buildHeader();
 
         var params = new HttpParams();
@@ -144,23 +144,21 @@ export class UbigeoHTTPServiceDomain {
         params = params.set("page",page.toString());
         params = params.set("size",size.toString());
         console.log("ejecutando")
-        if (title) {
-            params = params.set("title", title);
-        } 
         
         if (user) {
-            params = params.set("user", user);
+            params = params.set("id", user);
         }
+        console.log(params)
 
 
-        const request = this._http.get<ApiResponse<any>>(this.API_URL,{headers: header})
+        const request = this._http.get<any>(this.API_URL,{headers: header})
             .subscribe(
                 data => {
                     console.log(data);
                 }
             );
 
-        return this._http.get<ApiResponse<any>>( this.API_URL,{
+        return this._http.get<ApiResponse<PagedResponse<UserAsingModel<DepartamentModel>>>>( this.API_URL,{
             headers: header,
             params: params
         })
