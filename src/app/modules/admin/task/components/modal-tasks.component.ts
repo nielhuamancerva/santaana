@@ -22,7 +22,8 @@ const EMPTY_TASK: TareaModel = {
 
 @Component({
     selector: 'app-modal-task',
-    templateUrl: './modal-tasks.component.html'
+    templateUrl: './modal-tasks.component.html',
+    styleUrls: ['./modal-tasks.component.scss'],
 })
 
 export class ModalTaskComponent implements OnInit {

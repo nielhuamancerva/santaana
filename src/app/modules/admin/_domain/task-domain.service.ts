@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, tap, finalize } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
@@ -21,6 +21,7 @@ export class TaskHTTPServiceDomain {
     private _isLoading$ = new BehaviorSubject<boolean>(false);
     private _subscriptions: Subscription[] = [];
     API_URL_Local = `http://localhost:8880/api/tasks`;
+    API_URL = `${environment.apiService}/tasks`;
     header = buildHeader();
 
      // Getters
@@ -32,14 +33,14 @@ export class TaskHTTPServiceDomain {
     }
 
     constructor(
-        private http: HttpClient
+        private _http: HttpClient
     ){ }
 
     CreateTask(body): Observable<TareaModel> {
         let headers: HttpHeaders = new HttpHeaders()
             .set("Authorization", "Bearer " + retrieveStringFromStorage("TokenAuthorization") )
             .set("Access-Control-Allow-Origin", "*");
-        const request = this.http.post<TareaModel>(this.API_URL_Local, body,{headers: headers})
+        const request = this._http.post<TareaModel>(this.API_URL_Local, body,{headers: headers})
             .subscribe(
                 data => {
                     console.log(data);
@@ -47,7 +48,7 @@ export class TaskHTTPServiceDomain {
             );
             this._subscriptions.push(request);
 
-            return this.http.post<TareaModel>(this.API_URL_Local, body,{
+            return this._http.post<TareaModel>(this.API_URL_Local, body,{
             headers: headers 
         })
             .pipe(map(response => response))
@@ -58,7 +59,7 @@ export class TaskHTTPServiceDomain {
         let headers: HttpHeaders = new HttpHeaders()
             .set("Authorization", "Bearer " + retrieveStringFromStorage("TokenAuthorization") )
             .set("Access-Control-Allow-Origin", "*");
-        const request = this.http.patch(this.API_URL_Local, body,{headers: headers})
+        const request = this._http.patch(this.API_URL_Local, body,{headers: headers})
             .subscribe(
                 data => {
                     console.log(data);
@@ -66,7 +67,7 @@ export class TaskHTTPServiceDomain {
             );
         this._subscriptions.push(request);
 
-            return this.http.patch<TareaModel>(this.API_URL_Local, body,{
+            return this._http.patch<TareaModel>(this.API_URL_Local, body,{
             headers: headers 
         })
             .pipe(map(response => response))
@@ -75,7 +76,7 @@ export class TaskHTTPServiceDomain {
 
     getAllTasks(): Observable<ApiResponse<PagedResponse<TareaModel>>> {
         const header = buildHeader();
-        return this.http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL_Local,{
+        return this._http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL_Local,{
             headers: header 
         })
             .pipe(map(response => response))
@@ -110,19 +111,32 @@ export class TaskHTTPServiceDomain {
         })
       )
       .subscribe();
-    this._subscriptions.push(request);
+        this._subscriptions.push(request);
 
+    }
 
-    //   return this.getAllTasks().pipe(
-    //     map(
-    //     response => {this._items$.next(response.data.content);
-    //         console.log(response);
-    //         return response.data;
-    //     }
-    // ),finalize(() => {
-    //     this._isLoading$.next(false);
-    //   }) );    
+    getTasks(page: number , size: number, title: string, user: string): Observable<ApiResponse<PagedResponse<TareaModel>>> {
+        console.log("buscando")
+        const header = buildHeader();
 
+        var params = new HttpParams();
 
-      }
+        params = params.set("page",page.toString());
+        params = params.set("size",size.toString());
+
+        if (title) {
+            params = params.set("title", title);
+        } 
+        
+        if (user) {
+            params = params.set("user", user);
+        }
+
+        return this._http.get<ApiResponse<PagedResponse<TareaModel>>>( this.API_URL,{
+            headers: header,
+            params: params
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
 }
