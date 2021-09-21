@@ -101,7 +101,7 @@ export class TaskHTTPServiceDomain {
 
     }
 
-    getTasks(page: number , size: number, title: string, user: string): Observable<ApiResponse<PagedResponse<TareaModel>>> {
+    getTasks(page: number , size: number, title: string, username: string, dateIn: string, dateFn: string): Observable<ApiResponse<PagedResponse<TareaModel>>> {
         const header = buildHeader();
 
         var params = new HttpParams();
@@ -113,11 +113,19 @@ export class TaskHTTPServiceDomain {
             params = params.set("title", title);
         } 
         
-        if (user) {
-            params = params.set("user", user);
+        if (username) {
+            params = params.set("username", username);
         }
 
-        return this._http.get<ApiResponse<PagedResponse<TareaModel>>>( this.API_URL,{
+        if (dateIn) {
+            params = params.set("dateIn", dateIn);
+        }
+
+        if (dateFn) {
+            params = params.set("dateFn", dateFn);
+        }
+
+        return this._http.get<ApiResponse<PagedResponse<TareaModel>>>(this.API_URL,{
             headers: header,
             params: params
         })

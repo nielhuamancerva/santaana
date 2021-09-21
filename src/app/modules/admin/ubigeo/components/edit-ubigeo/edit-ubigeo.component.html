@@ -3,31 +3,30 @@
         <div class="card-title">
             <h3 class="card-label">
             <ng-container>
-                CREAR RELACION DE USUARIOS ASIGNACION
+                EDITAR RELACION DE USUARIOS ASIGNACION
             </ng-container>
             </h3>
         </div>
         <div class="card-toolbar">
             <a type="button" class="btn btn-light" routerLink="/admin/ubigeo">
-              <i class="fa fa-arrow-left"></i>Regresar
+              <i class="fa fa-arrow-left"></i>Back
             </a>
-            <button class="btn btn-secondary ml-2" (click)="uploadFile()">
-                <i class="fa fa-file"></i>Subir Archivo
-              </button>
         </div>
     </div>
     <div class="card-body">
         <ng-container >
             <div class="mt-5">
-                <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
+                <form action="#" class="form form-label-right" (ngSubmit)="save()">
                     <div class="form-group row">
                         <div class="col-lg-4">
                             <label>DNI</label>
                             <input 
                                 type="text"
                                 class="form-control form-control-lg form-control-solid"
+                                autocomplete="off"
                                 placeholder="DNI"
-                                formControlName="dni"
+                                name="dni"
+                                [ngModel]="ubigeo.documentNumber"
                                 (ngModelChange)="mostrar($event)"
                             />
                             <div class="results" *ngIf="isLoadingSearchDni">
@@ -46,7 +45,8 @@
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Nombre completo"
-                                formControlName="fullName"
+                                [value]="(ubigeo.name? ubigeo.name: '') +  (ubigeo.secondName? ubigeo.secondName: '') +  (ubigeo.lastName? ubigeo.lastName: '') +  (ubigeo.secondLastName? ubigeo.secondLastName : '')"
+                                name="fullname"
                             />
                         </div>
                         <div class="col-lg-4">
@@ -55,6 +55,8 @@
                                 type="text" 
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Correo"
+                                [ngModel]="ubigeo.email"
+                                name="email"
                             />
                         </div>
                     </div>
@@ -64,18 +66,21 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
-                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento>
+                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento [(ngModel)]="selectedDepartaments" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
                                         <mat-select-trigger>
                                             <mat-chip-list>
-                                                <mat-label *ngFor="let departamento of arrayGeneral">
-                                                    <mat-chip [removable]="removable" (removed)="removeDepartament(departamento.code)">
-                                                        {{ departamento.description }}
-                                                        <mat-icon matChipRemove>cancel</mat-icon>
-                                                    </mat-chip>
-                                                </mat-label>   
+                                                <mat-chip 
+                                                    [removable]="removable" 
+                                                    (removed)="removeDepartament(departamento.code)" 
+                                                    [selectable]="true"
+                                                    *ngFor="let departamento of arrayGeneral"
+                                                >
+                                                    {{ departamento.description }}
+                                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                                </mat-chip>
                                             </mat-chip-list>
-                                          </mat-select-trigger>
-                                        <mat-option *ngFor="let departament of $_departament | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
+                                        </mat-select-trigger>
+                                        <mat-option *ngFor="let departament of ApiDepartamentos | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -85,20 +90,21 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
-                                    <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia>
-                                        <mat-select-trigger>
+                                    <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia [(ngModel)]="selectedProvinces" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
+                                        <mat-select-trigger *ngFor="let departamento of arrayGeneral">
                                             <mat-chip-list>
-                                                <mat-label *ngFor="let departamento of arrayGeneral">
-                                                    <mat-label *ngFor="let provincia of departamento.provinces">
-                                                        <mat-chip [removable]="removable" (removed)="removeProvince(provincia.code)">
-                                                            {{ provincia.description }}
-                                                            <mat-icon matChipRemove>cancel</mat-icon>
-                                                        </mat-chip>
-                                                    </mat-label>
-                                                </mat-label>
+                                                <mat-chip 
+                                                    [removable]="removable" 
+                                                    (removed)="removeProvince(provincia.code)" 
+                                                    [selectable]="true"
+                                                    *ngFor="let provincia of departamento.provinces"
+                                                >
+                                                    {{ provincia.description }}
+                                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                                </mat-chip>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-optgroup *ngFor="let group of departamentos" [label]="group.description">
+                                        <mat-optgroup *ngFor="let group of ApiDepartamentos | async" [label]="group.description" [disabled]="group.disabled" [hidden]="!group.provinces">
                                             <mat-option *ngFor="let province of group.provinces" [id]="province.id" [value]="province.code">
                                             {{province.description}}
                                             </mat-option>
@@ -112,26 +118,30 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Distritos</mat-label>
-                                    <mat-select multiple (selectionChange)="checkDistrict($event)" #MatDistrito>
-                                        <mat-select-trigger>
-                                            <mat-chip-list>
-                                                <mat-label *ngFor="let departamento of arrayGeneral">
-                                                    <mat-label *ngFor="let provincia of departamento.provinces">
-                                                        <mat-label *ngFor="let distrito of provincia.districts">
-                                                            <mat-chip [removable]="removable" (removed)="removeDistrict(distrito.code)">
-                                                                {{ distrito.description }}
-                                                                <mat-icon matChipRemove>cancel</mat-icon>
-                                                            </mat-chip>
-                                                        </mat-label>
-                                                    </mat-label>
-                                                </mat-label>
+                                    <mat-select multiple 
+                                                (selectionChange)="checkDistrict($event)"
+                                                #MatDistrito 
+                                                [(ngModel)]="selectedDistricts"
+                                                [compareWith]="comparer"
+                                                [ngModelOptions]="{standalone: true}"
+                                    >
+                                        <mat-select-trigger *ngFor="let departamento of arrayGeneral">
+                                            <mat-chip-list *ngFor="let provincia of departamento.provinces">
+                                                <mat-chip [removable]="removable" (removed)="removeDistrict(distrito.code)" *ngFor="let distrito of provincia.districts">
+                                                    {{ distrito.description }}
+                                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                                </mat-chip>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-optgroup *ngFor="let group of provincias" [label]="group.description" [disabled]="group.disabled">
+                                        <mat-label *ngFor="let group1 of ApiDepartamentos | async">
+                                        <mat-optgroup *ngFor="let group of group1.provinces" [label]="group.description" [disabled]="group.disabled" [hidden]="!group.districts">
+                                            
                                             <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
                                             {{district.description}}
                                             </mat-option>
+                                        
                                         </mat-optgroup>
+                                    </mat-label>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -169,5 +179,6 @@
                 </form>
             </div>
         </ng-container>
+        <p>{{ arrayGeneral | json}}</p>
     </div>
 </div>

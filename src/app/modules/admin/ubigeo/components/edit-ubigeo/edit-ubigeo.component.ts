@@ -1,30 +1,22 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
-import { catchError, finalize, map, switchMap } from 'rxjs/operators';
-import { of, interval, Subject, Subscription, Observable } from 'rxjs';
-import { MatOption } from '@angular/material/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { of, interval, Subject, Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { DepartamentModel } from '../../../_models/Departament.model';
 import { ProvinceModel } from '../../../_models/Province.model';
 import { DistrictModel } from '../../../_models/District.model';
 import { CcppModel } from '../../../_models/Ccpp.model';
 import { UserAsingModel } from '../../../_models/UserAsign.model';
 import { DepartamentRepositoryService } from '../../../_services/departament-repository.service';
-import { UsersService } from '../../../_services/users.service';
-import { ProvinceDomainService } from '../../../_domain/province-domain.service';
-import { DepartamentDomainService } from '../../../_domain/departament-domain.service';
-import { DistrictDomainService } from '../../../_domain/district-domain.service';
-import { CcppDomainService } from '../../../_domain/ccpp-domain.service';
 import { ProvinceRepositoryService } from '../../../_services/province-repository.service';
 import { DistrictRepositoryService } from '../../../_services/distric-repository.service';
-import { CcppRepositoryService } from '../../../_services/ccpp-repository.service';
 import { UserDomainService } from '../../../_domain/user-domain.service';
-import { ModalUploadFileComponent } from '../modal-upload-file/modal-upload-file.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatOption } from '@angular/material/core';
+import { UsersService } from '../../../_services/users.service';
+import { DepartamentDomainService } from '../../../_domain/departament-domain.service';
 import { UbigeoHTTPServiceDomain } from '../../../_domain/ubigeo-domain.service';
-
 const EMPTY_ASIGN_INTERNAL_USER: UserAsingModel<DepartamentModel> ={
     id: undefined,
     roleCode: '',
@@ -56,13 +48,13 @@ const EMPTY_ASIGN_INTERNAL_USER: UserAsingModel<DepartamentModel> ={
 };
 
 @Component({
-    selector: 'app-create-ubigeo',
-    templateUrl: './create-ubigeo.component.html',
-    styleUrls: ['./create-ubigeo.component.scss'],
+    selector: 'app-ubigeo',
+    templateUrl: './edit-ubigeo.component.html',
+    styleUrls: ['./edit-ubigeo.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class CreateUbigeoComponent implements OnInit, OnDestroy{
+export class EditUbigeoComponent implements OnInit, OnDestroy{
     @ViewChild('MatDepartamento') MatDepartamento: MatSelect;
     @ViewChild('MatProvincia') MatProvincia: MatSelect;
     @ViewChild('MatDistrito') MatDistrito: MatSelect;
@@ -72,11 +64,6 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
     id: string;
     private subscriptions: Subscription[] = [];
     public SearchDni: number;
-    $_departament: Observable<DepartamentModel[]>;
-    $_getbydepartament :Observable<DepartamentModel[]>
-    $_province: ProvinceModel[];
-    $_district: DistrictModel[];
-    $_getbyprovince :Observable<ProvinceModel[]>
     $_getbydistrict :Observable<DistrictModel[]>
     $_Ccpp: Observable<CcppModel[]>;
     removable: boolean = true;
@@ -84,70 +71,105 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
     public isLoadingSearchDni=false;
     previous: DepartamentModel;
     ubigeo: UserAsingModel<DepartamentModel>;
-
+    selectedDepartaments: DepartamentModel[]=[];
+    selectedProvinces : ProvinceModel[]=[];
+    selectedDistricts : DistrictModel[]=[];
+    public appleStreamMapped:Observable<any[]>;
+    public _UbigeoGeneral$ = new BehaviorSubject<DepartamentModel[]>([]);
+    public _visor$ = new BehaviorSubject<DepartamentModel[]>([]);
+    public _visorproviActual$= new BehaviorSubject<ProvinceModel[]>([]);
     constructor(
         private departamentService: DepartamentRepositoryService,
         private userService: UsersService,
-        public dialog: MatDialog,
-        private fb: FormBuilder,
-        private provinceDomainService: ProvinceDomainService,
         public departamentDomainService: DepartamentDomainService,
-        private districtDomainService: DistrictDomainService,
-        private ccpDomainService: CcppDomainService,
         private provinceService: ProvinceRepositoryService,
         private districtService: DistrictRepositoryService,
-        private ccppService: CcppRepositoryService,
-        private asignUserService:UserDomainService,
         private route: ActivatedRoute,
-        private router: Router,
-        private modalService: NgbModal,
         private ubigeoService: UbigeoHTTPServiceDomain
-    ) { }
-
+    ) {}
 
     ngOnInit(): void {
-        this.loadDepartament();
-        this.departamentDomainService.getAll();
-        this.provinceDomainService.getAll();
-        this.districtDomainService.getAll();
-        this.ccpDomainService.getAll();
-        this.loadForm();
+        this.loadInternalUser();
+        this.loadApiDepartamentos();
+        this.ubigeo = EMPTY_ASIGN_INTERNAL_USER;
     }
 
     ngOnDestroy() {
     }
 
-
-    loadForm() {
-        this.formGroup = this.fb.group({
-            dni: [''],
-            fullName: [''],
-            email: ['', Validators.compose([Validators.required])]
-        });
-        this.formDniChange()
+    comparer(o1: any, o2: any): boolean {
+        return o1 && o2 ? o1 == o2.code : o2 === o2;
     }
 
-    formDniChange(){
-        this.formGroup.get("dni").valueChanges.subscribe(selectedValue => {
-            this.isLoadingSearchDni=true;
-            if(selectedValue == ''){
-                this.isLoadingSearchDni=false;
-            }else{
-                this.userService.getByDocumentUser(selectedValue).pipe(
-                    catchError((errorMessage) => {
-                        return of(errorMessage);
-                    })
-                ).subscribe((response) => {
-                        this.SearchDni = response.content;
-                });
+    loadInternalUser() {
+        const sb = this.route.paramMap.pipe(
+            switchMap(params => {
+                this.id = params.get('id');
+                if (this.id) {
+                    return this.ubigeoService.getItemById(this.id);
+                }
+                this.ubigeo = EMPTY_ASIGN_INTERNAL_USER;
+                return of(EMPTY_ASIGN_INTERNAL_USER);
+            }),
+            catchError((errorMessage) => {
+                this.errorMessage = errorMessage;
+                return of(undefined);
+            }),
+        ).subscribe((res) => {
+            if(res.data.id){
+                console.log(res)
+                this.arrayGeneral = res.data.information;
+                this.arrMaster2.asObservable();
+                this.arrMaster2.next(this.arrayGeneral);
+                
+                this.ubigeo = res.data;
+
+                for(let dep of res.data.information){
+                    this.selectedDepartaments.push(dep);
+                    this.searchDepartament(dep.code);
+                    this.departActual.push(dep.code);
+
+                    for(let prov of dep.provinces){
+                        this.selectedProvinces.push(prov)
+                        this.searchProvince(prov.code);
+                        this.proviActual.push(prov.code);
+
+                        for(let distri of prov.districts){
+                            this.selectedDistricts.push(distri)
+                            this.searchDistrict(distri.code);
+                            this.distriActual.push(prov.code);
+                        }
+                    }
+                }
+                
+                this.isLoading=true;
             }
-        })
+            this.previous = Object.assign({}, res);
+            
+        });
+        this.subscriptions.push(sb);
+    }
+
+    mostrar(InputSearchDni){
+        this.isLoadingSearchDni=true;
+        if(InputSearchDni == ''){
+            this.isLoadingSearchDni=false;
+        }else{
+            this.userService.getByDocumentUser(InputSearchDni).pipe(
+                debounceTime(150),
+                distinctUntilChanged(),
+                catchError((errorMessage) => {
+                    return of(errorMessage);
+                })
+            ).subscribe((response) => {
+                    this.SearchDni = response.content;
+            });
+        }
     }
 
     save(){
-        console.log(this._user_dni);
-        console.log(this.arrayGeneral);
-        this.ubigeoService.postAsingUser(this._user_dni,this.arrayGeneral);
+        console.log(this._user_dni)
+        this.ubigeoService.postEditAsingUser(this.ubigeo.id,this.arrayGeneral);
     }
 
     isDepartmentValid(controlName: string): boolean {
@@ -194,15 +216,12 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
         return result;
     }
 
-    loadDepartament(){
-        this.isLoading=true;
-        
-        this.$_departament=this.departamentService.getAllDepartament().pipe(
-            map((_beneficiary)=>_beneficiary.content,
-            finalize(()=>this.isLoading=false)
-            )
-        )
-
+    public ApiDepartamentos= new BehaviorSubject<DepartamentModel[]>([]);
+    public arrMaster2 = new BehaviorSubject<DepartamentModel[]>([]);
+    loadApiDepartamentos(){
+        this.ApiDepartamentos.asObservable();
+        this.departamentDomainService.getAll2().subscribe(respo => this.ApiDepartamentos.next(respo.content));
+        this.departamentDomainService.getAll2().subscribe(respo => this.arrMaster = respo.content);
     }
 
     //es el actual selected del <select> de (departament.code)
@@ -214,13 +233,16 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
     provincias: ProvinceModel[] = [];
     distritos: DistrictModel[] = [];
 
-    arrayGeneral: DepartamentModel[] = [];
+    arrMaster: DepartamentModel[] = [];
 
+    arrayGeneral: DepartamentModel[];
+ 
     checkDepartament(event){
-        var departamentosEnviados = event.value;
-        var CodeDepartament: any;
-        var existencia: boolean;
+        let departamentosEnviados = event.value;
+        let CodeDepartament: any;
+        let existencia: boolean;
         if( event.source.selected.length > this.departActual.length){
+            console.log("soy mayor que");
             for (let item of departamentosEnviados) {
                 existencia = this.departActual.includes(item);
                 if (!existencia) {
@@ -230,6 +252,7 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
             this.departActual = departamentosEnviados;
             this.searchDepartament(CodeDepartament);
         }else if( event.source.selected.length < this.departActual.length){
+            console.log("soy menor que");
             for (let item of this.departActual) {
                 existencia = departamentosEnviados.includes(item);
                 if (!existencia) {
@@ -242,47 +265,50 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
     }
 
     searchDepartament(CodeDepartament){
-        const sbDepartamentby = this.departamentService.getByDepartament2(CodeDepartament).pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
+        const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament).pipe(
+            switchMap(departamento => {
+                
+                if(this.arrayGeneral.findIndex(x => x.code === CodeDepartament) === -1){
+                    this.arrayGeneral.push({
+                        id: departamento.id, 
+                        code: departamento.code, 
+                        description: departamento.description, 
+                        provinces: []
+                    });
+                };
+                if(this.departamentos.findIndex(x => x.code === CodeDepartament) === -1){
+
+                    this.departamentos.push({
+                        id: departamento.id, 
+                        code: departamento.code, 
+                        description: departamento.description, 
+                        provinces: []
+                    });
+
+                };
+                return this.provinceService.getAllProvince(CodeDepartament+0);
             })
-        ).subscribe((response) => {
-            this.$_getbydepartament = response.content;
-            this.getProvincesByDepartament(CodeDepartament);
+        ).subscribe((allProvince) => {
+            
+            let indexDep = this.departamentos.findIndex(x => x.code === CodeDepartament);
+            this.departamentos[indexDep].provinces = allProvince.content;
+            this._visor$.asObservable();
+            this._visor$.next(this.departamentos);
+
+            let indexDep2 = this.arrMaster.findIndex(x => x.code === CodeDepartament);
+            this.arrMaster[indexDep2].provinces = allProvince.content;
+            this.ApiDepartamentos.next(this.arrMaster)
+
+            this.arrMaster2.next(this.arrayGeneral)
         });
         this.subscriptions.push(sbDepartamentby);
-    }
-
-    getProvincesByDepartament(CodeDepartament){
-        const sbProvinceby = this.provinceService.getAllProvince(CodeDepartament+0).pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((_pronvince) => {
-            this.$_province = _pronvince.content;
-            var departamento: DepartamentModel = {
-                id: this.$_getbydepartament[0].id,
-                code: this.$_getbydepartament[0].code,
-                description: this.$_getbydepartament[0].description,
-                provinces: this.$_province
-            }
-            var departamento1: DepartamentModel = {
-                id: this.$_getbydepartament[0].id,
-                code: this.$_getbydepartament[0].code,
-                description: this.$_getbydepartament[0].description,
-                provinces: []
-            }
-            this.departamentos.push(departamento);
-            this.arrayGeneral.push(departamento1);
-            console.log(this.arrayGeneral);
-        });
-        this.subscriptions.push(sbProvinceby);
+        
     }
 
     checkProvince(event){
-        var provinciasEnviados = event.value;
-        var CodeProvince: any;
-        var existencia: boolean;
+        let provinciasEnviados = event.value;
+        let CodeProvince: any;
+        let existencia: boolean;
         if( event.source.selected.length > this.proviActual.length){
             for (let item of provinciasEnviados) {
                 existencia = this.proviActual.includes(item);
@@ -306,55 +332,59 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
 
     searchProvince(CodeProvince){
         const sbProvinceby = this.provinceService.getByProvince(CodeProvince).pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
+            switchMap(province => {
+                const newProv: ProvinceModel = {
+                    id: province.content[0].id,
+                    code: province.content[0].code,
+                    description: province.content[0].description,
+                    districts: []
+                }
+                const newProv1: ProvinceModel = {
+                    id: province.content[0].id,
+                    code: province.content[0].code,
+                    description: province.content[0].description,
+                    districts: []
+                }
+                let codeDep = CodeProvince.substring(0,2);  
+                console.log(this.arrayGeneral);
+                
+                var indexDep = this.arrayGeneral.findIndex(x => x.code === codeDep);
+
+                console.log(indexDep);
+        
+                if(this.arrayGeneral[indexDep].provinces.findIndex(x => x.code === CodeProvince) === -1){
+                    this.arrayGeneral[indexDep].provinces.push(newProv1);
+                }
+                if(this.provincias.findIndex(x => x.code == CodeProvince) === -1){
+
+                    this.provincias.push(newProv);
+                };
+                return this.districtService.getAllDistrict(CodeProvince+0);
             })
-        ).subscribe((response) => {
-            this.$_getbyprovince = response.content;
-            this.getDistrictsByProvince(CodeProvince);
+        ).subscribe((allDistricts) => {
+            
+            let indexProv = this.provincias.findIndex(x => x.code === CodeProvince);
+            this.provincias[indexProv].districts = allDistricts.content;
+            
+            this._visorproviActual$.asObservable();
+            this._visorproviActual$.next(this.provincias);
+
+
+            console.log(this.arrMaster)
+            let indexDep2 = this.arrMaster.findIndex(x => x.code === CodeProvince.substring(0,2));
+            let indexDep3 = this.arrMaster[indexDep2].provinces.findIndex(x => x.code === CodeProvince);
+            this.arrMaster[indexDep2].provinces[indexDep3].districts = allDistricts.content;
+            this.ApiDepartamentos.next(this.arrMaster)
+            this.arrMaster2.next(this.arrayGeneral)
         });
         this.subscriptions.push(sbProvinceby);
-    }
-
-    getDistrictsByProvince(codeprovince){
-        const sbDistrictby = this.districtService.getAllDistrict(codeprovince+0).pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((response) => {
-            this.$_district = response.content;
-            var province: ProvinceModel = {
-                id: this.$_getbyprovince[0].id,
-                code: this.$_getbyprovince[0].code,
-                description: this.$_getbyprovince[0].description,
-                districts: this.$_district
-            }
-            var province1: ProvinceModel = {
-                id: this.$_getbyprovince[0].id,
-                code: this.$_getbyprovince[0].code,
-                description: this.$_getbyprovince[0].description,
-                districts: []
-            }
-            var codeDep = province.code.substring(0,2);
-            var posicionInser: number;
-           
-            for (let index = 0; index < this.arrayGeneral.length; index++){
-                if(this.arrayGeneral[index].code == codeDep){
-                    posicionInser = index;
-                }
-            }
-            this.arrayGeneral[posicionInser].provinces.push(province1);
-            
-            this.provincias.push(province);
-            console.log(this.arrayGeneral);
-        });
-        this.subscriptions.push(sbDistrictby);
+        
     }
 
     checkDistrict(event){
-        var distritosEnviados = event.value;
-        var CodeDistrict: any;
-        var existencia: boolean;
+        let distritosEnviados = event.value;
+        let CodeDistrict: any;
+        let existencia: boolean;
         if( event.source.selected.length > this.distriActual.length){
             for (let item of distritosEnviados) {
                 existencia = this.distriActual.includes(item);
@@ -382,51 +412,23 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
             catchError((errorMessage) => {
             return of(errorMessage);
             })
-        ).subscribe((response) => {
-            this.$_getbydistrict = response.content;
-            this.getCcppByDistrict();
+        ).subscribe((district) => {
+            this.$_getbydistrict = district.content;
+            let codeDep = CodeDistrict.substring(0,2);
+            let codeProv = CodeDistrict.substring(0,4);
+            var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
+            var indexProv = this.arrayGeneral[indexDep].provinces.findIndex(x => x.code == codeProv);
+            if(this.arrayGeneral[indexDep].provinces[indexProv].districts.findIndex(x => x.code == CodeDistrict) === -1){
+                this.arrayGeneral[indexDep].provinces[indexProv].districts.push(district.content[0]);
+            }
+            if(this.distritos.findIndex(x => x.code == CodeDistrict) === -1){
+                this.distritos.push(district.content[0]);
+            };
+
+            
         });
         this.subscriptions.push(sbDistrictby);
-    }
-
-    getCcppByDistrict(){
-        const sbDistrictby = this.ccppService.getAllCcpp().pipe(
-            catchError((errorMessage) => {
-            return of(errorMessage);
-            })
-        ).subscribe((response) => {
-            this.$_Ccpp = response.content;
-            var district: ProvinceModel = {
-                id: this.$_getbydistrict[0].id,
-                code: this.$_getbydistrict[0].code,
-                description: this.$_getbydistrict[0].description
-            }
-            var district1: ProvinceModel = {
-                id: this.$_getbydistrict[0].id,
-                code: this.$_getbydistrict[0].code,
-                description: this.$_getbydistrict[0].description
-            }
-            var codeDep = district.code.substring(0,2);
-            var codeProv = district.code.substring(0,4);
-            var posicionDep: number;
-            var posicionProv: number;
-           
-            for (let index = 0; index < this.arrayGeneral.length; index++){
-                if(this.arrayGeneral[index].code == codeDep){
-                    posicionDep = index;
-                }
-            }
-            for(let index = 0; index < this.arrayGeneral[posicionDep].provinces.length; index++){
-                if(this.arrayGeneral[posicionDep].provinces[index].code == codeProv){
-                    posicionProv = index;
-                }
-            }
-            this.arrayGeneral[posicionDep].provinces[posicionProv].districts.push(district1);
-
-            this.distritos.push(district);
-            console.log(this.arrayGeneral);
-        });
-        this.subscriptions.push(sbDistrictby);
+        this.arrMaster2.next(this.arrayGeneral)
     }
 
     removeDepartament(Departament) {
@@ -439,8 +441,8 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
     }
 
     removeProvince(Province) {
-        var codeDep = Province.substring(0,2);
-        var posicionInser: number;
+        let codeDep = Province.substring(0,2);
+        let posicionInser: number;
         
         for (let index = 0; index < this.arrayGeneral.length; index++){
             if(this.arrayGeneral[index].code == codeDep){
@@ -456,10 +458,10 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
     }
 
     removeDistrict(District) {
-        var codeDep = District.substring(0,2);
-        var codeProv = District.substring(0,4);
-        var indexDep: number;
-        var indexProv: number;
+        let codeDep = District.substring(0,2);
+        let codeProv = District.substring(0,4);
+        let indexDep: number;
+        let indexProv: number;
         
         for (let index = 0; index < this.arrayGeneral.length; index++){
             if(this.arrayGeneral[index].code == codeDep){
@@ -476,34 +478,13 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
         this.MatDistrito.options.forEach((data: MatOption) => {if(data.value == District){data.deselect()}});
     }
 
-    mostrar(InputSearchDni){
-        this.isLoadingSearchDni=true;
-        if(InputSearchDni == ''){
-            this.isLoadingSearchDni=false;
-        }else{
-            this.userService.getByDocumentUser(InputSearchDni).pipe(
-         
-                catchError((errorMessage) => {
-                    return of(errorMessage);
-                })
-            ).subscribe((response) => {
-                    this.SearchDni = response.content;
-            });
-        }
-    }
-
     selectBeneficiary(item){
-
         this._user_dni=item.id;
         this.formGroup.patchValue({
-        fullName: item.name+" "+item.lastName,
+        fullName: item.name+item.secondName+item.lastName+item.secondLastName,
         dni: item.documentNumber,
            
         });
         this.isLoadingSearchDni=false;
-    }
-
-    uploadFile(){
-        const modalRef = this.modalService.open(ModalUploadFileComponent, { size: 'lg' });
     }
 }

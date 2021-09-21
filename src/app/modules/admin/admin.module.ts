@@ -47,7 +47,7 @@ import { UbigeoComponent } from "./ubigeo/ubigeo.component";
 import { CreateUbigeoComponent } from "./ubigeo/components/create-ubigeo/create-ubigeo.component";
 import { MatSelectModule } from "@angular/material/select";
 import { ModalUploadFileComponent } from "./ubigeo/components/modal-upload-file/modal-upload-file.component";
-
+import { EditUbigeoComponent } from "./ubigeo/components/edit-ubigeo/edit-ubigeo.component";
 @NgModule({
     declarations: [
         AdminComponent,
@@ -72,7 +72,8 @@ import { ModalUploadFileComponent } from "./ubigeo/components/modal-upload-file/
         ModalTaskComponent,
         UbigeoComponent,
         CreateUbigeoComponent,
-        ModalUploadFileComponent
+        ModalUploadFileComponent,
+        EditUbigeoComponent
     ],
     imports: [
         CommonModule,

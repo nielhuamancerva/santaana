@@ -14,7 +14,7 @@ import { TaskComponent } from "./task/task.component";
 import { NotesComponent } from './notes/notes.component';
 import { UbigeoComponent } from "./ubigeo/ubigeo.component";
 import { CreateUbigeoComponent } from "./ubigeo/components/create-ubigeo/create-ubigeo.component";
-
+import { EditUbigeoComponent } from "./ubigeo/components/edit-ubigeo/edit-ubigeo.component";
 const routes: Routes = [
     {
         path: '',
@@ -71,6 +71,9 @@ const routes: Routes = [
             {
                 path: 'ubigeo/add',
                 component: CreateUbigeoComponent
+            },{
+                path: 'ubigeo/edit/:id',
+                component: EditUbigeoComponent,
             },
             { path: '', redirectTo: 'users', pathMatch: 'full' },
             { path: '**', redirectTo: 'users', pathMatch: 'full' },

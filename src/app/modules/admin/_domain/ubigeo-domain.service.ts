@@ -146,7 +146,7 @@ export class UbigeoHTTPServiceDomain {
         console.log("ejecutando")
         
         if (user) {
-            params = params.set("id", user);
+            params = params.set("username", user);
         }
         console.log(params)
 

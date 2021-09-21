@@ -5,6 +5,7 @@ import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { PaginatorState } from 'src/app/_metronic/shared/crud-table';
 import { TaskHTTPServiceDomain } from '../_domain/task-domain.service';
+import { DateModel } from '../_models/date.model';
 import { TareaModel } from '../_models/Taks.model';
 import { TasksService } from '../_services/tasks.service';
 import { ModalTaskComponent } from './components/modal-tasks.component';
@@ -16,6 +17,8 @@ import { ModalTaskComponent } from './components/modal-tasks.component';
 export class TaskComponent implements OnInit {
 
     isLoading:boolean;
+    dateIni: DateModel;
+    dateFin: DateModel;
     $_task: Observable<TareaModel[]>;
     searchGroup: FormGroup;
     paginator: PaginatorState;
@@ -24,8 +27,6 @@ export class TaskComponent implements OnInit {
         private modalService: NgbModal,
         private fb: FormBuilder,
         public _tasksService: TasksService,
-        public tasksServiceDomain: TaskHTTPServiceDomain
-        
     ) { }
 
     ngOnInit(): void {
@@ -45,7 +46,20 @@ export class TaskComponent implements OnInit {
         this.searchGroup = this.fb.group({
             title: [''],
             user: [''],
+            dateIn: [''],
+            dateFn: [''],
         });
+
+        const searchDateIn = this.searchGroup.controls.dateIn.valueChanges
+        .subscribe(() => this.searchDate());
+
+        this.subscriptions.push(searchDateIn);
+
+
+        const searchDateFn = this.searchGroup.controls.dateFn.valueChanges
+        .subscribe(() => this.searchDate());
+
+        this.subscriptions.push(searchDateFn);
 
         const searchTitle = this.searchGroup.controls.title.valueChanges
             .pipe(
@@ -64,6 +78,18 @@ export class TaskComponent implements OnInit {
             .subscribe((val) => this.searchUser(val));
             
         this.subscriptions.push(searchUser);
+    }
+
+    searchDate() {
+        this.dateIni = this.searchGroup.get('dateIn').value;
+        this.dateFin = this.searchGroup.get('dateFn').value;
+
+        if (this.dateIni && this.dateFin) {
+            let searchAux2 = (this.dateIni.day.toString().length > 1 ? this.dateIni.day : ("0" + this.dateIni.day))+"/"+(this.dateIni.month.toString().length > 1 ? this.dateIni.month : ("0" + this.dateIni.month))+"/"+this.dateIni.year;
+            let searchAux3 = (this.dateFin.day.toString().length > 1 ? this.dateFin.day : ("0" + this.dateFin.day))+"/"+(this.dateFin.month.toString().length > 1 ? this.dateFin.month : ("0" + this.dateFin.month))+"/"+this.dateFin.year;
+            this._tasksService.patchState({ searchAux2, searchAux3 });
+        }
+
     }
 
     searchUser(searchTerm: string) {

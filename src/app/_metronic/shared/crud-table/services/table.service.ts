@@ -184,6 +184,7 @@ export abstract class TableService<T> {
       .pipe(
         tap((res: TableResponseModel<T>) => {
           this._items$.next(res.items);
+          console.log(res);
           this.patchStateWithoutFetch({
             paginator: this._tableState$.value.paginator.recalculatePaginator(
               res.total

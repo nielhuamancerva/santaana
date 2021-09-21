@@ -23,10 +23,12 @@ export class TasksService extends TableService<TareaModel> implements OnDestroy{
     find(tableState: ITableState): Observable<TableResponseModel<TareaModel>> {
         let page = tableState.paginator.page -1;
         let size = tableState.paginator.pageSize;
-        let title = tableState.searchTerm;
-        let user = tableState.searchAux1;
+        let title = tableState.searchAux1;
+        let user = tableState.searchTerm;
+        let dateIn = tableState.searchAux2;
+        let dateFn = tableState.searchAux3;
     
-        return this._taskservicedomain.getTasks(page , size, title, user).pipe(
+        return this._taskservicedomain.getTasks(page , size, title, user,dateIn, dateFn).pipe(
         map(
         response => {
             let result: TableResponseModel<TareaModel> = {

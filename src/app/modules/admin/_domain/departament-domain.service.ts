@@ -59,6 +59,17 @@ export class DepartamentDomainService {
         })
     }
 
+    getAll2(){
+        return this.http.get<ApiRespuesta>(this.API_URL,{
+            headers: this.header
+        }).pipe(map(
+            response => {
+                return response.data;
+            }
+        ));
+    }
+
+
     getById(code){
         return this.http.get<ApiRespuesta>(this.API_URL + `?code=${code}`,{
             headers: this.header
