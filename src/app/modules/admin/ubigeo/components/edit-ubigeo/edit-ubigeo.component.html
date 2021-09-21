@@ -73,7 +73,7 @@
                                                     [removable]="removable" 
                                                     (removed)="removeDepartament(departamento.code)" 
                                                     [selectable]="true"
-                                                    *ngFor="let departamento of arrayGeneral"
+                                                    *ngFor="let departamento of arrMaster2 | async"
                                                 >
                                                     {{ departamento.description }}
                                                     <mat-icon matChipRemove>cancel</mat-icon>
@@ -91,7 +91,7 @@
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
                                     <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia [(ngModel)]="selectedProvinces" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
-                                        <mat-select-trigger *ngFor="let departamento of arrayGeneral">
+                                        <mat-select-trigger *ngFor="let departamento of arrMaster2 | async">
                                             <mat-chip-list>
                                                 <mat-chip 
                                                     [removable]="removable" 
@@ -125,7 +125,7 @@
                                                 [compareWith]="comparer"
                                                 [ngModelOptions]="{standalone: true}"
                                     >
-                                        <mat-select-trigger *ngFor="let departamento of arrayGeneral">
+                                        <mat-select-trigger *ngFor="let departamento of arrMaster2 | async">
                                             <mat-chip-list *ngFor="let provincia of departamento.provinces">
                                                 <mat-chip [removable]="removable" (removed)="removeDistrict(distrito.code)" *ngFor="let distrito of provincia.districts">
                                                     {{ distrito.description }}

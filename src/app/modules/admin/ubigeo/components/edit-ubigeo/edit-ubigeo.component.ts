@@ -78,6 +78,9 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     public _UbigeoGeneral$ = new BehaviorSubject<DepartamentModel[]>([]);
     public _visor$ = new BehaviorSubject<DepartamentModel[]>([]);
     public _visorproviActual$= new BehaviorSubject<ProvinceModel[]>([]);
+    public ApiDepartamentos= new BehaviorSubject<DepartamentModel[]>([]);
+    public arrMaster2 = new BehaviorSubject<DepartamentModel[]>([]);
+    private _isApiLoading$ = new BehaviorSubject<boolean>(false);
     constructor(
         private departamentService: DepartamentRepositoryService,
         private userService: UsersService,
@@ -89,7 +92,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     ) {}
 
     ngOnInit(): void {
-        this.loadInternalUser();
         this.loadApiDepartamentos();
         this.ubigeo = EMPTY_ASIGN_INTERNAL_USER;
     }
@@ -101,11 +103,22 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
         return o1 && o2 ? o1 == o2.code : o2 === o2;
     }
 
+    loadApiDepartamentos(){
+        this.ApiDepartamentos.asObservable();
+        this.departamentDomainService.getAll2().subscribe(respo => this.ApiDepartamentos.next(respo.content));
+        this.departamentDomainService.getAll2().subscribe(respo => {
+            this.arrMaster = respo.content;
+            this._isApiLoading$.asObservable();
+            this._isApiLoading$.next(true);
+            this.loadInternalUser();
+        });
+    }
+
     loadInternalUser() {
         const sb = this.route.paramMap.pipe(
             switchMap(params => {
                 this.id = params.get('id');
-                if (this.id) {
+                if (this.id && this._isApiLoading$) {
                     return this.ubigeoService.getItemById(this.id);
                 }
                 this.ubigeo = EMPTY_ASIGN_INTERNAL_USER;
@@ -117,8 +130,8 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
             }),
         ).subscribe((res) => {
             if(res.data.id){
-                console.log(res)
                 this.arrayGeneral = res.data.information;
+                console.log(this.arrayGeneral)
                 this.arrMaster2.asObservable();
                 this.arrMaster2.next(this.arrayGeneral);
                 
@@ -141,7 +154,7 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
                         }
                     }
                 }
-                
+                console.log(this.selectedProvinces)
                 this.isLoading=true;
             }
             this.previous = Object.assign({}, res);
@@ -216,13 +229,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
         return result;
     }
 
-    public ApiDepartamentos= new BehaviorSubject<DepartamentModel[]>([]);
-    public arrMaster2 = new BehaviorSubject<DepartamentModel[]>([]);
-    loadApiDepartamentos(){
-        this.ApiDepartamentos.asObservable();
-        this.departamentDomainService.getAll2().subscribe(respo => this.ApiDepartamentos.next(respo.content));
-        this.departamentDomainService.getAll2().subscribe(respo => this.arrMaster = respo.content);
-    }
 
     //es el actual selected del <select> de (departament.code)
     departActual = [];
@@ -268,7 +274,7 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
         const sbDepartamentby = this.departamentService.getByDepartament(CodeDepartament).pipe(
             switchMap(departamento => {
                 
-                if(this.arrayGeneral.findIndex(x => x.code === CodeDepartament) === -1){
+                if(this.arrayGeneral.findIndex(x => x.code == CodeDepartament) === -1){
                     this.arrayGeneral.push({
                         id: departamento.id, 
                         code: departamento.code, 
@@ -276,8 +282,7 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
                         provinces: []
                     });
                 };
-                if(this.departamentos.findIndex(x => x.code === CodeDepartament) === -1){
-
+                if(this.departamentos.findIndex(x => x.code == CodeDepartament) === -1){
                     this.departamentos.push({
                         id: departamento.id, 
                         code: departamento.code, 
@@ -289,17 +294,12 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
                 return this.provinceService.getAllProvince(CodeDepartament+0);
             })
         ).subscribe((allProvince) => {
+            console.log(this.arrMaster)
+            let indexDep = this.arrMaster.findIndex(x => x.code == CodeDepartament);
             
-            let indexDep = this.departamentos.findIndex(x => x.code === CodeDepartament);
-            this.departamentos[indexDep].provinces = allProvince.content;
-            this._visor$.asObservable();
-            this._visor$.next(this.departamentos);
-
-            let indexDep2 = this.arrMaster.findIndex(x => x.code === CodeDepartament);
-            this.arrMaster[indexDep2].provinces = allProvince.content;
-            this.ApiDepartamentos.next(this.arrMaster)
-
-            this.arrMaster2.next(this.arrayGeneral)
+            this.arrMaster[indexDep].provinces = allProvince.content;
+            
+            this.arrMaster2.next(this.arrayGeneral);
         });
         this.subscriptions.push(sbDepartamentby);
         
@@ -345,37 +345,32 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
                     description: province.content[0].description,
                     districts: []
                 }
-                let codeDep = CodeProvince.substring(0,2);  
-                console.log(this.arrayGeneral);
+                let codeDep = CodeProvince.substring(0,2);
                 
-                var indexDep = this.arrayGeneral.findIndex(x => x.code === codeDep);
-
-                console.log(indexDep);
-        
-                if(this.arrayGeneral[indexDep].provinces.findIndex(x => x.code === CodeProvince) === -1){
+                var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
+                if(this.arrayGeneral[indexDep].provinces.findIndex(x => x.code == CodeProvince) === -1){
                     this.arrayGeneral[indexDep].provinces.push(newProv1);
                 }
                 if(this.provincias.findIndex(x => x.code == CodeProvince) === -1){
-
                     this.provincias.push(newProv);
                 };
                 return this.districtService.getAllDistrict(CodeProvince+0);
             })
         ).subscribe((allDistricts) => {
-            
-            let indexProv = this.provincias.findIndex(x => x.code === CodeProvince);
-            this.provincias[indexProv].districts = allDistricts.content;
-            
-            this._visorproviActual$.asObservable();
-            this._visorproviActual$.next(this.provincias);
 
-
-            console.log(this.arrMaster)
-            let indexDep2 = this.arrMaster.findIndex(x => x.code === CodeProvince.substring(0,2));
-            let indexDep3 = this.arrMaster[indexDep2].provinces.findIndex(x => x.code === CodeProvince);
-            this.arrMaster[indexDep2].provinces[indexDep3].districts = allDistricts.content;
+            let codeDep = CodeProvince.substring(0,2)
+            let indexDep = this.arrMaster.findIndex(x => x.code == codeDep);
+            let indexProv = this.arrMaster[indexDep].provinces.findIndex(x => x.code == CodeProvince);
+            console.log(this.arrayGeneral)
+            this.arrMaster[indexDep].provinces[indexProv].districts = allDistricts.content;
             this.ApiDepartamentos.next(this.arrMaster)
             this.arrMaster2.next(this.arrayGeneral)
+
+
+
+            // let indexDep = this.arrMaster.findIndex(x => x.code === CodeDepartament);
+            // this.arrMaster[indexDep].provinces = allProvince.content;
+            // this.arrMaster2.next(this.arrayGeneral);
         });
         this.subscriptions.push(sbProvinceby);
         
@@ -416,7 +411,7 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
             this.$_getbydistrict = district.content;
             let codeDep = CodeDistrict.substring(0,2);
             let codeProv = CodeDistrict.substring(0,4);
-            var indexDep = this.arrayGeneral.findIndex(x => x.code == codeDep);
+            var indexDep = this.arrayGeneral.findIndex(x => x.code = codeDep);
             var indexProv = this.arrayGeneral[indexDep].provinces.findIndex(x => x.code == codeProv);
             if(this.arrayGeneral[indexDep].provinces[indexProv].districts.findIndex(x => x.code == CodeDistrict) === -1){
                 this.arrayGeneral[indexDep].provinces[indexProv].districts.push(district.content[0]);
