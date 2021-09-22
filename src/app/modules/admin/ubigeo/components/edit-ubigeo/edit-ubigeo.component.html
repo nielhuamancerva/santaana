@@ -9,14 +9,14 @@
         </div>
         <div class="card-toolbar">
             <a type="button" class="btn btn-light" routerLink="/admin/ubigeo">
-              <i class="fa fa-arrow-left"></i>Back
+              <i class="fa fa-arrow-left"></i>Volver
             </a>
         </div>
     </div>
     <div class="card-body">
-        <ng-container >
+        <ng-container *ngIf="_isApiLoading$ | async">
             <div class="mt-5">
-                <form action="#" class="form form-label-right" (ngSubmit)="save()">
+                <form action="#" class="form form-label-right" (ngSubmit)="save()" [formGroup]="formGroup">
                     <div class="form-group row">
                         <div class="col-lg-4">
                             <label>DNI</label>
@@ -25,9 +25,7 @@
                                 class="form-control form-control-lg form-control-solid"
                                 autocomplete="off"
                                 placeholder="DNI"
-                                name="dni"
-                                [ngModel]="ubigeo.documentNumber"
-                                (ngModelChange)="mostrar($event)"
+                                formControlName="dni"
                             />
                             <div class="results" *ngIf="isLoadingSearchDni">
                                 <ul>
@@ -46,10 +44,10 @@
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Nombre completo"
                                 [value]="(ubigeo.name? ubigeo.name: '') +  (ubigeo.secondName? ubigeo.secondName: '') +  (ubigeo.lastName? ubigeo.lastName: '') +  (ubigeo.secondLastName? ubigeo.secondLastName : '')"
-                                name="fullname"
+                                formControlName="fullName"
                             />
                         </div>
-                        <div class="col-lg-4">
+                        <!-- <div class="col-lg-4">
                             <label>Correo</label>
                             <input 
                                 type="text" 
@@ -58,7 +56,7 @@
                                 [ngModel]="ubigeo.email"
                                 name="email"
                             />
-                        </div>
+                        </div> -->
                     </div>
                     <div class="form-group row">    
                         <div class="col-lg-4">
@@ -66,7 +64,10 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Lista de departamentos</mat-label>
-                                    <mat-select multiple (selectionChange)="checkDepartament($event)" #MatDepartamento [(ngModel)]="selectedDepartaments" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
+                                    <mat-select multiple (selectionChange)="checkDepartament($event)" 
+                                                #MatDepartamento 
+                                                [compareWith]="comparerDep" 
+                                                formControlName="departamentos">
                                         <mat-select-trigger>
                                             <mat-chip-list>
                                                 <mat-chip 
@@ -80,7 +81,11 @@
                                                 </mat-chip>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-option *ngFor="let departament of ApiDepartamentos | async" [id]="departament.id" [value]="departament.code">{{departament.description}}</mat-option>
+                                        <mat-option *ngFor="let departament of ApiDepartamentos | async" 
+                                                    [id]="departament.id" 
+                                                    [(value)]="departament.code">
+                                                    {{departament.description}}
+                                        </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -90,7 +95,11 @@
                             <div class="example-button-row">
                                 <mat-form-field appearance="fill" class="example-full-width">
                                     <mat-label>Provincias</mat-label>
-                                    <mat-select multiple (selectionChange)="checkProvince($event)" #MatProvincia [(ngModel)]="selectedProvinces" [compareWith]="comparer" [ngModelOptions]="{standalone: true}">
+                                    <mat-select multiple 
+                                                (selectionChange)="checkProvince($event)" 
+                                                #MatProvincia 
+                                                formControlName="provincias"
+                                                [compareWith]="comparerProv" >
                                         <mat-select-trigger *ngFor="let departamento of arrMaster2 | async">
                                             <mat-chip-list>
                                                 <mat-chip 
@@ -104,8 +113,11 @@
                                                 </mat-chip>
                                             </mat-chip-list>
                                         </mat-select-trigger>
-                                        <mat-optgroup *ngFor="let group of ApiDepartamentos | async" [label]="group.description" [disabled]="group.disabled" [hidden]="!group.provinces">
-                                            <mat-option *ngFor="let province of group.provinces" [id]="province.id" [value]="province.code">
+                                        <mat-optgroup *ngFor="let group of ApiDepartamentos | async" 
+                                                        [label]="group.description" 
+                                                        [disabled]="group.disabled" 
+                                                        [hidden]="!group.provinces">
+                                            <mat-option *ngFor="let province of group.provinces" [id]="province.id" [(value)]="province.code">
                                             {{province.description}}
                                             </mat-option>
                                         </mat-optgroup>
@@ -121,52 +133,39 @@
                                     <mat-select multiple 
                                                 (selectionChange)="checkDistrict($event)"
                                                 #MatDistrito 
-                                                [(ngModel)]="selectedDistricts"
-                                                [compareWith]="comparer"
-                                                [ngModelOptions]="{standalone: true}"
+                                                formControlName="distritos"
+                                                [compareWith]="comparerDist"
                                     >
                                         <mat-select-trigger *ngFor="let departamento of arrMaster2 | async">
                                             <mat-chip-list *ngFor="let provincia of departamento.provinces">
-                                                <mat-chip [removable]="removable" (removed)="removeDistrict(distrito.code)" *ngFor="let distrito of provincia.districts">
+                                                <mat-chip [removable]="removable"
+                                                            *ngFor="let distrito of provincia.districts"
+                                                            (removed)="removeDistrict(distrito.code)"
+                                                            >
                                                     {{ distrito.description }}
                                                     <mat-icon matChipRemove>cancel</mat-icon>
                                                 </mat-chip>
                                             </mat-chip-list>
                                         </mat-select-trigger>
                                         <mat-label *ngFor="let group1 of ApiDepartamentos | async">
-                                        <mat-optgroup *ngFor="let group of group1.provinces" [label]="group.description" [disabled]="group.disabled" [hidden]="!group.districts">
-                                            
-                                            <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
-                                            {{district.description}}
-                                            </mat-option>
-                                        
-                                        </mat-optgroup>
-                                    </mat-label>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <label>Centro Poblado</label>
-                            <div class="example-button-row">
-                                <mat-form-field appearance="fill" class="example-full-width">
-                                    <mat-label>Centros poblados:</mat-label>
-                                    <mat-select multiple>
-                                        <mat-optgroup *ngFor="let group of $_Ccpp" [label]="group.code"
-                                                        [disabled]="false">
-                                            <mat-option *ngFor="let group of $_Ccpp" [value]="group.code">
-                                            </mat-option>
-                                        </mat-optgroup>
+                                            <mat-optgroup *ngFor="let group of group1.provinces" 
+                                                            [label]="group.description" 
+                                                            [disabled]="group.disabled" 
+                                                            [hidden]="!group.districts">
+                                                <mat-option *ngFor="let district of group.districts" [id]="district.id" [(value)]="district.code">
+                                                {{district.description}}
+                                                </mat-option>
+                                            </mat-optgroup>
+                                        </mat-label>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
                         </div>
                     </div>
                     
-                    
                     <div class="float-right">
                     <a
-                        class="btn btn-default font-weight-bold mr-2" routerLink="/asign-internal-user/list"
+                        class="btn btn-default font-weight-bold mr-2" routerLink="/admin/ubigeo"
                         >Cancelar</a
                     >
                     <button
@@ -179,6 +178,5 @@
                 </form>
             </div>
         </ng-container>
-        <p>{{ arrayGeneral | json}}</p>
     </div>
 </div>

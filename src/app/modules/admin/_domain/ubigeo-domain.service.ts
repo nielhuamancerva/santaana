@@ -93,7 +93,7 @@ export class UbigeoHTTPServiceDomain {
         return throwError(errorMessage);
     }
 
-    getItemById(id): Observable<ApiResponse<PagedResponse<UserAsingModel<DepartamentModel>>>> {
+    getItemById(id): Observable<any> {
         this._isLoading$.next(true);
         this._errorMessage.next('');
         const header = buildHeader();
