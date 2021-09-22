@@ -16,6 +16,7 @@ import { retrieveStringFromStorage } from 'src/app/_commons/utils/storage';
 export class UserDomainService {
 
    API_URL = `${environment.apiService}/users`;
+   API_URL_UBIGEO = `${environment.apiService}/users/ubigee`;
    file: Blob;
 
   constructor(private _http: HttpClient,
@@ -88,6 +89,15 @@ export class UserDomainService {
     getByDocumentUser(InputSearchDni): Observable<ApiResponse<PagedResponse<UserModel>>> {
         const header = buildHeader();
         return this._http.get<ApiResponse<PagedResponse<UserModel>>>(this.API_URL+ `?docnum=${InputSearchDni}`,{
+            headers: header 
+        })
+            .pipe(map(response => response))
+            .pipe(catchError(this.handleError));
+    }
+
+    getByUbigeo(InputSearchDni): Observable<ApiResponse<PagedResponse<UserModel>>> {
+        const header = buildHeader();
+        return this._http.get<ApiResponse<PagedResponse<UserModel>>>(this.API_URL_UBIGEO+ `?docnum=${InputSearchDni}`,{
             headers: header 
         })
             .pipe(map(response => response))

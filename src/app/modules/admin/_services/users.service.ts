@@ -57,7 +57,7 @@ export class UsersService extends TableService<UserModel> implements OnDestroy {
     }
 
     getByDocumentUser(InputSearchDni): Observable<PagedResponse<UserModel>> {
-        return this._userservicedomain.getByDocumentUser(InputSearchDni).pipe(
+        return this._userservicedomain.getByUbigeo(InputSearchDni).pipe(
             map(
             response => {
                 console.log(response);

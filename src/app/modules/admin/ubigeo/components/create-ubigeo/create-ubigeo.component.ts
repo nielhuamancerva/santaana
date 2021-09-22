@@ -487,7 +487,7 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
                     return of(errorMessage);
                 })
             ).subscribe((response) => {
-                    this.SearchDni = response.content;
+                    this.SearchDni = response;
             });
         }
     }
