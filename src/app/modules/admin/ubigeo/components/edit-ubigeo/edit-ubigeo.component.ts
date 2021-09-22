@@ -105,14 +105,14 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     }
 
     comparerProv(o1: any, o2: any): boolean {
-        return o1 && o2 ? o1 == o2.code : o1.code == o2.code;
+        return o1 && o2 ? o1 === o2 : o1.code == o2.code;
     }
 
     comparerDist(o1: any, o2: any): boolean {
         console.log("voy a comparar");
         console.log(o1);
         console.log(o2);
-        return (o1 && o2) ? o1 === o2.code : false;
+        return (o1 && o2) ? o1 === o2 : false;
     }
 
     loadApiDepartamentos(){
@@ -148,12 +148,12 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
                     this.departActual.push(dep.code);
 
                     for(let prov of dep.provinces){
-                        this.selectedProvinces.push(prov);
+                        this.selectedProvinces.push(prov.code);
                         this.searchProvince(prov.code);
                         this.proviActual.push(prov.code);
 
                         for(let distri of prov.districts){
-                            this.selectedDistricts.push(distri)
+                            this.selectedDistricts.push(distri.code)
                             this.searchDistrict(distri.code);
                             this.distriActual.push(distri.code);
                         }
