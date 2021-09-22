@@ -76,38 +76,16 @@
                         </td>
                         <td>
                             <a
-                            title="Edit product"
-                            class="btn btn-icon btn-light btn-hover-primary btn-sm mx-3"
-                            [routerLink]="'/admin/ubigeo/edit/'+data.id"
+                                title="Delete product"
+                                class="btn btn-icon btn-light btn-hover-primarybtn-sm mx-3"
+                                [routerLink]="'/admin/ubigeo/edit/'+data.id"
                             >
-                            <span
-                                [inlineSVG]="'./assets/media/svg/view.svg'"
-                                cacheSVG="true"
-                                class="svg-icon svg-icon-md svg-icon-primary"
-                            >
-                            </span>
-                            </a>
-                            <a
-                            title="Delete product"
-                            class="btn btn-icon btn-light btn-hover-danger btn-sm mx-3"
-                            >
-                            <span
-                                [inlineSVG]="'./assets/media/svg/do-not-disturb.svg'"
-                                cacheSVG="true"
-                                class="svg-icon svg-icon-md svg-icon-danger"
-                            >
-                            </span>
-                            </a>
-                            <a
-                            title="Delete product"
-                            class="btn btn-icon btn-light btn-hover-danger btn-sm mx-3"
-                            >
-                            <span
-                                [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
-                                cacheSVG="true"
-                                class="svg-icon svg-icon-md svg-icon-danger"
-                            >
-                            </span>
+                                <span
+                                    [inlineSVG]="'./assets/media/svg/icons/Communication/Write.svg'"
+                                    cacheSVG="true"
+                                    class="svg-icon svg-icon-md svg-icon-primary"
+                                >
+                                </span>
                             </a>
                         </td>
                     </tr>
@@ -117,4 +95,4 @@
         <app-paginator class="d-flex justify-content-between align-items-center flex-wrap" [paginator]="paginator"
             [isLoading]="isLoading" (paginate)="paginate($event)"></app-paginator>
     </div>
-  </div>
+</div>

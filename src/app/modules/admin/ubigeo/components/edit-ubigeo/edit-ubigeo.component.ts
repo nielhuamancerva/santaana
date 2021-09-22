@@ -109,9 +109,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     }
 
     comparerDist(o1: any, o2: any): boolean {
-        console.log("voy a comparar");
-        console.log(o1);
-        console.log(o2);
         return (o1 && o2) ? o1 === o2 : false;
     }
 
@@ -148,15 +145,18 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
                     this.departActual.push(dep.code);
 
                     for(let prov of dep.provinces){
-                        this.selectedProvinces.push(prov.code);
-                        this.searchProvince(prov.code);
-                        this.proviActual.push(prov.code);
+                        if(prov.code){
+                            this.selectedProvinces.push(prov.code);
+                            this.searchProvince(prov.code);
+                            this.proviActual.push(prov.code);
 
-                        for(let distri of prov.districts){
-                            this.selectedDistricts.push(distri.code)
-                            this.searchDistrict(distri.code);
-                            this.distriActual.push(distri.code);
+                            for(let distri of prov.districts){
+                                this.selectedDistricts.push(distri.code)
+                                this.searchDistrict(distri.code);
+                                this.distriActual.push(distri.code);
+                            }
                         }
+                        
                     }
                     
                 }
@@ -206,7 +206,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     }
 
     save(){
-        console.log(this.arrayGeneral)
         this.ubigeoService.postEditAsingUser(this.ubigeo.id,this.arrayGeneral);
     }
 
@@ -269,8 +268,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     arrayGeneral: DepartamentModel[];
  
     checkDepartament(event){
-        console.log(this.arrayGeneral)
-        console.log(event)
         let departamentosEnviados = event.value;
         let CodeDepartament: any;
         let existencia: boolean;
@@ -322,7 +319,7 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
             let indexDep = this.arrMaster.findIndex(x => x.code == CodeDepartament);
             
             this.arrMaster[indexDep].provinces = allProvince.content;
-            
+            this.ApiDepartamentos.next(this.arrMaster)
             this.arrMaster2.next(this.arrayGeneral);
         });
         this.subscriptions.push(sbDepartamentby);
@@ -330,7 +327,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     }
 
     checkProvince(event){
-        console.log(this.arrayGeneral)
         let provinciasEnviados = event.value;
         let CodeProvince: any;
         let existencia: boolean;
@@ -450,7 +446,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     }
 
     removeDepartament(Departament) {
-        console.log(Departament)
         let indexDepArr = this.arrMaster.findIndex(x => x.code == Departament);
         this.departamentos = this.departamentos.filter(item => item.code !== Departament);
         this.provincias = this.provincias.filter(item => item.code.substring(0,2) !== Departament);
@@ -512,7 +507,6 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
         
         this.MatDistrito.options.forEach((data: MatOption) => {if(data.value == District){data.deselect()}});
         this.arrMaster2.next(this.arrayGeneral);
-        console.log(this.arrMaster)
         this.ApiDepartamentos.next(this.arrMaster);
     }
 
