@@ -1,7 +1,7 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatSelect } from '@angular/material/select';
-import { catchError, debounceTime, distinctUntilChanged, filter, finalize, map, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, map, mergeMap, switchMap, tap, toArray } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { DepartamentModel } from '../../../_models/Departament.model';
 import { ProvinceModel } from '../../../_models/Province.model';
@@ -88,7 +88,8 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
         private districtService: DistrictRepositoryService,
         private route: ActivatedRoute,
         private ubigeoService: UbigeoHTTPServiceDomain,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -206,7 +207,14 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
     }
 
     save(){
-        this.ubigeoService.postEditAsingUser(this.ubigeo.id,this.arrayGeneral);
+        const sbUpdate = this.ubigeoService.postEditAsingUser(this.ubigeo.id,this.arrayGeneral).pipe(
+            tap(() => this.router.navigate(['/admin/ubigeo'])),
+            catchError((errorMessage) => {
+                console.error('UPDATE ERROR', errorMessage);
+                return of(this.arrayGeneral);
+            })
+        ).subscribe();
+        this.subscriptions.push(sbUpdate);;
     }
 
     isDepartmentValid(controlName: string): boolean {

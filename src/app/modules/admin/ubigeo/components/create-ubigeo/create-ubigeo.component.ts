@@ -2,7 +2,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
-import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { of, interval, Subject, Subscription, Observable } from 'rxjs';
 import { MatOption } from '@angular/material/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -147,7 +147,14 @@ export class CreateUbigeoComponent implements OnInit, OnDestroy{
     save(){
         console.log(this._user_dni);
         console.log(this.arrayGeneral);
-        this.ubigeoService.postAsingUser(this._user_dni,this.arrayGeneral);
+        const sbCreate = this.ubigeoService.postAsingUser(this._user_dni,this.arrayGeneral).pipe(
+            tap(() => this.router.navigate(['/admin/ubigeo'])),
+            catchError((errorMessage) => {
+                console.error('UPDATE ERROR', errorMessage);
+                return of(this.arrayGeneral);
+            })
+        ).subscribe();
+        this.subscriptions.push(sbCreate);;
     }
 
     isDepartmentValid(controlName: string): boolean {

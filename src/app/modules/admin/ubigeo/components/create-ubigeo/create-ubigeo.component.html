@@ -49,14 +49,6 @@
                                 formControlName="fullName"
                             />
                         </div>
-                        <div class="col-lg-4">
-                            <label>Correo</label>
-                            <input 
-                                type="text" 
-                                class="form-control form-control-lg form-control-solid"
-                                placeholder="Correo"
-                            />
-                        </div>
                     </div>
                     <div class="form-group row">    
                         <div class="col-lg-4">
@@ -130,21 +122,6 @@
                                         <mat-optgroup *ngFor="let group of provincias" [label]="group.description" [disabled]="group.disabled">
                                             <mat-option *ngFor="let district of group.districts" [id]="district.id" [value]="district.code">
                                             {{district.description}}
-                                            </mat-option>
-                                        </mat-optgroup>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <label>Centro Poblado</label>
-                            <div class="example-button-row">
-                                <mat-form-field appearance="fill" class="example-full-width">
-                                    <mat-label>Centros poblados:</mat-label>
-                                    <mat-select multiple>
-                                        <mat-optgroup *ngFor="let group of $_Ccpp" [label]="group.code"
-                                                        [disabled]="false">
-                                            <mat-option *ngFor="let group of $_Ccpp" [value]="group.code">
                                             </mat-option>
                                         </mat-optgroup>
                                     </mat-select>

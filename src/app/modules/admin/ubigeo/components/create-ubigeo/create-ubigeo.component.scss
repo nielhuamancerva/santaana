@@ -1,52 +1,80 @@
 .results {
-    background: white;
-    padding: 0;
-    margin-top: .5rem;
-    border-radius: 1rem;
-    width: 100%;
-    box-shadow: 0 6.7px 5.3px rgba(0, 0, 0, 0.032),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.048),
-    0 100px 80px rgba(0, 0, 0, 0.08);
-  }
-  
-  .results ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    /*display: co;*/
-  }
-  
-  .results ul li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: 400;
-    /*background-color: red;*/
-    padding: .5rem;
-    border-bottom: solid 1px #f1f1f1;
-  
-  }
-  
-  .results ul li:hover .name {
-    background-color: #42e77b;
-  }
-  
-  .results ul li:last-child {
-    border-bottom: transparent;
-  }
-  
-  .results ul li .name {
-    padding: .35rem;
-    border-radius: 1rem;
-    transition: all ease 150ms;
-    /*background-color: red;*/
-  }
+  background: white;
+  padding: 0;
+  margin-top: .5rem;
+  border-radius: 1rem;
+  width: 100%;
+  box-shadow: 0 6.7px 5.3px rgba(0, 0, 0, 0.032),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.048),
+  0 100px 80px rgba(0, 0, 0, 0.08);
+}
 
-  .name:hover {
-    cursor: pointer;
-  }
-  
-  .results ul li img {
-    width: 30px;
-    border-radius: 1rem;
-  }
+.results ul {
+list-style: none;
+padding: 0;
+margin: 0;
+/*display: co;*/
+}
+
+.results ul li {
+display: flex;
+align-items: center;
+justify-content: space-between;
+font-weight: 400;
+/*background-color: red;*/
+padding: .5rem;
+border-bottom: solid 1px #f1f1f1;
+
+}
+
+.results ul li:hover .name {
+  background-color: #d6d9db!important;
+  border-color: #F3F6F9!important;
+  color: #3F4254!important;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease!important;
+}
+
+
+
+.results ul li .name {
+padding: .35rem;
+border-radius: 1rem;
+transition: all ease 150ms;
+color:#000000;
+/*background-color: red;*/
+}
+
+.name:hover {
+cursor: pointer;
+}
+
+.results ul li img {
+width: 30px;
+border-radius: 1rem;
+transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease!important;
+}
+
+
+.form-control.form-control-solid {
+  background-color: #F3F6F9!important;
+  border-color: #F3F6F9!important;
+  color: #3F4254!important;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease!important;
+}
+
+.form-control-lg {
+
+padding: 0.3rem 0.8rem!important;
+
+}
+
+.custom-background {
+background-color: #F3F6F9!important;
+color: #3F4254!important;
+border-color: #F3F6F9!important;
+padding: 0.5rem 0.5rem!important;
+}
+
+.custom-back {
+padding-bottom: 0!important;
+}
