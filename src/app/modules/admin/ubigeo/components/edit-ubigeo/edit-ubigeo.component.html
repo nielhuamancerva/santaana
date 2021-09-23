@@ -26,6 +26,7 @@
                                 autocomplete="off"
                                 placeholder="DNI"
                                 formControlName="dni"
+                                (ngModelChange)="mostrar($event)"
                             />
                             <div class="results" *ngIf="isLoadingSearchDni">
                                 <ul>

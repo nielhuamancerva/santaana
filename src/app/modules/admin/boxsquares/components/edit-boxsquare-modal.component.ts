@@ -7,7 +7,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { BoxSquareModel } from '../../_models/boxsquare.model';
 import { HttpResponse } from '@angular/common/http';
 import { ImageModel } from '../../_models/Image.model';
-import { saveAs } from 'file-saver';
+/*import { saveAs } from 'file-saver';*/
 
 @Component({
   selector: 'app-edit-boxsquare-modal',
@@ -107,7 +107,7 @@ export class EditBoxSquareModalComponent implements OnInit, OnDestroy {
 
     download(file: ImageModel) {
         var blob = new Blob([file.file], {type:file.type});
-        saveAs(blob, file.name)
+      /*  saveAs(blob, file.name)*/
     }
 
 

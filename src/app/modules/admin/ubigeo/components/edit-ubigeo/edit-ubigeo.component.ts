@@ -201,7 +201,7 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
                     return of(errorMessage);
                 })
             ).subscribe((response) => {
-                    this.SearchDni = response.content;
+                    this.SearchDni = response;
             });
         }
     }
@@ -518,6 +518,7 @@ export class EditUbigeoComponent implements OnInit, OnDestroy{
         this.ApiDepartamentos.next(this.arrMaster);
     }
 
+    
     selectBeneficiary(item){
         this._user_dni=item.id;
         this.formGroup.patchValue({
